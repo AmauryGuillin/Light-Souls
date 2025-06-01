@@ -9,6 +9,7 @@ export type Projectile = {
     states: {
         isSpawned: boolean;
         lifeSpan: number;
+        createdAt: number;
     };
     position: {
         X: number;

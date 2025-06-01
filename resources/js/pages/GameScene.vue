@@ -106,7 +106,8 @@ function playerStartShooting() {
         },
         states: {
             isSpawned: true,
-            lifeSpan: 99999999999999,
+            lifeSpan: 99999,
+            createdAt: performance.now(),
         },
         position: {
             X: player.value.position.X + 2,
@@ -125,10 +126,12 @@ function playerStartShooting() {
 }
 
 function projectileMovement(projectile: Projectile) {
-    const start = performance.now();
+    //const start = performance.now();
 
     function animateProjectile(now: number) {
-        const elapsed = now - start;
+        const elapsed = now - projectile.states.createdAt;
+
+        if (!projectile.states.isSpawned) return;
 
         if (elapsed > projectile.states.lifeSpan) {
             projectile.states.isSpawned = false;
@@ -138,7 +141,10 @@ function projectileMovement(projectile: Projectile) {
 
         projectile.position.X += projectile.speed;
         projectile.position.X = clamp(projectile.position.X, 0, 99);
-        if (clamp(projectile.position.X, 0, 99) >= 99) projectile.states.isSpawned = false;
+        if (clamp(projectile.position.X, 0, 99) >= 99) {
+            projectile.states.isSpawned = false;
+            return;
+        }
 
         requestAnimationFrame(animateProjectile);
     }
