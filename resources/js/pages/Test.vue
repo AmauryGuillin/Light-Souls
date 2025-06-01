@@ -122,10 +122,7 @@ function projectileMovement(projectile: Projectile) {
 
         projectile.position.X += projectile.speed;
         projectile.position.X = clamp(projectile.position.X, 0, 99);
-        if (clamp(projectile.position.X, 0, 99) >= 99) {
-            console.log('in condition');
-            projectile.states.isSpawned = false;
-        }
+        if (clamp(projectile.position.X, 0, 99) >= 99) projectile.states.isSpawned = false;
 
         requestAnimationFrame(animateProjectile);
     }
