@@ -1,86 +1,9 @@
 <script setup lang="ts">
+import { Enemy } from '@/types/Game/enemy';
+import { MovementKey } from '@/types/Game/MovementKey';
+import { Player } from '@/types/Game/player';
+import { Projectile } from '@/types/Game/projectile';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
-
-type MovementKey = 'z' | 'q' | 's' | 'd';
-
-type Player = {
-    name: string;
-    actions: {
-        movement: {
-            keys: {
-                z: { pressed: boolean };
-                q: { pressed: boolean };
-                s: { pressed: boolean };
-                d: { pressed: boolean };
-            };
-            speed: number;
-        };
-    };
-    dimensions: {
-        height: number;
-        width: number;
-    };
-    position: {
-        X: number;
-        Y: number;
-    };
-    states: {
-        isSpawned: boolean;
-        isShooting: boolean;
-    };
-};
-
-type Enemy = {
-    id: string;
-    personalAttributes: {
-        HP: number;
-        movementSpeed: number;
-    };
-    structure: {
-        dimensions: {
-            height: number;
-            width: number;
-        };
-    };
-    states: {
-        isSpawned: boolean;
-        isShooting: boolean;
-        canKill: boolean;
-    };
-    position: {
-        X: number;
-        Y: number;
-    };
-    hitBox?: {
-        offsetX: number;
-        offsetY: number;
-        width: number;
-        height: number;
-    };
-};
-
-type Projectile = {
-    id: string;
-    structure: {
-        dimensions: {
-            height: number;
-            width: number;
-        };
-    };
-    states: {
-        isSpawned: boolean;
-        lifeSpan: number;
-    };
-    position: {
-        X: number;
-        Y: number;
-    };
-    speed: number;
-    hitBox: {
-        height: number;
-        width: number;
-    };
-};
 
 const player = ref<Player>({
     name: '',

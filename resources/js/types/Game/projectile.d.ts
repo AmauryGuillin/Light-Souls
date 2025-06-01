@@ -1,0 +1,22 @@
+export type Projectile = {
+    id: string;
+    structure: {
+        dimensions: {
+            height: number;
+            width: number;
+        };
+    };
+    states: {
+        isSpawned: boolean;
+        lifeSpan: number;
+    };
+    position: {
+        X: number;
+        Y: number;
+    };
+    speed: number;
+    hitBox: {
+        height: number;
+        width: number;
+    };
+};
