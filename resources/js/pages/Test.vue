@@ -101,7 +101,7 @@ function playerStartShooting() {
             X: player.value.position.X + 2,
             Y: player.value.position.Y + 2,
         },
-        speed: 0.4,
+        speed: 0.5,
     });
 
     projectiles.value.push(projectile);
@@ -121,6 +121,11 @@ function projectileMovement(projectile: Projectile) {
         }
 
         projectile.position.X += projectile.speed;
+        projectile.position.X = clamp(projectile.position.X, 0, 99);
+        if (clamp(projectile.position.X, 0, 99) >= 99) {
+            console.log('in condition');
+            projectile.states.isSpawned = false;
+        }
 
         requestAnimationFrame(animateProjectile);
     }
