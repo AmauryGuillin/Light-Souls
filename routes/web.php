@@ -11,9 +11,9 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('test', function () {
-    return Inertia::render('Test');
-})->middleware(['auth', 'verified'])->name('test');
+Route::get('LightSouls', function () {
+    return Inertia::render('GameScene');
+})->middleware(['auth', 'verified'])->name('LightSouls');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
