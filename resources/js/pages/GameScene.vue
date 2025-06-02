@@ -6,6 +6,7 @@ import { Player } from '@/types/Game/player';
 import { Projectile } from '@/types/Game/projectile';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
 
+const isGamePaused = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 
 const player = ref<Player>({
@@ -45,6 +46,8 @@ const enemies = ref<Enemy[]>([]);
 let animationFrameId: number;
 
 function gameLoop() {
+    if (isGamePaused.value) return;
+
     if (player.value.states.isSpawned) {
         const keys = player.value.actions.movement.keys;
         const speed = player.value.actions.movement.speed;
@@ -125,7 +128,7 @@ function spawnPlayer() {
 }
 
 function playerStartShooting() {
-    if (!player.value.states.isSpawned) return;
+    if (!player.value.states.isSpawned || isGamePaused.value) return;
     const projectile = reactive<Projectile>({
         id: crypto.randomUUID(),
         structure: {
@@ -149,16 +152,14 @@ function playerStartShooting() {
 
     projectiles.value.push(projectile);
     projectileMovement(projectile);
-    projectileHit(projectile);
+    //projectileHit(projectile);
 }
 
 function projectileMovement(projectile: Projectile) {
-    //const start = performance.now();
+    const start = performance.now();
 
     function animateProjectile(now: number) {
-        const elapsed = now - projectile.states.createdAt;
-
-        if (!projectile.states.isSpawned) return;
+        const elapsed = now - start;
 
         if (elapsed > projectile.states.lifeSpan) {
             projectile.states.isSpawned = false;
@@ -166,14 +167,23 @@ function projectileMovement(projectile: Projectile) {
             return;
         }
 
+        // Mouvement
         projectile.position.X += projectile.speed;
         projectile.position.X = clamp(projectile.position.X, 0, 99);
-        if (clamp(projectile.position.X, 0, 99) >= 99) {
+        if (projectile.position.X >= 99) {
             projectile.states.isSpawned = false;
             return;
         }
 
+        if (isGamePaused.value) {
+            return;
+        }
+
         requestAnimationFrame(animateProjectile);
+    }
+
+    if (isGamePaused.value) {
+        return;
     }
 
     requestAnimationFrame(animateProjectile);
@@ -191,9 +201,24 @@ function projectileHit(projectile: Projectile) {
         const eW = enemy.hitBox!.width;
         const eH = enemy.hitBox!.height;
 
-        const isColliding = pX < eX + eW && pX + pW > eX && pY < eY + eH && pY + pH > eY;
+        const isColliding = pX <= eX + eW && pX + pW >= eX && pY <= eY + eH && pY + pH >= eY;
+
+        console.log(
+            'calcul',
+            pX + ' <= ' + eX + eW + ' && ' + pX + pW + ' >= ' + eX + ' && ' + pY + ' <= ' + eY + eH + ' && ' + pY + pH + ' >= ' + eY,
+        );
+        console.log('calcul bool', pX <= eX + eW, '&&', pX + pW >= eX, '&&', pY <= eY + eH, '&&', pY + pH >= eY);
+
+        /*
+            calcul
+            20.55 <= 2050 OK
+            && 20.551 >= 20 OK
+            && 79.25 <= 7350 OK
+            && 79.251 >= 73 OK
+        */
 
         if (isColliding) {
+            console.log(enemy.id, 'hit');
             enemy.states.isSpawned = false;
             enemy.states.canKill = false;
             enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
@@ -206,7 +231,7 @@ function spawnEnemy() {
         id: crypto.randomUUID(),
         personalAttributes: {
             HP: 100,
-            movementSpeed: 0, //00.5
+            movementSpeed: 0.05, //0.05
             damage: 1,
         },
         structure: {
@@ -262,8 +287,23 @@ function showHitboxes() {
     isHitboxesShown.value = false;
 }
 
+function pauseGame(e: KeyboardEvent) {
+    const key = e.key;
+    if (key === 'Escape') {
+        if (isGamePaused.value) {
+            console.log('Game start');
+            isGamePaused.value = false;
+            animationFrameId = requestAnimationFrame(gameLoop);
+            return;
+        }
+        console.log('Game paused');
+        isGamePaused.value = true;
+    }
+}
+
 onMounted(() => {
     window.addEventListener('keydown', movementKeyDown);
+    window.addEventListener('keydown', pauseGame);
     window.addEventListener('keyup', movementKeyUp);
     animationFrameId = requestAnimationFrame(gameLoop);
 });
@@ -276,7 +316,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div id="scene" class="relative h-screen bg-gray-900">
+    <div id="scene" class="relative flex h-screen flex-col items-center justify-center bg-gray-900">
         <div class="absolute top-1 left-[82%] z-50 flex">
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
                 Hitboxes
@@ -291,6 +331,7 @@ onUnmounted(() => {
                 Shoot!
             </button>
         </div>
+        <div v-if="isGamePaused" class="z-50 bg-white text-7xl font-bold text-black">GAME PAUSED</div>
 
         <Progress class="absolute top-[3%] left-[40%] z-50 w-96" :model-value="player.personalAttributes.HP" />
         <div class="absolute top-[5%] left-[40%] z-50">{{ player.personalAttributes.HP }} HP</div>
