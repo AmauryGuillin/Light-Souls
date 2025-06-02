@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Enemy } from '@/types/Game/enemy';
-import { MovementKey } from '@/types/Game/MovementKey';
+import { MovementKey } from '@/types/Game/movementKey';
 import { Player } from '@/types/Game/player';
 import { Projectile } from '@/types/Game/projectile';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
@@ -240,24 +240,18 @@ onUnmounted(() => {
 
 <template>
     <div id="scene" class="relative h-screen bg-gray-900">
-        <button
-            class="relative top-1 left-1 z-50 mx-2 my-1 cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800"
-            @click="spawnPlayer"
-        >
-            spawn player
-        </button>
-        <button
-            class="relative top-1 left-1 z-50 mx-2 my-1 cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800"
-            @click="spawnEnemy"
-        >
-            spawn enemy
-        </button>
-        <button
-            class="relative top-1 left-1 z-50 mx-2 my-1 cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600"
-            @click="playerStartShooting"
-        >
-            Shoot!
-        </button>
+        <div class="absolute top-1 left-[82%] z-50 flex">
+            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnPlayer">
+                spawn player
+            </button>
+            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnEnemy">
+                spawn enemy
+            </button>
+            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="playerStartShooting">
+                Shoot!
+            </button>
+        </div>
+
         <div
             v-if="player.states.isSpawned"
             id="player"
