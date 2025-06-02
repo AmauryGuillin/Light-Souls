@@ -92,14 +92,20 @@ function gameLoop() {
             const damageCoolDown = 500; // ms
 
             if (timeSinceLastHit > damageCoolDown && player.value.personalAttributes.HP > 0) {
-                player.value.personalAttributes.HP -= enemy.personalAttributes.damage;
+                player.value.personalAttributes.HP -=
+                    enemy.personalAttributes.damage *
+                    enemies.value.filter(
+                        (e) =>
+                            Math.round(e.position.X) === Math.round(player.value.position.X) &&
+                            Math.round(e.position.Y) === Math.round(player.value.position.Y),
+                    ).length;
                 player.value.states.lastDamageTime = now;
 
                 console.log('Le joueur a pris un dégât ! HP:', player.value.personalAttributes.HP);
 
                 if (player.value.personalAttributes.HP <= 0) {
                     player.value.states.isSpawned = false;
-                    console.log('Le joueur est DEAD');
+                    console.log('Le joueur est DEAD, le gros naze');
                     return;
                 }
             }
