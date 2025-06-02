@@ -6,6 +6,8 @@ import { Player } from '@/types/Game/player';
 import { Projectile } from '@/types/Game/projectile';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
 
+const isHitboxesShown = ref<boolean>(false);
+
 const player = ref<Player>({
     name: '',
     actions: {
@@ -204,7 +206,7 @@ function spawnEnemy() {
         id: crypto.randomUUID(),
         personalAttributes: {
             HP: 100,
-            movementSpeed: 0.05,
+            movementSpeed: 0, //00.5
             damage: 1,
         },
         structure: {
@@ -219,8 +221,8 @@ function spawnEnemy() {
             canKill: true,
         },
         position: {
-            X: 80,
-            Y: 80,
+            X: Math.floor(Math.random() * 97), //80
+            Y: Math.floor(Math.random() * 94), //80
         },
         hitBox: {
             offsetX: 0,
@@ -251,6 +253,15 @@ function movementKeyUp(e: KeyboardEvent) {
     }
 }
 
+function showHitboxes() {
+    if (!isHitboxesShown.value) {
+        isHitboxesShown.value = true;
+        return;
+    }
+
+    isHitboxesShown.value = false;
+}
+
 onMounted(() => {
     window.addEventListener('keydown', movementKeyDown);
     window.addEventListener('keyup', movementKeyUp);
@@ -267,6 +278,9 @@ onUnmounted(() => {
 <template>
     <div id="scene" class="relative h-screen bg-gray-900">
         <div class="absolute top-1 left-[82%] z-50 flex">
+            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
+                Hitboxes
+            </button>
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnPlayer">
                 spawn player
             </button>
@@ -278,8 +292,8 @@ onUnmounted(() => {
             </button>
         </div>
 
-        <Progress class="absolute top-[3%] left-[40%] w-96" :model-value="player.personalAttributes.HP" />
-        <div class="absolute top-[5%] left-[40%]">{{ player.personalAttributes.HP }} HP</div>
+        <Progress class="absolute top-[3%] left-[40%] z-50 w-96" :model-value="player.personalAttributes.HP" />
+        <div class="absolute top-[5%] left-[40%] z-50">{{ player.personalAttributes.HP }} HP</div>
         <div
             v-if="player.states.isSpawned"
             id="player"
@@ -309,6 +323,43 @@ onUnmounted(() => {
             class="absolute rounded-full bg-red-600"
             :style="{
                 visibility: `${enemy.states.isSpawned ? 'visible' : 'hidden'}`,
+                top: `${enemy.position.Y}%`,
+                left: `${enemy.position.X}%`,
+                height: `${enemy.structure.dimensions.height}px`,
+                width: `${enemy.structure.dimensions.width}px`,
+            }"
+        ></div>
+        <div
+            id="debug-player-hitboxe"
+            v-if="player.states.isSpawned && isHitboxesShown"
+            class="absolute border-2 border-blue-300"
+            :style="{
+                top: `${player.position.Y}%`,
+                left: `${player.position.X}%`,
+                height: `${player.dimensions.height}px`,
+                width: `${player.dimensions.width}px`,
+            }"
+        ></div>
+        <div
+            id="debug-projectiles-hitboxes"
+            v-for="projectile in projectiles"
+            v-bind:key="projectile.id"
+            class="absolute border-2 border-amber-500"
+            :style="{
+                visibility: `${projectile.states.isSpawned && isHitboxesShown ? 'visible' : 'hidden'}`,
+                top: `${projectile.position.Y}%`,
+                left: `${projectile.position.X}%`,
+                height: `${projectile.structure.dimensions.height}px`,
+                width: `${projectile.structure.dimensions.width}px`,
+            }"
+        ></div>
+        <div
+            id="debug-enemies-hitboxes"
+            v-for="enemy in enemies"
+            v-bind:key="enemy.id"
+            class="absolute border-2 border-red-600"
+            :style="{
+                visibility: `${enemy.states.isSpawned && isHitboxesShown ? 'visible' : 'hidden'}`,
                 top: `${enemy.position.Y}%`,
                 left: `${enemy.position.X}%`,
                 height: `${enemy.structure.dimensions.height}px`,
