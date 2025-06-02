@@ -22,5 +22,9 @@ export type Player = {
     states: {
         isSpawned: boolean;
         isShooting: boolean;
+        lastDamageTime: number;
+    };
+    personalAttributes: {
+        HP: number;
     };
 };

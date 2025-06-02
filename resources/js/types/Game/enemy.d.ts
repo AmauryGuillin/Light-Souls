@@ -3,6 +3,7 @@ export type Enemy = {
     personalAttributes: {
         HP: number;
         movementSpeed: number;
+        damage: number;
     };
     structure: {
         dimensions: {

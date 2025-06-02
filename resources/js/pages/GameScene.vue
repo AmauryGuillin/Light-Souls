@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Progress } from '@/components/ui/progress';
 import { Enemy } from '@/types/Game/enemy';
 import { MovementKey } from '@/types/Game/movementKey';
 import { Player } from '@/types/Game/player';
@@ -29,6 +30,10 @@ const player = ref<Player>({
     states: {
         isSpawned: false,
         isShooting: false,
+        lastDamageTime: 0,
+    },
+    personalAttributes: {
+        HP: 100,
     },
 } as Player);
 
@@ -82,8 +87,22 @@ function gameLoop() {
             Math.round(enemy.position.X) === Math.round(player.value.position.X) &&
             Math.round(enemy.position.Y) === Math.round(player.value.position.Y)
         ) {
-            console.log('you lost');
-            player.value.states.isSpawned = false;
+            const now = performance.now();
+            const timeSinceLastHit = now - player.value.states.lastDamageTime;
+            const damageCoolDown = 500; // ms
+
+            if (timeSinceLastHit > damageCoolDown && player.value.personalAttributes.HP > 0) {
+                player.value.personalAttributes.HP -= enemy.personalAttributes.damage;
+                player.value.states.lastDamageTime = now;
+
+                console.log('Le joueur a pris un dégât ! HP:', player.value.personalAttributes.HP);
+
+                if (player.value.personalAttributes.HP <= 0) {
+                    player.value.states.isSpawned = false;
+                    console.log('Le joueur est DEAD');
+                    return;
+                }
+            }
         }
     });
 
@@ -180,6 +199,7 @@ function spawnEnemy() {
         personalAttributes: {
             HP: 100,
             movementSpeed: 0.05,
+            damage: 1,
         },
         structure: {
             dimensions: {
@@ -252,6 +272,8 @@ onUnmounted(() => {
             </button>
         </div>
 
+        <Progress class="absolute top-[3%] left-[40%] w-96" :model-value="player.personalAttributes.HP" />
+        <div class="absolute top-[5%] left-[40%]">{{ player.personalAttributes.HP }} HP</div>
         <div
             v-if="player.states.isSpawned"
             id="player"
