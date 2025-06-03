@@ -4,11 +4,15 @@ import { Enemy } from '@/types/Game/enemy';
 import { MovementKey } from '@/types/Game/movementKey';
 import { Player } from '@/types/Game/player';
 import { Projectile } from '@/types/Game/projectile';
-import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
+const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
-
+const projectiles = ref<Projectile[]>([]);
+const enemies = ref<Enemy[]>([]);
+let fireInterval: ReturnType<typeof setInterval> | null = null;
+let animationFrameId: number;
 const player = ref<Player>({
     name: '',
     actions: {
@@ -37,13 +41,20 @@ const player = ref<Player>({
     },
     personalAttributes: {
         HP: 100,
+        fireRate: 1000, //ms
     },
 } as Player);
 
-const projectiles = ref<Projectile[]>([]);
-const enemies = ref<Enemy[]>([]);
-
-let animationFrameId: number;
+watch(
+    () => player.value.states.isSpawned,
+    (newVal) => {
+        if (newVal) {
+            startFiring();
+        } else {
+            stopFiring();
+        }
+    },
+);
 
 function gameLoop() {
     if (isGamePaused.value) return;
@@ -106,11 +117,8 @@ function gameLoop() {
                     ).length;
                 player.value.states.lastDamageTime = now;
 
-                console.log('Le joueur a pris un dégât ! HP:', player.value.personalAttributes.HP);
-
                 if (player.value.personalAttributes.HP <= 0) {
                     player.value.states.isSpawned = false;
-                    console.log('Le joueur est DEAD, le gros naze');
                     return;
                 }
             }
@@ -118,6 +126,25 @@ function gameLoop() {
     });
 
     animationFrameId = requestAnimationFrame(gameLoop);
+}
+
+function startFiring() {
+    if (fireInterval || !player.value.states.isSpawned) return;
+
+    fireInterval = setInterval(() => {
+        if (!player.value.states.isSpawned) {
+            stopFiring(); // sécurité
+            return;
+        }
+        playerStartShooting();
+    }, player.value.personalAttributes.fireRate);
+}
+
+function stopFiring() {
+    if (fireInterval) {
+        clearInterval(fireInterval);
+        fireInterval = null;
+    }
 }
 
 function spawnPlayer() {
@@ -129,7 +156,7 @@ function spawnPlayer() {
 
 function playerStartShooting() {
     if (!player.value.states.isSpawned || isGamePaused.value) return;
-    const projectile = reactive<Projectile>({
+    const projectile = markRaw<Projectile>({
         id: crypto.randomUUID(),
         structure: {
             dimensions: { height: 10, width: 10 },
@@ -152,7 +179,6 @@ function playerStartShooting() {
 
     projectiles.value.push(projectile);
     projectileMovement(projectile);
-    //projectileHit(projectile);
 }
 
 function projectileMovement(projectile: Projectile) {
@@ -167,7 +193,6 @@ function projectileMovement(projectile: Projectile) {
             return;
         }
 
-        // Mouvement
         projectile.position.X += projectile.speed;
         projectile.position.X = clamp(projectile.position.X, 0, 99);
         if (projectile.position.X >= 99) {
@@ -190,48 +215,40 @@ function projectileMovement(projectile: Projectile) {
 }
 
 function projectileHit(projectile: Projectile) {
-    enemies.value.forEach((enemy: Enemy) => {
-        const pX = projectile.position.X;
-        const pY = projectile.position.Y;
-        const pW = projectile.hitBox.width;
-        const pH = projectile.hitBox.height;
+    if (!sceneRef.value) return;
 
-        const eX = enemy.position.X + enemy.hitBox!.offsetX;
-        const eY = enemy.position.Y + enemy.hitBox!.offsetY;
+    const sceneWidth = sceneRef.value.offsetWidth;
+    const sceneHeight = sceneRef.value.offsetHeight;
+
+    const pXpx = (projectile.position.X / 100) * sceneWidth;
+    const pYpx = (projectile.position.Y / 100) * sceneHeight;
+    const pW = projectile.hitBox.width;
+    const pH = projectile.hitBox.height;
+
+    enemies.value.forEach((enemy: Enemy) => {
+        const eXpx = ((enemy.position.X + enemy.hitBox!.offsetX) / 100) * sceneWidth;
+        const eYpx = ((enemy.position.Y + enemy.hitBox!.offsetY) / 100) * sceneHeight;
         const eW = enemy.hitBox!.width;
         const eH = enemy.hitBox!.height;
 
-        const isColliding = pX <= eX + eW && pX + pW >= eX && pY <= eY + eH && pY + pH >= eY;
-
-        console.log(
-            'calcul',
-            pX + ' <= ' + eX + eW + ' && ' + pX + pW + ' >= ' + eX + ' && ' + pY + ' <= ' + eY + eH + ' && ' + pY + pH + ' >= ' + eY,
-        );
-        console.log('calcul bool', pX <= eX + eW, '&&', pX + pW >= eX, '&&', pY <= eY + eH, '&&', pY + pH >= eY);
-
-        /*
-            calcul
-            20.55 <= 2050 OK
-            && 20.551 >= 20 OK
-            && 79.25 <= 7350 OK
-            && 79.251 >= 73 OK
-        */
+        const isColliding = pXpx < eXpx + eW && pXpx + pW > eXpx && pYpx < eYpx + eH && pYpx + pH > eYpx;
 
         if (isColliding) {
-            console.log(enemy.id, 'hit');
             enemy.states.isSpawned = false;
             enemy.states.canKill = false;
             enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
+            projectile.states.isSpawned = false;
+            projectiles.value = projectiles.value.filter((p) => p.id != projectile.id);
         }
     });
 }
 
 function spawnEnemy() {
-    const enemy = reactive<Enemy>({
+    const enemy = markRaw<Enemy>({
         id: crypto.randomUUID(),
         personalAttributes: {
             HP: 100,
-            movementSpeed: 0.05, //0.05
+            movementSpeed: 0.05,
             damage: 1,
         },
         structure: {
@@ -246,8 +263,8 @@ function spawnEnemy() {
             canKill: true,
         },
         position: {
-            X: Math.floor(Math.random() * 97), //80
-            Y: Math.floor(Math.random() * 94), //80
+            X: Math.floor(Math.random() * 97),
+            Y: Math.floor(Math.random() * 94),
         },
         hitBox: {
             offsetX: 0,
@@ -291,12 +308,10 @@ function pauseGame(e: KeyboardEvent) {
     const key = e.key;
     if (key === 'Escape') {
         if (isGamePaused.value) {
-            console.log('Game start');
             isGamePaused.value = false;
             animationFrameId = requestAnimationFrame(gameLoop);
             return;
         }
-        console.log('Game paused');
         isGamePaused.value = true;
     }
 }
@@ -316,7 +331,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div id="scene" class="relative flex h-screen flex-col items-center justify-center bg-gray-900">
+    <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col items-center justify-center bg-gray-900">
         <div class="absolute top-1 left-[82%] z-50 flex">
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
                 Hitboxes
@@ -401,8 +416,8 @@ onUnmounted(() => {
             class="absolute border-2 border-red-600"
             :style="{
                 visibility: `${enemy.states.isSpawned && isHitboxesShown ? 'visible' : 'hidden'}`,
-                top: `${enemy.position.Y}%`,
-                left: `${enemy.position.X}%`,
+                top: `${enemy.position.Y + enemy.hitBox!.offsetY}%`,
+                left: `${enemy.position.X + enemy.hitBox!.offsetX}%`,
                 height: `${enemy.structure.dimensions.height}px`,
                 width: `${enemy.structure.dimensions.width}px`,
             }"

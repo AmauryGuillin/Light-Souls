@@ -26,5 +26,6 @@ export type Player = {
     };
     personalAttributes: {
         HP: number;
+        fireRate: number;
     };
 };
