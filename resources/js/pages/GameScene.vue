@@ -12,6 +12,7 @@ const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<Projectile[]>([]);
 const enemies = ref<Enemy[]>([]);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
+let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
 let animationFrameId: number;
 const player = ref<Player>({
     name: '',
@@ -50,14 +51,16 @@ watch(
     (newVal) => {
         if (newVal) {
             startFiring();
+            startEnemiSpawn();
         } else {
             stopFiring();
+            stopEnemySpawn();
         }
     },
 );
 
 function gameLoop() {
-    if (isGamePaused.value) return;
+    if (isGamePaused.value || player.value.personalAttributes.HP <= 0) return;
 
     if (player.value.states.isSpawned) {
         const keys = player.value.actions.movement.keys;
@@ -140,10 +143,29 @@ function startFiring() {
     }, player.value.personalAttributes.fireRate);
 }
 
+function startEnemiSpawn() {
+    if (enemySpawnInterval || !player.value.states.isSpawned) return;
+
+    enemySpawnInterval = setInterval(() => {
+        if (!player.value.states.isSpawned) {
+            stopEnemySpawn();
+            return;
+        }
+        spawnEnemy();
+    }, 1250);
+}
+
 function stopFiring() {
     if (fireInterval) {
         clearInterval(fireInterval);
         fireInterval = null;
+    }
+}
+
+function stopEnemySpawn() {
+    if (enemySpawnInterval) {
+        clearInterval(enemySpawnInterval);
+        enemySpawnInterval = null;
     }
 }
 
@@ -200,14 +222,14 @@ function projectileMovement(projectile: Projectile) {
             return;
         }
 
-        if (isGamePaused.value) {
+        if (isGamePaused.value || player.value.personalAttributes.HP > 0) {
             return;
         }
 
         requestAnimationFrame(animateProjectile);
     }
 
-    if (isGamePaused.value) {
+    if (isGamePaused.value || player.value.personalAttributes.HP > 0) {
         return;
     }
 
@@ -249,7 +271,7 @@ function spawnEnemy() {
         personalAttributes: {
             HP: 100,
             movementSpeed: 0.05,
-            damage: 1,
+            damage: 10,
         },
         structure: {
             dimensions: {
@@ -347,6 +369,7 @@ onUnmounted(() => {
             </button>
         </div>
         <div v-if="isGamePaused" class="z-50 bg-white text-7xl font-bold text-black">GAME PAUSED</div>
+        <div v-if="player.personalAttributes.HP < 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
         <Progress class="absolute top-[3%] left-[40%] z-50 w-96" :model-value="player.personalAttributes.HP" />
         <div class="absolute top-[5%] left-[40%] z-50">{{ player.personalAttributes.HP }} HP</div>
