@@ -62,6 +62,16 @@ watch(
 function gameLoop() {
     if (isGamePaused.value || player.value.personalAttributes.HP <= 0) return;
 
+    handlePlayerMovementAnimation();
+
+    handleProjectilesMovementAnimations();
+
+    handleEnemiesMovementAnimations();
+
+    animationFrameId = requestAnimationFrame(gameLoop);
+}
+
+function handlePlayerMovementAnimation() {
     if (player.value.states.isSpawned) {
         const keys = player.value.actions.movement.keys;
         const speed = player.value.actions.movement.speed;
@@ -74,7 +84,9 @@ function gameLoop() {
 
     player.value.position.X = clamp(player.value.position.X, 0, 97);
     player.value.position.Y = clamp(player.value.position.Y, 0, 94);
+}
 
+function handleProjectilesMovementAnimations() {
     projectiles.value.forEach((projectile) => {
         if (!projectile.states.isSpawned) return;
 
@@ -90,7 +102,9 @@ function gameLoop() {
     });
 
     projectiles.value = projectiles.value.filter((p) => p.states.isSpawned);
+}
 
+function handleEnemiesMovementAnimations() {
     enemies.value.forEach((enemy) => {
         if (!enemy.states.isSpawned) return;
 
@@ -127,8 +141,6 @@ function gameLoop() {
             }
         }
     });
-
-    animationFrameId = requestAnimationFrame(gameLoop);
 }
 
 function startFiring() {
@@ -266,6 +278,7 @@ function projectileHit(projectile: Projectile) {
 }
 
 function spawnEnemy() {
+    if (isGamePaused.value) return;
     const enemy = markRaw<Enemy>({
         id: crypto.randomUUID(),
         personalAttributes: {
@@ -369,7 +382,7 @@ onUnmounted(() => {
             </button>
         </div>
         <div v-if="isGamePaused" class="z-50 bg-white text-7xl font-bold text-black">GAME PAUSED</div>
-        <div v-if="player.personalAttributes.HP < 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
+        <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
         <Progress class="absolute top-[3%] left-[40%] z-50 w-96" :model-value="player.personalAttributes.HP" />
         <div class="absolute top-[5%] left-[40%] z-50">{{ player.personalAttributes.HP }} HP</div>
