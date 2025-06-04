@@ -6,15 +6,18 @@ import { Switch } from '@/components/ui/switch';
 import { Enemy } from '@/types/Game/enemy';
 import { MovementKey } from '@/types/Game/movementKey';
 import { Player } from '@/types/Game/player';
+import { PowerUp } from '@/types/Game/powerup';
 import { Projectile } from '@/types/Game/projectile';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
 const isGameDevModeEnabled = ref<boolean>(true);
+const isEnemiesEnabled = ref<boolean>(true);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<Projectile[]>([]);
 const enemies = ref<Enemy[]>([]);
+const playerBonus = ref<PowerUp | null>(null);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
 let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
 let animationFrameId: number;
@@ -64,6 +67,16 @@ watch(
     },
 );
 
+watch(
+    () => player.value.personalAttributes.fireRate,
+    () => {
+        if (fireInterval) {
+            stopFiring();
+            startFiring();
+        }
+    },
+);
+
 /**
  * Handle most animations required for the game
  * @beta
@@ -99,6 +112,8 @@ function handlePlayerMovementAnimation() {
 
     player.value.position.X = clamp(player.value.position.X, 0, 97);
     player.value.position.Y = clamp(player.value.position.Y, 0, 94);
+
+    playerBonusHit();
 }
 
 /**
@@ -190,7 +205,6 @@ function startEnemiSpawn() {
     if (enemySpawnInterval || !player.value.states.isSpawned) return;
 
     const spawningRate = 1225 - player.value.personalAttributes.score / 20;
-    console.log(spawningRate);
 
     enemySpawnInterval = setInterval(() => {
         if (!player.value.states.isSpawned) {
@@ -340,6 +354,7 @@ function projectileHit(projectile: Projectile) {
  */
 function spawnEnemy() {
     if (isGamePaused.value) return;
+    if (!isEnemiesEnabled.value) return;
     const enemy = markRaw<Enemy>({
         id: crypto.randomUUID(),
         personalAttributes: {
@@ -371,6 +386,70 @@ function spawnEnemy() {
     });
 
     enemies.value.push(enemy);
+}
+
+/**
+ * Make a bonus spawn into the scene
+ * @Beta
+ */
+function spawnPlayerBonus() {
+    if (isGamePaused.value) return;
+    const bonus = {
+        name: 'Better fire rate',
+        bonusType: 'projectile',
+        aquired: false,
+        boost: {
+            fireRate: 0.5,
+        },
+        position: {
+            X: 80,
+            Y: 80,
+        },
+        structure: {
+            dimensions: {
+                width: 20,
+                height: 30,
+            },
+        },
+        states: {
+            isSpawned: true,
+        },
+    } as PowerUp;
+
+    playerBonus.value = bonus;
+}
+
+/**
+ * Handle player bonus hitbox
+ * @beta
+ */
+function playerBonusHit() {
+    if (!sceneRef.value) return;
+    if (playerBonus.value === null) return;
+
+    const sceneWidth = sceneRef.value.offsetWidth;
+    const sceneHeight = sceneRef.value.offsetHeight;
+
+    const playerBonusXpx = (playerBonus.value?.position.X / 100) * sceneWidth;
+    const playerBonusYpx = (playerBonus.value?.position.Y / 100) * sceneHeight;
+    const playerBonusW = playerBonus.value?.structure.dimensions.width;
+    const playerBonusH = playerBonus.value?.structure.dimensions.width;
+
+    const pXpx = (player.value.position.X / 100) * sceneWidth;
+    const pYpx = (player.value.position.Y / 100) * sceneHeight;
+    const pW = player.value.dimensions.width;
+    const pH = player.value.dimensions.height;
+
+    const isColliding =
+        playerBonusXpx < pXpx + pW && playerBonusXpx + playerBonusH > pXpx && playerBonusYpx < pYpx + pH && playerBonusYpx + playerBonusW > pYpx;
+
+    if (isColliding) {
+        playerBonus.value.states.isSpawned = false;
+        if (playerBonus.value.boost?.fireRate && player.value.personalAttributes.fireRate >= 250)
+            player.value.personalAttributes.fireRate *= playerBonus.value.boost?.fireRate;
+        playerBonus.value = null;
+        return;
+    }
 }
 
 /**
@@ -471,6 +550,9 @@ onUnmounted(() => {
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnEnemy">
                 spawn enemy
             </button>
+            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnPlayerBonus">
+                spawn bonus
+            </button>
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="playerStartShooting">
                 Shoot!
             </button>
@@ -485,6 +567,10 @@ onUnmounted(() => {
                         <div class="flex items-center gap-2">
                             <Label>Enable Game Dev mode</Label>
                             <Switch v-model="isGameDevModeEnabled"></Switch>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <Label>Enable Enemies</Label>
+                            <Switch v-model="isEnemiesEnabled"></Switch>
                         </div>
                     </DialogDescription>
                 </DialogHeader>
@@ -501,7 +587,7 @@ onUnmounted(() => {
         <div
             v-if="player.states.isSpawned"
             id="player"
-            class="absolute rounded-full bg-blue-300"
+            class="absolute z-40 rounded-full bg-blue-300"
             :style="{
                 top: `${player.position.Y}%`,
                 left: `${player.position.X}%`,
@@ -531,6 +617,30 @@ onUnmounted(() => {
                 left: `${enemy.position.X}%`,
                 height: `${enemy.structure.dimensions.height}px`,
                 width: `${enemy.structure.dimensions.width}px`,
+            }"
+        ></div>
+        <div
+            v-if="playerBonus !== null"
+            class="absolute z-30 animate-pulse text-green-500"
+            :style="{
+                visibility: `${playerBonus.states.isSpawned ? 'visible' : 'hidden'}`,
+                top: `${playerBonus.position.Y - 2}%`,
+                left: `${playerBonus.position.X - 1.6}%`,
+                height: `${playerBonus.structure.dimensions.height}px`,
+                width: `${playerBonus.structure.dimensions.width + 100}px`,
+            }"
+        >
+            {{ playerBonus.name }}
+        </div>
+        <div
+            v-if="playerBonus !== null"
+            class="absolute z-30 animate-pulse bg-green-500"
+            :style="{
+                visibility: `${playerBonus.states.isSpawned ? 'visible' : 'hidden'}`,
+                top: `${playerBonus.position.Y}%`,
+                left: `${playerBonus.position.X}%`,
+                height: `${playerBonus.structure.dimensions.height}px`,
+                width: `${playerBonus.structure.dimensions.width}px`,
             }"
         ></div>
         <div
