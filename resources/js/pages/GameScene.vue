@@ -496,7 +496,7 @@ onUnmounted(() => {
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
         <HealthBar class="absolute top-[3%] left-[40%] z-50 w-96 bg-black" :model-value="player.personalAttributes.HP" />
-        <div class="absolute top-[5%] left-[40%] z-50 text-red-500">{{ player.personalAttributes.HP }} HP</div>
+        <div v-if="isGameDevModeEnabled" class="absolute top-[5%] left-[40%] z-50 text-red-500">{{ player.personalAttributes.HP }} HP</div>
         <div class="absolute top-[5%] left-[55%] z-50 text-red-500">Points: {{ player.personalAttributes.score }}</div>
         <div
             v-if="player.states.isSpawned"
