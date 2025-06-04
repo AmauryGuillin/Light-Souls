@@ -47,6 +47,7 @@ const player = ref<Player>({
     personalAttributes: {
         HP: 100,
         fireRate: 1000, //ms
+        score: 0,
     },
 } as Player);
 
@@ -188,13 +189,16 @@ function startFiring() {
 function startEnemiSpawn() {
     if (enemySpawnInterval || !player.value.states.isSpawned) return;
 
+    const spawningRate = 1225 - player.value.personalAttributes.score / 20;
+    console.log(spawningRate);
+
     enemySpawnInterval = setInterval(() => {
         if (!player.value.states.isSpawned) {
             stopEnemySpawn();
             return;
         }
         spawnEnemy();
-    }, 1250);
+    }, spawningRate);
 }
 
 /**
@@ -251,7 +255,7 @@ function playerStartShooting() {
             X: player.value.position.X + 2,
             Y: player.value.position.Y + 2,
         },
-        speed: 0.5,
+        speed: 0.05,
         hitBox: {
             height: 1,
             width: 1,
@@ -320,6 +324,7 @@ function projectileHit(projectile: Projectile) {
         const isColliding = pXpx < eXpx + eW && pXpx + pW > eXpx && pYpx < eYpx + eH && pYpx + pH > eYpx;
 
         if (isColliding) {
+            player.value.personalAttributes.score++;
             enemy.states.isSpawned = false;
             enemy.states.canKill = false;
             enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
@@ -492,6 +497,7 @@ onUnmounted(() => {
 
         <HealthBar class="absolute top-[3%] left-[40%] z-50 w-96 bg-black" :model-value="player.personalAttributes.HP" />
         <div class="absolute top-[5%] left-[40%] z-50 text-red-500">{{ player.personalAttributes.HP }} HP</div>
+        <div class="absolute top-[5%] left-[55%] z-50 text-red-500">Points: {{ player.personalAttributes.score }}</div>
         <div
             v-if="player.states.isSpawned"
             id="player"
