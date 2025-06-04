@@ -3,11 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { HealthBar } from '@/components/ui/progress-health-bar';
 import { Switch } from '@/components/ui/switch';
-import { Enemy } from '@/types/Game/enemy';
-import { MovementKey } from '@/types/Game/movementKey';
-import { Player } from '@/types/Game/player';
-import { PowerUp } from '@/types/Game/powerup';
-import { Projectile } from '@/types/Game/projectile';
+import { Enemy } from '@/types/game/enemy';
+import { MovementKey } from '@/types/game/movementKey';
+import { Player } from '@/types/game/player';
+import { PowerUp } from '@/types/game/powerup';
+import { Projectile } from '@/types/game/projectile';
+import { randomPositionX, randomPositionY } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
@@ -374,8 +375,8 @@ function spawnEnemy() {
             canKill: true,
         },
         position: {
-            X: Math.floor(Math.random() * 97),
-            Y: Math.floor(Math.random() * 94),
+            X: randomPositionX(),
+            Y: randomPositionY(),
         },
         hitBox: {
             offsetX: 0,
@@ -402,8 +403,8 @@ function spawnPlayerBonus() {
             fireRate: 0.5,
         },
         position: {
-            X: 80,
-            Y: 80,
+            X: randomPositionX(),
+            Y: randomPositionY(),
         },
         structure: {
             dimensions: {
