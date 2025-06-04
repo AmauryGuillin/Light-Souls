@@ -11,7 +11,7 @@ import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
-const isGameDevModeEnabled = ref<boolean>(false);
+const isGameDevModeEnabled = ref<boolean>(true);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<Projectile[]>([]);
 const enemies = ref<Enemy[]>([]);
