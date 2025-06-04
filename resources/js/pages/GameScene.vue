@@ -488,6 +488,11 @@ function movementKeyUp(e: KeyboardEvent) {
     }
 }
 
+/**
+ * For development purpose only
+ * @Remark
+ * **Meant to be deleted**
+ */
 function showHitboxes() {
     if (!isHitboxesShown.value) {
         isHitboxesShown.value = true;
@@ -569,7 +574,7 @@ onUnmounted(() => {
                             <Label>Enable Game Dev mode</Label>
                             <Switch v-model="isGameDevModeEnabled"></Switch>
                         </div>
-                        <div class="flex items-center gap-2">
+                        <div v-if="isGameDevModeEnabled" class="flex items-center gap-2">
                             <Label>Enable Enemies</Label>
                             <Switch v-model="isEnemiesEnabled"></Switch>
                         </div>
