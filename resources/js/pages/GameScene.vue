@@ -59,6 +59,10 @@ watch(
     },
 );
 
+/**
+ * Handle most animations required for the game
+ * @beta
+ */
 function gameLoop() {
     if (isGamePaused.value || player.value.personalAttributes.HP <= 0) return;
 
@@ -71,6 +75,12 @@ function gameLoop() {
     animationFrameId = requestAnimationFrame(gameLoop);
 }
 
+/**
+ * Handle player movement
+ * @remark
+ * use the **MovementKey** type
+ * @beta
+ */
 function handlePlayerMovementAnimation() {
     if (player.value.states.isSpawned) {
         const keys = player.value.actions.movement.keys;
@@ -86,6 +96,10 @@ function handlePlayerMovementAnimation() {
     player.value.position.Y = clamp(player.value.position.Y, 0, 94);
 }
 
+/**
+ * Handle player's projectiles animations
+ * @beta
+ */
 function handleProjectilesMovementAnimations() {
     projectiles.value.forEach((projectile) => {
         if (!projectile.states.isSpawned) return;
@@ -104,6 +118,10 @@ function handleProjectilesMovementAnimations() {
     projectiles.value = projectiles.value.filter((p) => p.states.isSpawned);
 }
 
+/**
+ * Handle enemies movement animations
+ * @beta
+ */
 function handleEnemiesMovementAnimations() {
     enemies.value.forEach((enemy) => {
         if (!enemy.states.isSpawned) return;
@@ -143,6 +161,10 @@ function handleEnemiesMovementAnimations() {
     });
 }
 
+/**
+ * Initiate player's projectile shooting loop
+ * @beta
+ */
 function startFiring() {
     if (fireInterval || !player.value.states.isSpawned) return;
 
@@ -155,6 +177,10 @@ function startFiring() {
     }, player.value.personalAttributes.fireRate);
 }
 
+/**
+ * Initiate enemies spawning loop
+ * @beta
+ */
 function startEnemiSpawn() {
     if (enemySpawnInterval || !player.value.states.isSpawned) return;
 
@@ -167,6 +193,10 @@ function startEnemiSpawn() {
     }, 1250);
 }
 
+/**
+ * Stop player's projectile shooting loop
+ * @beta
+ */
 function stopFiring() {
     if (fireInterval) {
         clearInterval(fireInterval);
@@ -174,6 +204,10 @@ function stopFiring() {
     }
 }
 
+/**
+ * Stop enemies spawning loop
+ * @beta
+ */
 function stopEnemySpawn() {
     if (enemySpawnInterval) {
         clearInterval(enemySpawnInterval);
@@ -181,6 +215,10 @@ function stopEnemySpawn() {
     }
 }
 
+/**
+ * Make the player spawn into the scene
+ * @beta
+ */
 function spawnPlayer() {
     player.value.position.X = 50;
     player.value.position.Y = 50;
@@ -188,6 +226,11 @@ function spawnPlayer() {
     player.value.states.isSpawned = true;
 }
 
+/**
+ * Construct an iteration of a player's projectile
+ * Initiate the projectiles movement loop animation
+ * @beta
+ */
 function playerStartShooting() {
     if (!player.value.states.isSpawned || isGamePaused.value) return;
     const projectile = markRaw<Projectile>({
@@ -215,6 +258,11 @@ function playerStartShooting() {
     projectileMovement(projectile);
 }
 
+/**
+ * Handle each player's projectile movement animation
+ * @param projectile The player's projectile created in the **playerStartShooting()** function
+ * @beta
+ */
 function projectileMovement(projectile: Projectile) {
     const start = performance.now();
 
@@ -234,20 +282,20 @@ function projectileMovement(projectile: Projectile) {
             return;
         }
 
-        if (isGamePaused.value || player.value.personalAttributes.HP > 0) {
-            return;
-        }
+        if (isGamePaused.value || player.value.personalAttributes.HP > 0) return;
 
         requestAnimationFrame(animateProjectile);
     }
 
-    if (isGamePaused.value || player.value.personalAttributes.HP > 0) {
-        return;
-    }
+    if (isGamePaused.value || player.value.personalAttributes.HP > 0) return;
 
     requestAnimationFrame(animateProjectile);
 }
 
+/**
+ * Handle player's projectiles hitboxes
+ * @param projectile The player's projectile created in the **playerStartShooting()** function
+ */
 function projectileHit(projectile: Projectile) {
     if (!sceneRef.value) return;
 
@@ -277,6 +325,10 @@ function projectileHit(projectile: Projectile) {
     });
 }
 
+/**
+ * Make an enemy spawn into the scene
+ * @beta
+ */
 function spawnEnemy() {
     if (isGamePaused.value) return;
     const enemy = markRaw<Enemy>({
@@ -312,10 +364,21 @@ function spawnEnemy() {
     enemies.value.push(enemy);
 }
 
+/**
+ * Prevent an entity to move out of a certain perimeter
+ * @param val The entity position on the scene (X or Y axis)
+ * @param min The minimum value in % (0 recommended)
+ * @param max The maximum value in % (value < 100 recommended)
+ */
 function clamp(val: number, min: number, max: number) {
     return Math.max(min, Math.min(max, val));
 }
-
+/**
+ * Handle keyboard events in order to begin player's actions in the scene
+ * @param e The keyboard event to track.
+ * @remark
+ * Keyboard action **KeyDown**
+ */
 function movementKeyDown(e: KeyboardEvent) {
     const key = e.key.toLowerCase();
     if (key in player.value.actions.movement.keys) {
@@ -323,6 +386,12 @@ function movementKeyDown(e: KeyboardEvent) {
     }
 }
 
+/**
+ * Handle keyboard events in order to begin player's actions in the scene
+ * @param e The keyboard event to track.
+ * @remark
+ * Keyboard action **KeyUp**
+ */
 function movementKeyUp(e: KeyboardEvent) {
     const key = e.key.toLowerCase();
     if (key in player.value.actions.movement.keys) {
@@ -339,6 +408,13 @@ function showHitboxes() {
     isHitboxesShown.value = false;
 }
 
+/**
+ * Toggles the game's pause mode.
+ * Handles keyboard events to start player actions in the scene.
+ * @param e - The keyboard event to track.
+ * @remark
+ * Activated on **KeyDown** of the "Escape" key to pause or resume the game.
+ */
 function pauseGame(e: KeyboardEvent) {
     const key = e.key;
     if (key === 'Escape') {
