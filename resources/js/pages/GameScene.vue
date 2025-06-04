@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { HealthBar } from '@/components/ui/progress-health-bar';
+import { Switch } from '@/components/ui/switch';
 import { Enemy } from '@/types/Game/enemy';
 import { MovementKey } from '@/types/Game/movementKey';
 import { Player } from '@/types/Game/player';
@@ -8,6 +11,7 @@ import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
+const isGameDevModeEnabled = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<Projectile[]>([]);
 const enemies = ref<Enemy[]>([]);
@@ -415,9 +419,18 @@ function showHitboxes() {
  * @remark
  * Activated on **KeyDown** of the "Escape" key to pause or resume the game.
  */
-function pauseGame(e: KeyboardEvent) {
-    const key = e.key;
-    if (key === 'Escape') {
+function pauseGame(e?: KeyboardEvent) {
+    const key = e?.key;
+    if (key !== undefined && key === 'Escape') {
+        if (isGamePaused.value) {
+            isGamePaused.value = false;
+            animationFrameId = requestAnimationFrame(gameLoop);
+            return;
+        }
+        isGamePaused.value = true;
+    }
+
+    if (key === undefined) {
         if (isGamePaused.value) {
             isGamePaused.value = false;
             animationFrameId = requestAnimationFrame(gameLoop);
@@ -443,7 +456,7 @@ onUnmounted(() => {
 
 <template>
     <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col items-center justify-center bg-gray-900">
-        <div class="absolute top-1 left-[82%] z-50 flex">
+        <div v-if="isGameDevModeEnabled" class="absolute top-1 left-[82%] z-50 flex">
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
                 Hitboxes
             </button>
@@ -457,11 +470,28 @@ onUnmounted(() => {
                 Shoot!
             </button>
         </div>
-        <div v-if="isGamePaused" class="z-50 bg-white text-7xl font-bold text-black">GAME PAUSED</div>
+        <Dialog :open="isGamePaused">
+            <DialogContent>
+                <DialogHeader class="gap-10">
+                    <DialogTitle>
+                        <div class="flex items-center justify-center text-4xl">GAME PAUSED</div>
+                    </DialogTitle>
+                    <DialogDescription class="h-80">
+                        <div class="flex items-center gap-2">
+                            <Label>Enable Game Dev mode</Label>
+                            <Switch v-model="isGameDevModeEnabled"></Switch>
+                        </div>
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button type="button" class="cursor-pointer" @click="pauseGame()">Resume</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
-        <Progress class="absolute top-[3%] left-[40%] z-50 w-96" :model-value="player.personalAttributes.HP" />
-        <div class="absolute top-[5%] left-[40%] z-50">{{ player.personalAttributes.HP }} HP</div>
+        <HealthBar class="absolute top-[3%] left-[40%] z-50 w-96 bg-black" :model-value="player.personalAttributes.HP" />
+        <div class="absolute top-[5%] left-[40%] z-50 text-red-500">{{ player.personalAttributes.HP }} HP</div>
         <div
             v-if="player.states.isSpawned"
             id="player"
