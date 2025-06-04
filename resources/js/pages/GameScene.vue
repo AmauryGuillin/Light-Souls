@@ -251,7 +251,7 @@ function playerStartShooting() {
             X: player.value.position.X + 2,
             Y: player.value.position.Y + 2,
         },
-        speed: 0.05,
+        speed: 0.5,
         hitBox: {
             height: 1,
             width: 1,
