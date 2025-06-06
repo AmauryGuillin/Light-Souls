@@ -15,6 +15,7 @@ const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
 const isGameDevModeEnabled = ref<boolean>(true);
 const isEnemiesEnabled = ref<boolean>(true);
+const isPlayerProjectilesEnabled = ref<boolean>(true);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<Projectile[]>([]);
 const enemies = ref<Enemy[]>([]);
@@ -256,6 +257,7 @@ function spawnPlayer() {
  */
 function playerStartShooting() {
     if (!player.value.states.isSpawned || isGamePaused.value) return;
+    if (!isPlayerProjectilesEnabled.value) return;
     const projectile = markRaw<Projectile>({
         id: crypto.randomUUID(),
         structure: {
@@ -577,6 +579,10 @@ onUnmounted(() => {
                         <div v-if="isGameDevModeEnabled" class="flex items-center gap-2">
                             <Label>Enable Enemies</Label>
                             <Switch v-model="isEnemiesEnabled"></Switch>
+                        </div>
+                        <div v-if="isGameDevModeEnabled" class="flex items-center gap-2">
+                            <Label>Enable player's projectiles</Label>
+                            <Switch v-model="isPlayerProjectilesEnabled"></Switch>
                         </div>
                     </DialogDescription>
                 </DialogHeader>
