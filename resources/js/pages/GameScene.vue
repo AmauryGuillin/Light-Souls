@@ -2,6 +2,7 @@
 import DebbugButtons from '@/components/DebbugButtons.vue';
 import GamePauseDialog from '@/components/GamePauseDialog.vue';
 import Player from '@/components/Player.vue';
+import Projectile from '@/components/Projectile.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExperienceBar } from '@/components/ui/progress-experience-bar';
@@ -10,7 +11,7 @@ import { Enemy } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 import { PowerUp } from '@/types/game/powerup';
-import { Projectile } from '@/types/game/projectile';
+import { ProjectileType } from '@/types/game/projectile';
 import { randomPositionX, randomPositionY } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
@@ -21,7 +22,7 @@ const isEnemiesEnabled = ref<boolean>(false);
 const isPlayerProjectilesEnabled = ref<boolean>(false);
 const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
-const projectiles = ref<Projectile[]>([]);
+const projectiles = ref<ProjectileType[]>([]);
 const enemies = ref<Enemy[]>([]);
 const playerBonus = ref<PowerUp | null>(null);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
@@ -125,8 +126,8 @@ function handlePlayerMovementAnimation() {
         if (keys.d.pressed) player.value.position.X += speed;
     }
 
-    player.value.position.X = clamp(player.value.position.X, 0, 97);
-    player.value.position.Y = clamp(player.value.position.Y, 0, 94);
+    player.value.position.X = clamp(player.value.position.X, 0, 93);
+    player.value.position.Y = clamp(player.value.position.Y, 0, 86);
 
     playerBonusHit();
 }
@@ -271,7 +272,7 @@ function spawnPlayer() {
 function playerStartShooting() {
     if (!player.value.states.isSpawned || isGamePaused.value || isBoostPageOpen.value) return;
     if (!isPlayerProjectilesEnabled.value) return;
-    const projectile = markRaw<Projectile>({
+    const projectile = markRaw<ProjectileType>({
         id: crypto.randomUUID(),
         structure: {
             dimensions: { height: 10, width: 10 },
@@ -309,7 +310,7 @@ function HandlePauseStateWhenBonusPageOpen() {
  * @param projectile The player's projectile created in the **playerStartShooting()** function
  * @beta
  */
-function projectileMovement(projectile: Projectile) {
+function projectileMovement(projectile: ProjectileType) {
     const start = performance.now();
 
     function animateProjectile(now: number) {
@@ -342,7 +343,7 @@ function projectileMovement(projectile: Projectile) {
  * Handle player's projectiles hitboxes
  * @param projectile The player's projectile created in the **playerStartShooting()** function
  */
-function projectileHit(projectile: Projectile) {
+function projectileHit(projectile: ProjectileType) {
     if (!sceneRef.value) return;
 
     const sceneWidth = sceneRef.value.offsetWidth;
@@ -639,18 +640,16 @@ onUnmounted(() => {
             :player-dim-h="player.dimensions.height"
             :player-dim-w="player.dimensions.width"
         />
-        <div
+
+        <Projectile
             v-for="projectile in projectiles"
             v-bind:key="projectile.id"
-            class="absolute rounded-full border-2 border-amber-600 bg-red-600"
-            :style="{
-                visibility: `${projectile.states.isSpawned ? 'visible' : 'hidden'}`,
-                top: `${projectile.position.Y}%`,
-                left: `${projectile.position.X}%`,
-                height: `${projectile.structure.dimensions.height}px`,
-                width: `${projectile.structure.dimensions.width}px`,
-            }"
-        ></div>
+            :projectile-pos-x="projectile.position.X"
+            :projectile-pos-y="projectile.position.Y"
+            :projectile-dim-h="projectile.structure.dimensions.height"
+            :projectile-dim-w="projectile.structure.dimensions.width"
+            :projectile-spawn-state="projectile.states.isSpawned"
+        />
         <div
             v-for="enemy in enemies"
             v-bind:key="enemy.id"

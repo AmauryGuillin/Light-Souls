@@ -1,4 +1,4 @@
-export type Projectile = {
+export type ProjectileType = {
     id: string;
     structure: {
         dimensions: {
