@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DebbugButtons from '@/components/DebbugButtons.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -570,23 +571,14 @@ onUnmounted(() => {
 
 <template>
     <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col bg-[url(/assets/ground/ground.jpg)] bg-auto">
-        <div v-if="isGameDevModeEnabled" class="absolute top-1 left-[82%] z-50 flex">
-            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
-                Hitboxes
-            </button>
-            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnPlayer">
-                spawn player
-            </button>
-            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnEnemy">
-                spawn enemy
-            </button>
-            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-gray-800" @click="spawnPlayerBonus">
-                spawn bonus
-            </button>
-            <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="playerStartShooting">
-                Shoot!
-            </button>
-        </div>
+        <DebbugButtons
+            v-if="isGameDevModeEnabled"
+            @showHitboxes="showHitboxes"
+            @spawnPlayer="spawnPlayer"
+            @spawnEnemy="spawnEnemy"
+            @spawnPlayerBonus="spawnPlayerBonus"
+            @playerStartShooting="playerStartShooting"
+        ></DebbugButtons>
         <div v-if="isBoostPageOpen" class="z-50 w-[50%] rounded-xl border-2 border-white bg-black p-3 shadow-2xl">
             <div class="flex items-center justify-center p-3 text-3xl font-bold text-white">
                 <h1>SELECT AN UPGRADE</h1>
