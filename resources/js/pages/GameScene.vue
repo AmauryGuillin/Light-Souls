@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ExperienceBar } from '@/components/ui/progress-experience-bar';
 import { HealthBar } from '@/components/ui/progress-health-bar';
 import { Switch } from '@/components/ui/switch';
 import { Enemy } from '@/types/game/enemy';
@@ -15,8 +16,8 @@ import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
 const isGameDevModeEnabled = ref<boolean>(true);
-const isEnemiesEnabled = ref<boolean>(true);
-const isPlayerProjectilesEnabled = ref<boolean>(true);
+const isEnemiesEnabled = ref<boolean>(false);
+const isPlayerProjectilesEnabled = ref<boolean>(false);
 const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<Projectile[]>([]);
@@ -39,8 +40,8 @@ const player = ref<Player>({
         },
     },
     dimensions: {
-        height: 50,
-        width: 50,
+        height: 100,
+        width: 100,
     },
     position: {
         X: 50,
@@ -52,7 +53,7 @@ const player = ref<Player>({
         lastDamageTime: 0,
     },
     personalAttributes: {
-        HP: 100,
+        HP: 99999,
         fireRate: 1000, //ms
         score: 0,
     },
@@ -568,7 +569,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col items-center justify-center bg-[url(/assets/ground/ground.jpg)] bg-auto">
+    <div
+        ref="sceneRef"
+        id="scene"
+        class="relative flex h-screen flex-col bg-white bg-[url(/assets/ground/ground.jpg)] bg-auto"
+        :style="{ backgroundImage: 'none' }"
+    >
         <div v-if="isGameDevModeEnabled" class="absolute top-1 left-[82%] z-50 flex">
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
                 Hitboxes
@@ -648,20 +654,34 @@ onUnmounted(() => {
         </Dialog>
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
-        <HealthBar class="absolute top-[3%] left-[40%] z-50 w-96 bg-black" :model-value="player.personalAttributes.HP" />
-        <div v-if="isGameDevModeEnabled" class="absolute top-[5%] left-[40%] z-50 text-red-500">{{ player.personalAttributes.HP }} HP</div>
-        <div class="absolute top-[5%] left-[55%] z-50 text-red-500">Points: {{ player.personalAttributes.score }}</div>
+        <div class="mt-5 ml-5 flex flex-col gap-2">
+            <HealthBar class="z-50 h-3 w-96 bg-white" :model-value="player.personalAttributes.HP" />
+            <ExperienceBar class="z-50 w-96 bg-white" :model-value="80" />
+            <div v-if="isGameDevModeEnabled" class="az-50 font-bold text-red-500">{{ player.personalAttributes.HP }} HP</div>
+            <div class="z-50 font-bold text-red-500">Score: {{ player.personalAttributes.score }}</div>
+        </div>
+
         <div
             v-if="player.states.isSpawned"
             id="player"
-            class="absolute z-40 rounded-full bg-blue-300"
+            class="absolute z-40 rounded-full border-2 border-green-500"
             :style="{
                 top: `${player.position.Y}%`,
                 left: `${player.position.X}%`,
                 height: `${player.dimensions.height}px`,
                 width: `${player.dimensions.width}px`,
             }"
-        ></div>
+        >
+            <img
+                class="border-2 border-red-500"
+                src="assets/player/player-idle.gif"
+                alt=""
+                :style="{
+                    height: `${player.dimensions.height}px`,
+                    width: `${player.dimensions.width}px`,
+                }"
+            />
+        </div>
         <div
             v-for="projectile in projectiles"
             v-bind:key="projectile.id"
