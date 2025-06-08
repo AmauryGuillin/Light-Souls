@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import DebbugButtons from '@/components/DebbugButtons.vue';
+import GamePauseDialog from '@/components/GamePauseDialog.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ExperienceBar } from '@/components/ui/progress-experience-bar';
 import { HealthBar } from '@/components/ui/progress-health-bar';
-import { Switch } from '@/components/ui/switch';
 import { Enemy } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { Player } from '@/types/game/player';
@@ -613,32 +612,16 @@ onUnmounted(() => {
                 </Card>
             </div>
         </div>
-        <Dialog :open="isGamePaused">
-            <DialogContent>
-                <DialogHeader class="gap-10">
-                    <DialogTitle>
-                        <div class="flex items-center justify-center text-4xl">GAME PAUSED</div>
-                    </DialogTitle>
-                    <DialogDescription class="h-80">
-                        <div class="flex items-center gap-2">
-                            <Label>Enable Game Dev mode</Label>
-                            <Switch v-model="isGameDevModeEnabled"></Switch>
-                        </div>
-                        <div v-if="isGameDevModeEnabled" class="flex items-center gap-2">
-                            <Label>Enable Enemies</Label>
-                            <Switch v-model="isEnemiesEnabled"></Switch>
-                        </div>
-                        <div v-if="isGameDevModeEnabled" class="flex items-center gap-2">
-                            <Label>Enable player's projectiles</Label>
-                            <Switch v-model="isPlayerProjectilesEnabled"></Switch>
-                        </div>
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button type="button" class="cursor-pointer" @click="pauseGame()">Resume</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <GamePauseDialog
+            :open="isGamePaused"
+            :isGameDevModeEnabled="isGameDevModeEnabled"
+            :isEnemiesEnabled="isEnemiesEnabled"
+            :isPlayerProjectilesEnabled="isPlayerProjectilesEnabled"
+            @update:isGameDevModeEnabled="(val) => (isGameDevModeEnabled = val)"
+            @update:isEnemiesEnabled="(val) => (isEnemiesEnabled = val)"
+            @update:isPlayerProjectilesEnabled="(val) => (isPlayerProjectilesEnabled = val)"
+            @resume="pauseGame()"
+        />
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
         <div class="mt-5 ml-5 flex flex-col gap-2">
