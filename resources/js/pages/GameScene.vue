@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import DebbugButtons from '@/components/DebbugButtons.vue';
 import GamePauseDialog from '@/components/GamePauseDialog.vue';
+import Player from '@/components/Player.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExperienceBar } from '@/components/ui/progress-experience-bar';
 import { HealthBar } from '@/components/ui/progress-health-bar';
 import { Enemy } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
-import { Player } from '@/types/game/player';
+import { PlayerType } from '@/types/game/player';
 import { PowerUp } from '@/types/game/powerup';
 import { Projectile } from '@/types/game/projectile';
 import { randomPositionX, randomPositionY } from '@/utils/game/game-utils';
@@ -26,7 +27,7 @@ const playerBonus = ref<PowerUp | null>(null);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
 let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
 let animationFrameId: number;
-const player = ref<Player>({
+const player = ref<PlayerType>({
     name: '',
     actions: {
         movement: {
@@ -57,7 +58,7 @@ const player = ref<Player>({
         fireRate: 1000, //ms
         score: 0,
     },
-} as Player);
+} as PlayerType);
 
 watch(
     () => player.value.states.isSpawned,
@@ -85,7 +86,7 @@ watch(
 watch(
     () => player.value.personalAttributes.score,
     (score) => {
-        if (score === 5) {
+        if (score === 5000) {
             isBoostPageOpen.value = true;
         }
     },
@@ -620,7 +621,7 @@ onUnmounted(() => {
             @update:isGameDevModeEnabled="(val) => (isGameDevModeEnabled = val)"
             @update:isEnemiesEnabled="(val) => (isEnemiesEnabled = val)"
             @update:isPlayerProjectilesEnabled="(val) => (isPlayerProjectilesEnabled = val)"
-            @resume="pauseGame()"
+            @resume="pauseGame"
         />
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
@@ -631,31 +632,17 @@ onUnmounted(() => {
             <div class="z-50 font-bold text-red-500">Score: {{ player.personalAttributes.score }}</div>
         </div>
 
-        <div
+        <Player
             v-if="player.states.isSpawned"
-            id="player"
-            class="absolute z-40"
-            :style="{
-                top: `${player.position.Y}%`,
-                left: `${player.position.X}%`,
-                height: `${player.dimensions.height}px`,
-                width: `${player.dimensions.width}px`,
-            }"
-        >
-            <img
-                class=""
-                src="assets/player/player-idle-white.gif"
-                alt=""
-                :style="{
-                    height: `${player.dimensions.height}px`,
-                    width: `${player.dimensions.width}px`,
-                }"
-            />
-        </div>
+            :player-pos-x="player.position.X"
+            :player-pos-y="player.position.Y"
+            :player-dim-h="player.dimensions.height"
+            :player-dim-w="player.dimensions.width"
+        />
         <div
             v-for="projectile in projectiles"
             v-bind:key="projectile.id"
-            class="absolute rounded-full bg-red-600"
+            class="absolute rounded-full border-2 border-amber-600 bg-red-600"
             :style="{
                 visibility: `${projectile.states.isSpawned ? 'visible' : 'hidden'}`,
                 top: `${projectile.position.Y}%`,
@@ -672,8 +659,6 @@ onUnmounted(() => {
                 visibility: `${enemy.states.isSpawned ? 'visible' : 'hidden'}`,
                 top: `${enemy.position.Y}%`,
                 left: `${enemy.position.X}%`,
-                // height: `${enemy.structure.dimensions.height}px`,
-                // width: `${enemy.structure.dimensions.width}px`,
             }"
         >
             <img
