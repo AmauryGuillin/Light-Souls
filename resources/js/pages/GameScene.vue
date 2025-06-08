@@ -36,12 +36,12 @@ const player = ref<Player>({
                 s: { pressed: false },
                 d: { pressed: false },
             } as Record<MovementKey, { pressed: boolean }>,
-            speed: 0.25,
+            speed: 0.1,
         },
     },
     dimensions: {
-        height: 100,
-        width: 100,
+        height: 125,
+        width: 125,
     },
     position: {
         X: 50,
@@ -53,7 +53,7 @@ const player = ref<Player>({
         lastDamageTime: 0,
     },
     personalAttributes: {
-        HP: 99999,
+        HP: 100,
         fireRate: 1000, //ms
         score: 0,
     },
@@ -281,7 +281,7 @@ function playerStartShooting() {
             createdAt: performance.now(),
         },
         position: {
-            X: player.value.position.X + 2,
+            X: player.value.position.X + 5,
             Y: player.value.position.Y + 2,
         },
         speed: 0.05,
@@ -388,8 +388,8 @@ function spawnEnemy() {
         },
         structure: {
             dimensions: {
-                height: 50,
-                width: 50,
+                height: 80,
+                width: 80,
             },
         },
         states: {
@@ -404,8 +404,8 @@ function spawnEnemy() {
         hitBox: {
             offsetX: 0,
             offsetY: 0,
-            width: 50,
-            height: 50,
+            width: 80,
+            height: 80,
         },
     });
 
@@ -569,12 +569,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div
-        ref="sceneRef"
-        id="scene"
-        class="relative flex h-screen flex-col bg-white bg-[url(/assets/ground/ground.jpg)] bg-auto"
-        :style="{ backgroundImage: 'none' }"
-    >
+    <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col bg-[url(/assets/ground/ground.jpg)] bg-auto">
         <div v-if="isGameDevModeEnabled" class="absolute top-1 left-[82%] z-50 flex">
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
                 Hitboxes
@@ -664,7 +659,7 @@ onUnmounted(() => {
         <div
             v-if="player.states.isSpawned"
             id="player"
-            class="absolute z-40 rounded-full border-2 border-green-500"
+            class="absolute z-40"
             :style="{
                 top: `${player.position.Y}%`,
                 left: `${player.position.X}%`,
@@ -673,8 +668,8 @@ onUnmounted(() => {
             }"
         >
             <img
-                class="border-2 border-red-500"
-                src="assets/player/player-idle.gif"
+                class=""
+                src="assets/player/player-idle-white.gif"
                 alt=""
                 :style="{
                     height: `${player.dimensions.height}px`,
@@ -685,7 +680,7 @@ onUnmounted(() => {
         <div
             v-for="projectile in projectiles"
             v-bind:key="projectile.id"
-            class="absolute rounded-full bg-amber-500"
+            class="absolute rounded-full bg-red-600"
             :style="{
                 visibility: `${projectile.states.isSpawned ? 'visible' : 'hidden'}`,
                 top: `${projectile.position.Y}%`,
@@ -697,15 +692,25 @@ onUnmounted(() => {
         <div
             v-for="enemy in enemies"
             v-bind:key="enemy.id"
-            class="absolute rounded-full bg-red-600"
+            class="absolute z-40 rounded-full"
             :style="{
                 visibility: `${enemy.states.isSpawned ? 'visible' : 'hidden'}`,
                 top: `${enemy.position.Y}%`,
                 left: `${enemy.position.X}%`,
-                height: `${enemy.structure.dimensions.height}px`,
-                width: `${enemy.structure.dimensions.width}px`,
+                // height: `${enemy.structure.dimensions.height}px`,
+                // width: `${enemy.structure.dimensions.width}px`,
             }"
-        ></div>
+        >
+            <img
+                class=""
+                src="assets/enemie/enemi-walk.gif"
+                alt=""
+                :style="{
+                    height: `${enemy.structure.dimensions.height}px`,
+                    width: `${enemy.structure.dimensions.width}px`,
+                }"
+            />
+        </div>
         <div
             v-if="playerBonus !== null"
             class="absolute z-30 animate-pulse text-green-500"
