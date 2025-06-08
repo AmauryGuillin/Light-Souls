@@ -568,7 +568,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col items-center justify-center bg-gray-700">
+    <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col items-center justify-center bg-[url(/assets/ground/ground.jpg)] bg-auto">
         <div v-if="isGameDevModeEnabled" class="absolute top-1 left-[82%] z-50 flex">
             <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="showHitboxes">
                 Hitboxes
