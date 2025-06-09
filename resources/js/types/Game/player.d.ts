@@ -11,9 +11,11 @@ export type PlayerType = {
             speed: number;
         };
     };
-    dimensions: {
-        height: number;
-        width: number;
+    structure: {
+        dimensions: {
+            height: number;
+            width: number;
+        };
     };
     position: {
         X: number;

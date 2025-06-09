@@ -13,7 +13,7 @@ import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 import { PowerUp } from '@/types/game/powerup';
 import { ProjectileType } from '@/types/game/projectile';
-import { randomPositionX, randomPositionY } from '@/utils/game/game-utils';
+import { calculColisionBetweenTwoEntities, randomPositionX, randomPositionY } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
@@ -42,9 +42,11 @@ const player = ref<PlayerType>({
             speed: 0.1,
         },
     },
-    dimensions: {
-        height: 125,
-        width: 125,
+    structure: {
+        dimensions: {
+            height: 125,
+            width: 125,
+        },
     },
     position: {
         X: 50,
@@ -99,7 +101,7 @@ watch(
  * @beta
  */
 function gameLoop() {
-    if (isGamePaused.value || isBoostPageOpen.value || player.value.personalAttributes.HP <= 0) return;
+    if (isGamePaused.value || player.value.personalAttributes.HP <= 0) return;
 
     handlePlayerMovementAnimation();
 
@@ -271,7 +273,7 @@ function spawnPlayer() {
  * @beta
  */
 function playerStartShooting() {
-    if (!player.value.states.isSpawned || isGamePaused.value || isBoostPageOpen.value) return;
+    if (!player.value.states.isSpawned || isGamePaused.value) return;
     if (!isPlayerProjectilesEnabled.value) return;
     const projectile = markRaw<ProjectileType>({
         id: crypto.randomUUID(),
@@ -330,12 +332,12 @@ function projectileMovement(projectile: ProjectileType) {
             return;
         }
 
-        if (isGamePaused.value || isBoostPageOpen.value || player.value.personalAttributes.HP > 0) return;
+        if (isGamePaused.value || player.value.personalAttributes.HP > 0) return;
 
         requestAnimationFrame(animateProjectile);
     }
 
-    if (isGamePaused.value || isBoostPageOpen.value || player.value.personalAttributes.HP > 0) return;
+    if (isGamePaused.value || player.value.personalAttributes.HP > 0) return;
 
     requestAnimationFrame(animateProjectile);
 }
@@ -345,23 +347,8 @@ function projectileMovement(projectile: ProjectileType) {
  * @param projectile The player's projectile created in the **playerStartShooting()** function
  */
 function projectileHit(projectile: ProjectileType) {
-    if (!sceneRef.value) return;
-
-    const sceneWidth = sceneRef.value.offsetWidth;
-    const sceneHeight = sceneRef.value.offsetHeight;
-
-    const pXpx = (projectile.position.X / 100) * sceneWidth;
-    const pYpx = (projectile.position.Y / 100) * sceneHeight;
-    const pW = projectile.hitBox.width;
-    const pH = projectile.hitBox.height;
-
     enemies.value.forEach((enemy: EnemyType) => {
-        const eXpx = ((enemy.position.X + enemy.hitBox!.offsetX) / 100) * sceneWidth;
-        const eYpx = ((enemy.position.Y + enemy.hitBox!.offsetY) / 100) * sceneHeight;
-        const eW = enemy.hitBox!.width;
-        const eH = enemy.hitBox!.height;
-
-        const isColliding = pXpx < eXpx + eW && pXpx + pW > eXpx && pYpx < eYpx + eH && pYpx + pH > eYpx;
+        const isColliding = calculColisionBetweenTwoEntities(projectile, enemy, sceneRef);
 
         if (isColliding) {
             player.value.personalAttributes.score++;
@@ -380,7 +367,7 @@ function projectileHit(projectile: ProjectileType) {
  */
 function spawnEnemy() {
     if (isGamePaused.value) return;
-    if (isBoostPageOpen.value) return;
+
     if (!isEnemiesEnabled.value) return;
     const enemy = markRaw<EnemyType>({
         id: crypto.randomUUID(),
@@ -421,7 +408,7 @@ function spawnEnemy() {
  */
 function spawnPlayerBonus() {
     if (isGamePaused.value) return;
-    if (isBoostPageOpen.value) return;
+
     const bonus = {
         name: 'Better fire rate',
         bonusType: 'projectile',
@@ -452,24 +439,9 @@ function spawnPlayerBonus() {
  * @beta
  */
 function playerBonusHit() {
-    if (!sceneRef.value) return;
     if (playerBonus.value === null) return;
 
-    const sceneWidth = sceneRef.value.offsetWidth;
-    const sceneHeight = sceneRef.value.offsetHeight;
-
-    const playerBonusXpx = (playerBonus.value?.position.X / 100) * sceneWidth;
-    const playerBonusYpx = (playerBonus.value?.position.Y / 100) * sceneHeight;
-    const playerBonusW = playerBonus.value?.structure.dimensions.width;
-    const playerBonusH = playerBonus.value?.structure.dimensions.width;
-
-    const pXpx = (player.value.position.X / 100) * sceneWidth;
-    const pYpx = (player.value.position.Y / 100) * sceneHeight;
-    const pW = player.value.dimensions.width;
-    const pH = player.value.dimensions.height;
-
-    const isColliding =
-        playerBonusXpx < pXpx + pW && playerBonusXpx + playerBonusH > pXpx && playerBonusYpx < pYpx + pH && playerBonusYpx + playerBonusW > pYpx;
+    const isColliding = calculColisionBetweenTwoEntities(playerBonus.value, player.value, sceneRef);
 
     if (isColliding) {
         playerBonus.value.states.isSpawned = false;
@@ -637,8 +609,8 @@ onUnmounted(() => {
             v-if="player.states.isSpawned"
             :player-pos-x="player.position.X"
             :player-pos-y="player.position.Y"
-            :player-dim-h="player.dimensions.height"
-            :player-dim-w="player.dimensions.width"
+            :player-dim-h="player.structure.dimensions.height"
+            :player-dim-w="player.structure.dimensions.width"
         />
 
         <Projectile
@@ -687,8 +659,8 @@ onUnmounted(() => {
             v-if="player.states.isSpawned && isHitboxesShown"
             :player-pos-x="player.position.X"
             :player-pos-y="player.position.Y"
-            :player-dim-h="player.dimensions.height"
-            :player-dim-w="player.dimensions.width"
+            :player-dim-h="player.structure.dimensions.height"
+            :player-dim-w="player.structure.dimensions.width"
             :projectiles-array="projectiles"
             :enemies-array="enemies"
         />
