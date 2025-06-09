@@ -197,7 +197,7 @@ function handleEnemiesMovementAnimations() {
         const dy = player.value.position.Y - enemy.position.Y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (dx > 0) {
+        if (dx >= 0) {
             enemy.orientation.right = true;
             enemy.orientation.left = false;
         } else {
@@ -592,6 +592,7 @@ onUnmounted(() => {
             @spawnEnemy="spawnEnemy"
             @spawnPlayerBonus="spawnPlayerBonus"
             @playerStartShooting="playerStartShooting"
+            @pause-game="pauseGame"
         ></DebbugButtons>
         <div v-if="isBoostPageOpen" class="z-50 w-[50%] rounded-xl border-2 border-white bg-black p-3 shadow-2xl">
             <div class="flex items-center justify-center p-3 text-3xl font-bold text-white">

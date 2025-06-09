@@ -3,7 +3,7 @@ const emit = defineEmits(['showHitboxes', 'spawnPlayer', 'spawnEnemy', 'spawnPla
 </script>
 
 <template>
-    <div class="absolute top-1 left-[82%] z-50 flex">
+    <div class="z-50 flex">
         <button class="cursor-pointer rounded-lg border-2 bg-black p-1 font-bold text-white hover:bg-red-600" @click="emit('showHitboxes')">
             Hitboxes
         </button>
