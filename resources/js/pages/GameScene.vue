@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import DebbugButtons from '@/components/DebbugButtons.vue';
+import Enemy from '@/components/Enemy.vue';
 import GamePauseDialog from '@/components/GamePauseDialog.vue';
 import Player from '@/components/Player.vue';
 import PlayerInfo from '@/components/PlayerInfo.vue';
 import Projectile from '@/components/Projectile.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Enemy } from '@/types/game/enemy';
+import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 import { PowerUp } from '@/types/game/powerup';
@@ -22,7 +23,7 @@ const isPlayerProjectilesEnabled = ref<boolean>(false);
 const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
-const enemies = ref<Enemy[]>([]);
+const enemies = ref<EnemyType[]>([]);
 const playerBonus = ref<PowerUp | null>(null);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
 let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
@@ -353,7 +354,7 @@ function projectileHit(projectile: ProjectileType) {
     const pW = projectile.hitBox.width;
     const pH = projectile.hitBox.height;
 
-    enemies.value.forEach((enemy: Enemy) => {
+    enemies.value.forEach((enemy: EnemyType) => {
         const eXpx = ((enemy.position.X + enemy.hitBox!.offsetX) / 100) * sceneWidth;
         const eYpx = ((enemy.position.Y + enemy.hitBox!.offsetY) / 100) * sceneHeight;
         const eW = enemy.hitBox!.width;
@@ -380,7 +381,7 @@ function spawnEnemy() {
     if (isGamePaused.value) return;
     if (isBoostPageOpen.value) return;
     if (!isEnemiesEnabled.value) return;
-    const enemy = markRaw<Enemy>({
+    const enemy = markRaw<EnemyType>({
         id: crypto.randomUUID(),
         personalAttributes: {
             HP: 100,
@@ -648,26 +649,15 @@ onUnmounted(() => {
             :projectile-dim-w="projectile.structure.dimensions.width"
             :projectile-spawn-state="projectile.states.isSpawned"
         />
-        <div
+        <Enemy
             v-for="enemy in enemies"
             v-bind:key="enemy.id"
-            class="absolute z-40 rounded-full"
-            :style="{
-                visibility: `${enemy.states.isSpawned ? 'visible' : 'hidden'}`,
-                top: `${enemy.position.Y}%`,
-                left: `${enemy.position.X}%`,
-            }"
-        >
-            <img
-                class=""
-                src="assets/enemie/enemi-walk.gif"
-                alt=""
-                :style="{
-                    height: `${enemy.structure.dimensions.height}px`,
-                    width: `${enemy.structure.dimensions.width}px`,
-                }"
-            />
-        </div>
+            :enemy-spawn-state="enemy.states.isSpawned"
+            :enemy-pos-x="enemy.position.X"
+            :enemy-pos-y="enemy.position.Y"
+            :enemy-dim-w="enemy.structure.dimensions.width"
+            :enemy-dim-h="enemy.structure.dimensions.height"
+        />
         <div
             v-if="playerBonus !== null"
             class="absolute z-30 animate-pulse text-green-500"

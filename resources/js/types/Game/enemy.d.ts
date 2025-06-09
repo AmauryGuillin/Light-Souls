@@ -1,4 +1,4 @@
-export type Enemy = {
+export type EnemyType = {
     id: string;
     personalAttributes: {
         HP: number;
