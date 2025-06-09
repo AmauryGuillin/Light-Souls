@@ -318,7 +318,7 @@ function playerStartShooting() {
         },
         states: {
             isSpawned: true,
-            lifeSpan: 99999,
+            lifeSpan: 4000,
             createdAt: performance.now(),
         },
         position: {
