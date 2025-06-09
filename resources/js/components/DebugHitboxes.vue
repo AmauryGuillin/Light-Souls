@@ -44,5 +44,6 @@ const props = defineProps<{
         :enemy-dim-h="enemy.structure.dimensions.height"
         :enemy-dim-w="enemy.structure.dimensions.width"
         :enemy-spawn-state="enemy.states.isSpawned"
+        :enemy-orientation="enemy.orientation"
     />
 </template>

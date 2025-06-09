@@ -5,6 +5,10 @@ const props = defineProps<{
     enemyPosY: number;
     enemyDimW: number;
     enemyDimH: number;
+    enemyOrientation: {
+        left: boolean;
+        right: boolean;
+    };
 }>();
 </script>
 
@@ -24,6 +28,7 @@ const props = defineProps<{
             :style="{
                 height: `${props.enemyDimH}px`,
                 width: `${props.enemyDimW}px`,
+                transform: `${props.enemyOrientation.left ? 'scaleX(-1)' : ''}`,
             }"
         />
     </div>

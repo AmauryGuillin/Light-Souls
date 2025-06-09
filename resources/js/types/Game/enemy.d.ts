@@ -20,6 +20,10 @@ export type EnemyType = {
         X: number;
         Y: number;
     };
+    orientation: {
+        left: boolean;
+        right: boolean;
+    };
     hitBox?: {
         offsetX: number;
         offsetY: number;

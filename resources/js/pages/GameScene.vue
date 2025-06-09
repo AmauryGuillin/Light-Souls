@@ -196,6 +196,14 @@ function handleEnemiesMovementAnimations() {
         const dx = player.value.position.X - enemy.position.X;
         const dy = player.value.position.Y - enemy.position.Y;
         const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (dx > 0) {
+            enemy.orientation.right = true;
+            enemy.orientation.left = false;
+        } else {
+            enemy.orientation.right = false;
+            enemy.orientation.left = true;
+        }
         if (distance > 1e-2) {
             enemy.position.X += (dx / distance) * enemy.personalAttributes.movementSpeed;
             enemy.position.Y += (dy / distance) * enemy.personalAttributes.movementSpeed;
@@ -418,6 +426,10 @@ function spawnEnemy() {
         position: {
             X: randomPositionX(),
             Y: randomPositionY(),
+        },
+        orientation: {
+            left: false,
+            right: false,
         },
         hitBox: {
             offsetX: 0,
@@ -660,6 +672,7 @@ onUnmounted(() => {
             :enemy-pos-y="enemy.position.Y"
             :enemy-dim-w="enemy.structure.dimensions.width"
             :enemy-dim-h="enemy.structure.dimensions.height"
+            :enemy-orientation="enemy.orientation"
         />
         <div
             v-if="playerBonus !== null"
