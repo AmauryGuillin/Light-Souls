@@ -39,6 +39,10 @@ const player = ref<PlayerType>({
                 s: { pressed: false },
                 d: { pressed: false },
             } as Record<MovementKey, { pressed: boolean }>,
+            direction: {
+                left: false,
+                right: false,
+            },
             speed: 0.1,
         },
     },
@@ -123,10 +127,34 @@ function handlePlayerMovementAnimation() {
         const keys = player.value.actions.movement.keys;
         const speed = player.value.actions.movement.speed;
 
-        if (keys.z.pressed) player.value.position.Y -= speed;
-        if (keys.s.pressed) player.value.position.Y += speed;
-        if (keys.q.pressed) player.value.position.X -= speed;
-        if (keys.d.pressed) player.value.position.X += speed;
+        let isMoving = false;
+        let directionLeft = false;
+        let directionRight = false;
+
+        if (keys.z.pressed) {
+            player.value.position.Y -= speed;
+            isMoving = true;
+        }
+        if (keys.s.pressed) {
+            player.value.position.Y += speed;
+            isMoving = true;
+        }
+        if (keys.q.pressed) {
+            player.value.position.X -= speed;
+            directionLeft = true;
+            directionRight = false;
+            isMoving = true;
+        }
+        if (keys.d.pressed) {
+            player.value.position.X += speed;
+            directionLeft = false;
+            directionRight = true;
+            isMoving = true;
+        }
+
+        player.value.actions.movement.isMoving = isMoving;
+        player.value.actions.movement.direction.left = directionLeft;
+        player.value.actions.movement.direction.right = directionRight;
     }
 
     player.value.position.X = clamp(player.value.position.X, 0, 93);
@@ -378,8 +406,8 @@ function spawnEnemy() {
         },
         structure: {
             dimensions: {
-                height: 80,
-                width: 80,
+                height: 100,
+                width: 100,
             },
         },
         states: {
@@ -394,8 +422,8 @@ function spawnEnemy() {
         hitBox: {
             offsetX: 0,
             offsetY: 0,
-            width: 80,
-            height: 80,
+            width: 100,
+            height: 100,
         },
     });
 
@@ -611,6 +639,8 @@ onUnmounted(() => {
             :player-pos-y="player.position.Y"
             :player-dim-h="player.structure.dimensions.height"
             :player-dim-w="player.structure.dimensions.width"
+            :player-direction="player.actions.movement.direction"
+            :player-is-moving="player.actions.movement.isMoving"
         />
 
         <Projectile

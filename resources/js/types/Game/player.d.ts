@@ -8,6 +8,11 @@ export type PlayerType = {
                 s: { pressed: boolean };
                 d: { pressed: boolean };
             };
+            direction: {
+                left: boolean;
+                right: boolean;
+            };
+            isMoving: boolean;
             speed: number;
         };
     };
