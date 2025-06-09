@@ -35,5 +35,7 @@ export type PlayerType = {
         HP: number;
         fireRate: number;
         score: number;
+        XP: number;
+        level: number;
     };
 };

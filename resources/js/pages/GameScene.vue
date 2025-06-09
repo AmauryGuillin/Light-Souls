@@ -65,6 +65,8 @@ const player = ref<PlayerType>({
         HP: 100,
         fireRate: 1000, //ms
         score: 0,
+        XP: 1,
+        level: 0,
     },
 } as PlayerType);
 
@@ -301,6 +303,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
+    player.value.personalAttributes.level = 1;
 }
 
 /**
@@ -388,6 +391,12 @@ function projectileHit(projectile: ProjectileType) {
 
         if (isColliding) {
             player.value.personalAttributes.score++;
+            if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * 100) {
+                player.value.personalAttributes.XP += 10;
+            } else {
+                player.value.personalAttributes.level++;
+                player.value.personalAttributes.XP = 1;
+            }
             enemy.states.isSpawned = false;
             enemy.states.canKill = false;
             enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
@@ -644,6 +653,9 @@ onUnmounted(() => {
             :is-game-dev-mode-enabled="isGameDevModeEnabled"
             :player-h-p="player.personalAttributes.HP"
             :player-score="player.personalAttributes.score"
+            :player-x-p="player.personalAttributes.XP"
+            :player-level="player.personalAttributes.level"
+            :player-spawn-state="player.states.isSpawned"
         />
 
         <Player
