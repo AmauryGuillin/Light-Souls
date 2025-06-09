@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DebbugButtons from '@/components/DebbugButtons.vue';
+import DebugHitboxes from '@/components/DebugHitboxes.vue';
 import Enemy from '@/components/Enemy.vue';
 import GamePauseDialog from '@/components/GamePauseDialog.vue';
 import Player from '@/components/Player.vue';
@@ -682,42 +683,14 @@ onUnmounted(() => {
                 width: `${playerBonus.structure.dimensions.width}px`,
             }"
         ></div>
-        <div
-            id="debug-player-hitboxe"
+        <DebugHitboxes
             v-if="player.states.isSpawned && isHitboxesShown"
-            class="absolute border-2 border-blue-300"
-            :style="{
-                top: `${player.position.Y}%`,
-                left: `${player.position.X}%`,
-                height: `${player.dimensions.height}px`,
-                width: `${player.dimensions.width}px`,
-            }"
-        ></div>
-        <div
-            id="debug-projectiles-hitboxes"
-            v-for="projectile in projectiles"
-            v-bind:key="projectile.id"
-            class="absolute border-2 border-amber-500"
-            :style="{
-                visibility: `${projectile.states.isSpawned && isHitboxesShown ? 'visible' : 'hidden'}`,
-                top: `${projectile.position.Y}%`,
-                left: `${projectile.position.X}%`,
-                height: `${projectile.structure.dimensions.height}px`,
-                width: `${projectile.structure.dimensions.width}px`,
-            }"
-        ></div>
-        <div
-            id="debug-enemies-hitboxes"
-            v-for="enemy in enemies"
-            v-bind:key="enemy.id"
-            class="absolute border-2 border-red-600"
-            :style="{
-                visibility: `${enemy.states.isSpawned && isHitboxesShown ? 'visible' : 'hidden'}`,
-                top: `${enemy.position.Y + enemy.hitBox!.offsetY}%`,
-                left: `${enemy.position.X + enemy.hitBox!.offsetX}%`,
-                height: `${enemy.structure.dimensions.height}px`,
-                width: `${enemy.structure.dimensions.width}px`,
-            }"
-        ></div>
+            :player-pos-x="player.position.X"
+            :player-pos-y="player.position.Y"
+            :player-dim-h="player.dimensions.height"
+            :player-dim-w="player.dimensions.width"
+            :projectiles-array="projectiles"
+            :enemies-array="enemies"
+        />
     </div>
 </template>

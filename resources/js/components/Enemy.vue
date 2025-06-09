@@ -10,7 +10,7 @@ const props = defineProps<{
 
 <template>
     <div
-        class="absolute z-40 rounded-full"
+        class="absolute z-40"
         :style="{
             visibility: `${props.enemySpawnState ? 'visible' : 'hidden'}`,
             top: `${props.enemyPosY}%`,
