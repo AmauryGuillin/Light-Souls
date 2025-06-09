@@ -2,11 +2,10 @@
 import DebbugButtons from '@/components/DebbugButtons.vue';
 import GamePauseDialog from '@/components/GamePauseDialog.vue';
 import Player from '@/components/Player.vue';
+import PlayerInfo from '@/components/PlayerInfo.vue';
 import Projectile from '@/components/Projectile.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExperienceBar } from '@/components/ui/progress-experience-bar';
-import { HealthBar } from '@/components/ui/progress-health-bar';
 import { Enemy } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
@@ -626,12 +625,11 @@ onUnmounted(() => {
         />
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
-        <div class="mt-5 ml-5 flex flex-col gap-2">
-            <HealthBar class="z-50 h-3 w-96 bg-white" :model-value="player.personalAttributes.HP" />
-            <ExperienceBar class="z-50 w-96 bg-white" :model-value="80" />
-            <div v-if="isGameDevModeEnabled" class="az-50 font-bold text-red-500">{{ player.personalAttributes.HP }} HP</div>
-            <div class="z-50 font-bold text-red-500">Score: {{ player.personalAttributes.score }}</div>
-        </div>
+        <PlayerInfo
+            :is-game-dev-mode-enabled="isGameDevModeEnabled"
+            :player-h-p="player.personalAttributes.HP"
+            :player-score="player.personalAttributes.score"
+        />
 
         <Player
             v-if="player.states.isSpawned"
