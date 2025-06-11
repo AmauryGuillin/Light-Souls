@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
-import { PowerUp } from '@/types/game/powerup';
+import { PowerUpType } from '@/types/game/powerup';
 import { ProjectileType } from '@/types/game/projectile';
 import { calculColisionBetweenTwoEntities, randomPositionX, randomPositionY } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -26,7 +26,7 @@ const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
 const enemies = ref<EnemyType[]>([]);
-const playerBonus = ref<PowerUp | null>(null);
+const playerBonus = ref<PowerUpType | null>(null);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
 let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
 let animationFrameId: number;
@@ -162,8 +162,6 @@ function handlePlayerMovementAnimation() {
 
     player.value.position.X = clamp(player.value.position.X, 0, 93);
     player.value.position.Y = clamp(player.value.position.Y, 0, 86);
-
-    playerBonusHit();
 }
 
 /**
@@ -460,46 +458,15 @@ function spawnPlayerBonus() {
     if (isGamePaused.value) return;
 
     const bonus = {
-        name: 'Better fire rate',
-        bonusType: 'projectile',
-        aquired: false,
+        name: '',
+        bonusType: 'attack',
         boost: {
-            fireRate: 0.5,
+            damageMultiplier: 1.1,
         },
-        position: {
-            X: randomPositionX(),
-            Y: randomPositionY(),
-        },
-        structure: {
-            dimensions: {
-                width: 20,
-                height: 30,
-            },
-        },
-        states: {
-            isSpawned: true,
-        },
-    } as PowerUp;
+        description: '',
+    } as PowerUpType;
 
     playerBonus.value = bonus;
-}
-
-/**
- * Handle player bonus hitbox
- * @beta
- */
-function playerBonusHit() {
-    if (playerBonus.value === null) return;
-
-    const isColliding = calculColisionBetweenTwoEntities(playerBonus.value, player.value, sceneRef);
-
-    if (isColliding) {
-        playerBonus.value.states.isSpawned = false;
-        if (playerBonus.value.boost?.fireRate && player.value.personalAttributes.fireRate >= 250)
-            player.value.personalAttributes.fireRate *= playerBonus.value.boost?.fireRate;
-        playerBonus.value = null;
-        return;
-    }
 }
 
 /**
@@ -701,30 +668,6 @@ onUnmounted(() => {
             :enemy-dim-h="enemy.structure.dimensions.height"
             :enemy-orientation="enemy.orientation"
         />
-        <div
-            v-if="playerBonus !== null"
-            class="absolute z-30 animate-pulse text-green-500"
-            :style="{
-                visibility: `${playerBonus.states.isSpawned ? 'visible' : 'hidden'}`,
-                top: `${playerBonus.position.Y - 2}%`,
-                left: `${playerBonus.position.X - 1.6}%`,
-                height: `${playerBonus.structure.dimensions.height}px`,
-                width: `${playerBonus.structure.dimensions.width + 100}px`,
-            }"
-        >
-            {{ playerBonus.name }}
-        </div>
-        <div
-            v-if="playerBonus !== null"
-            class="absolute z-30 animate-pulse bg-green-500"
-            :style="{
-                visibility: `${playerBonus.states.isSpawned ? 'visible' : 'hidden'}`,
-                top: `${playerBonus.position.Y}%`,
-                left: `${playerBonus.position.X}%`,
-                height: `${playerBonus.structure.dimensions.height}px`,
-                width: `${playerBonus.structure.dimensions.width}px`,
-            }"
-        ></div>
         <DebugHitboxes
             v-if="player.states.isSpawned && isHitboxesShown"
             :player-pos-x="player.position.X"

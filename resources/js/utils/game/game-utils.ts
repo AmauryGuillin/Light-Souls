@@ -1,6 +1,6 @@
 import { EnemyType } from '@/types/game/enemy';
 import { PlayerType } from '@/types/game/player';
-import { PowerUp } from '@/types/game/powerup';
+import { PowerUpType } from '@/types/game/powerup';
 import { ProjectileType } from '@/types/game/projectile';
 import { Ref } from 'vue';
 
@@ -27,8 +27,8 @@ export function randomPositionY(): number {
  * @beta
  */
 export function calculColisionBetweenTwoEntities(
-    firstEntity: PlayerType | EnemyType | ProjectileType | PowerUp,
-    secondEntity: PlayerType | EnemyType | ProjectileType | PowerUp,
+    firstEntity: PlayerType | EnemyType | ProjectileType | PowerUpType,
+    secondEntity: PlayerType | EnemyType | ProjectileType | PowerUpType,
     sceneRef: Ref<HTMLElement | null, HTMLElement | null>,
 ): boolean {
     if (!sceneRef.value) return false;
