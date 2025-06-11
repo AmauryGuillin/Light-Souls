@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 import {
   DialogContent,
   type DialogContentEmits,
   type DialogContentProps,
   DialogPortal,
   useForwardPropsEmits
-} from 'reka-ui'
-import { computed, type HTMLAttributes } from 'vue'
-import DialogOverlay from './DialogOverlay.vue'
+} from 'reka-ui';
+import { computed, type HTMLAttributes } from 'vue';
+import DialogOverlay from './DialogOverlay.vue';
 
 const props = defineProps<DialogContentProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<DialogContentEmits>()

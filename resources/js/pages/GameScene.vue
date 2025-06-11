@@ -7,7 +7,8 @@ import Player from '@/components/Player.vue';
 import PlayerInfo from '@/components/PlayerInfo.vue';
 import Projectile from '@/components/Projectile.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
@@ -603,40 +604,53 @@ onUnmounted(() => {
             @playerStartShooting="playerStartShooting"
             @pause-game="pauseGame"
         ></DebbugButtons>
-        <div v-if="isBoostPageOpen" class="z-50 w-[50%] rounded-xl border-2 border-white bg-black p-3 shadow-2xl">
-            <div class="flex items-center justify-center p-3 text-3xl font-bold text-white">
-                <h1>SELECT AN UPGRADE</h1>
-            </div>
-            <div class="flex w-full justify-center gap-5">
-                <Card class="w-1/3">
-                    <CardHeader>
-                        <CardTitle>Movement Speed</CardTitle>
-                        <CardDescription>Increase by 2% your movement speed </CardDescription>
-                    </CardHeader>
-                    <CardFooter>
-                        <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
-                    </CardFooter>
-                </Card>
-                <Card class="w-1/3">
-                    <CardHeader>
-                        <CardTitle>Projectile Speed</CardTitle>
-                        <CardDescription>Increase by 2% your projectiles speed</CardDescription>
-                    </CardHeader>
-                    <CardFooter>
-                        <Button class="w-full cursor-pointer">Select</Button>
-                    </CardFooter>
-                </Card>
-                <Card class="w-1/3">
-                    <CardHeader>
-                        <CardTitle>Fire Rate</CardTitle>
-                        <CardDescription>Increase by 2% your fire rate</CardDescription>
-                    </CardHeader>
-                    <CardFooter>
-                        <Button class="w-full cursor-pointer">Select</Button>
-                    </CardFooter>
-                </Card>
-            </div>
-        </div>
+        <Dialog :open="isBoostPageOpen">
+            <DialogContent>
+                <DialogHeader class="gap-10">
+                    <DialogTitle>
+                        <h1 class="flex items-center justify-center text-4xl">SELECT AN UPGRADE</h1>
+                    </DialogTitle>
+                    <DialogDescription class="flex justify-center">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>
+                                    <img src="/assets/boost/damage-boost.png" alt="" srcset="" />
+                                </CardTitle>
+                                <CardDescription>Damage boost</CardDescription>
+                            </CardHeader>
+                            <CardContent> Increase by 10% your damages </CardContent>
+                            <CardFooter>
+                                <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
+                            </CardFooter>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>
+                                    <img src="/assets/boost/damage-boost.png" alt="" srcset="" />
+                                </CardTitle>
+                                <CardDescription>Damage boost</CardDescription>
+                            </CardHeader>
+                            <CardContent> Increase by 10% your damages </CardContent>
+                            <CardFooter>
+                                <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
+                            </CardFooter>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>
+                                    <img src="/assets/boost/damage-boost.png" alt="" srcset="" />
+                                </CardTitle>
+                                <CardDescription>Damage boost</CardDescription>
+                            </CardHeader>
+                            <CardContent> Increase by 10% your damages </CardContent>
+                            <CardFooter>
+                                <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
+                            </CardFooter>
+                        </Card>
+                    </DialogDescription>
+                </DialogHeader>
+            </DialogContent>
+        </Dialog>
         <GamePauseDialog
             :open="isGamePaused"
             :isGameDevModeEnabled="isGameDevModeEnabled"

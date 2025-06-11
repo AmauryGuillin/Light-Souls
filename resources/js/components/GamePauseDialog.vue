@@ -25,7 +25,7 @@ const emits = defineEmits<{
         <DialogContent>
             <DialogHeader class="gap-10">
                 <DialogTitle>
-                    <div class="flex items-center justify-center text-4xl">GAME PAUSED</div>
+                    <h1 class="flex items-center justify-center text-4xl">GAME PAUSED</h1>
                 </DialogTitle>
                 <DialogDescription class="h-80">
                     <div class="flex items-center gap-2">
