@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -17,8 +18,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        DB::table('roles')->insert([
+            ['name' => 'User', 'created_at' => now()],
+            ['name' => 'Developper', 'created_at' => now()],
+        ]);
+
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->constrained();
+            $table->foreignId('role_id')->default(1)->constrained();
         });
     }
 
