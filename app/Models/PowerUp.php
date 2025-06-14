@@ -3,20 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PowerUp extends Model
 {
-    public function type()
+
+    protected $table = 'powerups'; // <- ligne importante
+
+    public function type(): BelongsTo
     {
         return $this->belongsTo(PowerupType::class, 'powerup_types_id');
     }
 
-    public function boost()
+    public function boost(): BelongsTo
     {
         return $this->belongsTo(PowerupBoost::class, 'powerup_boosts_id');
     }
 
-    public function asset()
+    public function asset(): BelongsTo
     {
         return $this->belongsTo(PowerupAsset::class, 'powerup_assets_id');
     }
