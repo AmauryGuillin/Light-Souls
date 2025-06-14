@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\Roles;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +20,8 @@ return new class extends Migration
         });
 
         DB::table('roles')->insert([
-            ['name' => 'User', 'created_at' => now()],
-            ['name' => 'Developper', 'created_at' => now()],
+            ['name' => Roles::USER, 'created_at' => now()],
+            ['name' => Roles::DEVELOPPER, 'created_at' => now()],
         ]);
 
         Schema::table('users', function (Blueprint $table) {
