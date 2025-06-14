@@ -81,7 +81,7 @@ import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
                                     </div>
                                     <div class="space-y-2">
                                         <Label htmlFor="cooldown">Percentage</Label>
-                                        <Input id="cooldown" type="number" placeholder="5%" min="0" />
+                                        <Input id="cooldown" type="number" placeholder="10%" min="0" />
                                     </div>
                                 </div>
                             </div>
