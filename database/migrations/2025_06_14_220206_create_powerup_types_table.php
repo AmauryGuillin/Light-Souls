@@ -13,22 +13,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('poweruptypes', function (Blueprint $table) {
+        Schema::create('powerup_types', function (Blueprint $table) {
             $table->id();
             $table->string('type');
             $table->timestamps();
         });
 
-        DB::table('poweruptypes')->insert([
+        DB::table('powerup_types')->insert([
             ['type' => PowerupTypes::ATTACK, 'created_at' => now()],
             ['type' => PowerupTypes::DEFENSE, 'created_at' => now()],
             ['type' => PowerupTypes::SPEED, 'created_at' => now()],
             ['type' => PowerupTypes::FIRERATE, 'created_at' => now()],
         ]);
-
-        Schema::table('powerups', function (Blueprint $table) {
-            $table->foreignId('poweruptype_id')->constrained();
-        });
     }
 
     /**
@@ -36,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('poweruptypes');
+        Schema::dropIfExists('powerup_types');
     }
 };

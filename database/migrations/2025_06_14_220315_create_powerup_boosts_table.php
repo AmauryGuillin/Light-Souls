@@ -1,7 +1,9 @@
 <?php
 
+use App\Enum\PowerupBoosts;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,11 +13,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('powerups', function (Blueprint $table) {
+        Schema::create('powerup_boosts', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->string('type');
+            $table->double('multiplier');
             $table->timestamps();
         });
+
+        DB::table('powerup_boosts')->insert([
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.05, 'created_at' => now()]
+        ]);
     }
 
     /**
@@ -23,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('powerups');
+        Schema::dropIfExists('powerup_boosts');
     }
 };
