@@ -16,5 +16,7 @@ declare namespace App.Data {
     };
 }
 declare namespace App.Enum {
+    export type PowerupBoosts = 'Increase' | 'Decrease';
+    export type PowerupTypes = 'Attack' | 'Defense' | 'Speed' | 'FireRate';
     export type Roles = 'User' | 'Developper';
 }
