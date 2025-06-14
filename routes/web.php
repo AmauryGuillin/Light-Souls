@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PowerupController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -17,6 +18,7 @@ Route::get('LightSouls', function () {
 })->middleware(['auth', 'verified'])->name('LightSouls');
 
 Route::get('dashboard', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('powerupfactory', [PowerupController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
