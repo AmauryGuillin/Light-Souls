@@ -1,4 +1,15 @@
 declare namespace App.Data {
+    export type PowerupData = {
+        id: number;
+        name: string;
+        description: string;
+        unlockLevel: number;
+        powerup_types_id: number;
+        powerup_boosts_id: number;
+        powerup_assets_id: number;
+        created_at: string;
+        updated_at: string;
+    };
     export type RoleData = {
         id: number;
         name: App.Enum.Roles;
