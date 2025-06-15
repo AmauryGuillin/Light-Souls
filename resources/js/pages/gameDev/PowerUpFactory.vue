@@ -222,7 +222,7 @@ function deleteForm() {
                             <Loader2 v-if="form.processing" class="mr-2 h-4 w-4 animate-spin" />
                             Create Power-Up
                         </Button>
-                        <Button @Click="deleteForm" variant="destructive" class="w-full"> Reset Form </Button>
+                        <Button type="button" @Click="deleteForm" variant="destructive" class="w-full"> Reset Form </Button>
                     </div>
                 </div>
             </div>
