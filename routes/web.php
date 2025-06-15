@@ -18,7 +18,8 @@ Route::get('LightSouls', function () {
 })->middleware(['auth', 'verified'])->name('LightSouls');
 
 Route::get('dashboard', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('powerupfactory', [PowerupController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('powerupfactory', [PowerupController::class, 'index'])->middleware(['auth', 'verified'])->name('powerupfactory');
+Route::post('powerupfactory', [PowerupController::class, 'store'])->middleware(['auth', 'verified'])->name('powerupfactory.store');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

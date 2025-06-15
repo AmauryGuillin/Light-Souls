@@ -1,4 +1,13 @@
 declare namespace App.Data {
+    export type PowerUpFormData = {
+        name: string;
+        powerupType: string;
+        bonusType: string;
+        multiplier: number | null;
+        unlockLevel: number | null;
+        assetId: number | null;
+        description: string;
+    };
     export type PowerupData = {
         id: number;
         name: string;

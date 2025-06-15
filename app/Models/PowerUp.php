@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PowerUp extends Model
 {
 
-    protected $table = 'powerups'; // <- ligne importante
+    protected $table = 'powerups';
+
+    protected $fillable = ['powerup_types_id', 'powerup_boosts_id', 'powerup_assets_id', 'name', 'description', 'unlockLevel'];
 
     public function type(): BelongsTo
     {

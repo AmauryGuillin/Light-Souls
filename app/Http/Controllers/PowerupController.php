@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\PowerUpFormData;
 use App\Enum\PowerupBoosts;
 use App\Models\PowerUp;
 use App\Models\PowerUpAsset;
 use App\Models\PowerUpBoost;
 use App\Models\PowerUpType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PowerupController extends Controller
@@ -26,9 +28,23 @@ class PowerupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PowerUpFormData $formData)
     {
-        //
+        DB::transaction(function () use ($formData) {
+            $boost = PowerUpBoost::create([
+                'type' => $formData->bonusType,
+                'multiplier' => $formData->multiplier
+            ]);
+
+            PowerUp::create([
+                'powerup_types_id' => 1,
+                'powerup_boosts_id' => $boost->id,
+                'powerup_assets_id' => $formData->assetId,
+                'name' => $formData->name,
+                'description' => $formData->description,
+                'unlockLevel' => $formData->unlockLevel,
+            ]);
+        });
     }
 
     /**

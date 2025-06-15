@@ -7,20 +7,44 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
-import { toRaw } from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { Brush, Loader2, Settings, Sparkles, Zap } from 'lucide-vue-next';
+import { ref } from 'vue';
 
-const props = defineProps<{
+defineProps<{
     powerupTypes: [{ id: number; type: string }];
     powerupBoosts: string[];
     powerupAssets: { path: string }[];
 }>();
 
-console.log(toRaw(props.powerupAssets));
+const selectedIllustration = ref<number | null>(null);
+
+const form = useForm<App.Data.PowerUpFormData>({
+    name: '',
+    powerupType: '',
+    bonusType: '',
+    multiplier: null,
+    unlockLevel: null,
+    assetId: null,
+    description: '',
+});
+
+function handleSelectedIllustration(selectedIllustrationId: number) {
+    selectedIllustration.value = selectedIllustrationId;
+    if (form.assetId === null) form.assetId = selectedIllustration.value;
+}
+
+function deleteForm() {
+    selectedIllustration.value = null;
+    form.reset();
+}
 </script>
 
 <template>
-    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <form
+        @submit.prevent="form.post(route('powerupfactory.store'))"
+        class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800"
+    >
         <div class="container mx-auto p-6">
             <!-- Header -->
             <div class="mb-8">
@@ -49,11 +73,11 @@ console.log(toRaw(props.powerupAssets));
                             <div class="grid gap-4 md:grid-cols-2">
                                 <div class="space-y-2">
                                     <Label htmlFor="name">Power-Up Name</Label>
-                                    <Input id="name" placeholder="Lightning Strike" class="font-medium" />
+                                    <Input id="name" placeholder="Lightning Strike" class="font-medium" v-model="form.name" />
                                 </div>
                                 <div class="space-y-2">
                                     <Label htmlFor="type">Type</Label>
-                                    <Select>
+                                    <Select v-model="form.powerupType">
                                         <SelectTrigger class="w-full">
                                             <SelectValue placeholder="Select type" />
                                         </SelectTrigger>
@@ -74,7 +98,7 @@ console.log(toRaw(props.powerupAssets));
                                 <div class="grid gap-4 md:grid-cols-2">
                                     <div class="space-y-2">
                                         <Label htmlFor="damage">Bonus type</Label>
-                                        <Select>
+                                        <Select v-model="form.bonusType">
                                             <SelectTrigger class="w-full">
                                                 <SelectValue placeholder="Select type" />
                                             </SelectTrigger>
@@ -87,15 +111,11 @@ console.log(toRaw(props.powerupAssets));
                                     </div>
                                     <div class="space-y-2">
                                         <Label htmlFor="duration">Multiplier (1.1 = +10%)</Label>
-                                        <Input id="duration" type="number" placeholder="1.1" min="1" step="0.1" />
-                                    </div>
-                                    <div class="space-y-2">
-                                        <Label htmlFor="cooldown">Percentage</Label>
-                                        <Input id="cooldown" type="number" placeholder="10" min="0" />
+                                        <Input id="duration" type="number" placeholder="1.1" step="0.1" v-model="form.multiplier!" />
                                     </div>
                                     <div class="space-y-2">
                                         <Label htmlFor="unlock-level">Unlock Level</Label>
-                                        <Input id="unlock-level" type="number" placeholder="1" min="1" />
+                                        <Input id="unlock-level" type="number" placeholder="1" min="1" v-model="form.unlockLevel!" />
                                     </div>
                                 </div>
                             </div>
@@ -115,7 +135,11 @@ console.log(toRaw(props.powerupAssets));
                                         <CarouselContent class="-ml-1">
                                             <CarouselItem v-for="(image, index) in powerupAssets" :key="index" class="pl-1 md:basis-1/2 lg:basis-1/3">
                                                 <div class="p-1">
-                                                    <Card>
+                                                    <Card
+                                                        @Click="handleSelectedIllustration(index + 1)"
+                                                        class="cursor-pointer transition-all hover:border-white"
+                                                        :class="selectedIllustration === index ? 'border-green-400' : ''"
+                                                    >
                                                         <CardContent class="flex aspect-square items-center justify-center p-6">
                                                             <img :src="image.path" alt="" />
                                                         </CardContent>
@@ -138,6 +162,7 @@ console.log(toRaw(props.powerupAssets));
                                     id="description"
                                     placeholder="Describe the power-up's effects, special mechanics..."
                                     class="min-h-[120px] resize-none"
+                                    v-model="form.description"
                                 />
                             </div>
                         </CardContent>
@@ -159,9 +184,12 @@ console.log(toRaw(props.powerupAssets));
                                 <div
                                     class="from-primary/20 to-primary/5 border-primary/20 flex aspect-square items-center justify-center rounded-lg border-2 border-dashed bg-gradient-to-br"
                                 >
-                                    <div class="text-center">
+                                    <div v-if="selectedIllustration === null" class="text-center">
                                         <Zap class="text-primary/40 mx-auto mb-2 h-12 w-12" />
                                         <p class="text-muted-foreground text-sm">Power-Up Icon</p>
+                                    </div>
+                                    <div v-else class="text-center">
+                                        <img :src="powerupAssets[selectedIllustration].path" alt="" />
                                     </div>
                                 </div>
 
@@ -189,14 +217,15 @@ console.log(toRaw(props.powerupAssets));
 
                     <!-- Action Buttons -->
                     <div class="space-y-3">
-                        <Button class="w-full" size="lg">
-                            <Zap class="mr-2 h-4 w-4" />
+                        <Button class="w-full" size="lg" :disabled="form.processing">
+                            <Zap v-if="!form.processing" class="mr-2 h-4 w-4" />
+                            <Loader2 v-if="form.processing" class="mr-2 h-4 w-4 animate-spin" />
                             Create Power-Up
                         </Button>
-                        <Button variant="destructive" class="w-full"> Reset Form </Button>
+                        <Button @Click="deleteForm" variant="destructive" class="w-full"> Reset Form </Button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </template>
