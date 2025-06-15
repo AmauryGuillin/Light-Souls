@@ -42,7 +42,13 @@ function deleteForm() {
 
 <template>
     <form
-        @submit.prevent="form.post(route('powerupfactory.store'))"
+        @submit.prevent="
+            form.post(route('powerupfactory.store'), {
+                onSuccess: () => {
+                    form.reset();
+                },
+            })
+        "
         class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800"
     >
         <div class="container mx-auto p-6">
