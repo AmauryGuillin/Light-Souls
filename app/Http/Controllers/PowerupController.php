@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\PowerupBoosts;
 use App\Models\PowerUp;
+use App\Models\PowerUpAsset;
+use App\Models\PowerUpBoost;
+use App\Models\PowerUpType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +17,10 @@ class PowerupController extends Controller
      */
     public function index()
     {
-        return Inertia::render('gameDev/PowerUpFactory');
+        $powerupTypes = PowerUpType::select('id', 'type')->get();
+        $powerupBoosts = [PowerupBoosts::INCREASE, PowerUpBoosts::DECREASE];
+        $powerupAssets = PowerUpAsset::select('path')->get();
+        return Inertia::render('gameDev/PowerUpFactory', ['powerupTypes' =>  $powerupTypes, 'powerupBoosts' => $powerupBoosts, 'powerupAssets' => $powerupAssets]);
     }
 
     /**

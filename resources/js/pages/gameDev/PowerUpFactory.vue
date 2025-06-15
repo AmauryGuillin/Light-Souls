@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
+import { toRaw } from 'vue';
+
+const props = defineProps<{
+    powerupTypes: [{ id: number; type: string }];
+    powerupBoosts: string[];
+    powerupAssets: { path: string }[];
+}>();
+
+console.log(toRaw(props.powerupAssets));
 </script>
 
 <template>
@@ -48,10 +58,9 @@ import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
                                             <SelectValue placeholder="Select type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="attack">Attack</SelectItem>
-                                            <SelectItem value="defense">Defense</SelectItem>
-                                            <SelectItem value="speed">Speed</SelectItem>
-                                            <SelectItem value="firerate">FireRate</SelectItem>
+                                            <SelectItem v-for="item in powerupTypes" v-bind:key="item.id" :value="item.type">{{
+                                                item.type
+                                            }}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -70,8 +79,9 @@ import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
                                                 <SelectValue placeholder="Select type" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="increase">Increase</SelectItem>
-                                                <SelectItem value="decrease">Decrease</SelectItem>
+                                                <SelectItem v-for="item in powerupBoosts" :key="item" :value="item">
+                                                    {{ item }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -81,7 +91,11 @@ import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
                                     </div>
                                     <div class="space-y-2">
                                         <Label htmlFor="cooldown">Percentage</Label>
-                                        <Input id="cooldown" type="number" placeholder="10%" min="0" />
+                                        <Input id="cooldown" type="number" placeholder="10" min="0" />
+                                    </div>
+                                    <div class="space-y-2">
+                                        <Label htmlFor="unlock-level">Unlock Level</Label>
+                                        <Input id="unlock-level" type="number" placeholder="1" min="1" />
                                     </div>
                                 </div>
                             </div>
@@ -89,28 +103,29 @@ import { Brush, Settings, Sparkles, Zap } from 'lucide-vue-next';
                             <Separator />
 
                             <!-- Addtionnal Properties -->
-                            <div class="space-y-4">
+                            <div class="w-full space-y-4">
                                 <h3 class="text-lg font-semibold">Additional Properties</h3>
-                                <div class="grid gap-4 md:grid-cols-2">
-                                    <div class="space-y-2">
-                                        <Label htmlFor="rarity">Rarity Level</Label>
-                                        <Select>
-                                            <SelectTrigger class="w-full">
-                                                <SelectValue placeholder="Select rarity" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="common">Common</SelectItem>
-                                                <SelectItem value="uncommon">Uncommon</SelectItem>
-                                                <SelectItem value="rare">Rare</SelectItem>
-                                                <SelectItem value="epic">Epic</SelectItem>
-                                                <SelectItem value="legendary">Legendary</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <Label htmlFor="unlock-level">Unlock Level</Label>
-                                        <Input id="unlock-level" type="number" placeholder="1" min="1" />
-                                    </div>
+                                <div class="flex items-center justify-center">
+                                    <Carousel
+                                        class="w-full max-w-sm"
+                                        :opts="{
+                                            align: 'start',
+                                        }"
+                                    >
+                                        <CarouselContent class="-ml-1">
+                                            <CarouselItem v-for="(image, index) in powerupAssets" :key="index" class="pl-1 md:basis-1/2 lg:basis-1/3">
+                                                <div class="p-1">
+                                                    <Card>
+                                                        <CardContent class="flex aspect-square items-center justify-center p-6">
+                                                            <img :src="image.path" alt="" />
+                                                        </CardContent>
+                                                    </Card>
+                                                </div>
+                                            </CarouselItem>
+                                        </CarouselContent>
+                                        <CarouselPrevious />
+                                        <CarouselNext />
+                                    </Carousel>
                                 </div>
                             </div>
 
