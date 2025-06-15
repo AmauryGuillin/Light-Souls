@@ -31,7 +31,7 @@ const form = useForm<App.Data.PowerUpFormData>({
 
 function handleSelectedIllustration(selectedIllustrationId: number) {
     selectedIllustration.value = selectedIllustrationId;
-    if (form.assetId === null) form.assetId = selectedIllustration.value;
+    form.assetId = selectedIllustration.value;
 }
 
 function deleteForm() {
@@ -45,7 +45,7 @@ function deleteForm() {
         @submit.prevent="
             form.post(route('powerupfactory.store'), {
                 onSuccess: () => {
-                    form.reset();
+                    deleteForm();
                 },
             })
         "
@@ -144,7 +144,7 @@ function deleteForm() {
                                                     <Card
                                                         @Click="handleSelectedIllustration(index + 1)"
                                                         class="cursor-pointer transition-all hover:border-white"
-                                                        :class="selectedIllustration === index ? 'border-green-400' : ''"
+                                                        :class="selectedIllustration === index + 1 ? 'border-green-400' : ''"
                                                     >
                                                         <CardContent class="flex aspect-square items-center justify-center p-6">
                                                             <img :src="image.path" alt="" />

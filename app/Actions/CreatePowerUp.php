@@ -11,9 +11,7 @@ class CreatePowerUp
 {
     public function handle(PowerUpFormData $formData)
     {
-
         DB::transaction(function () use ($formData) {
-
             $boost = $this->createPowerUpBoost($formData);
             $this->createPowerUp($formData, $boost);
         });
