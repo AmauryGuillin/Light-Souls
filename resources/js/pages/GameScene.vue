@@ -393,6 +393,7 @@ function projectileHit(projectile: ProjectileType) {
             } else {
                 player.value.personalAttributes.level++;
                 player.value.personalAttributes.XP = 1;
+                getPowerUp();
             }
             enemy.states.isSpawned = false;
             enemy.states.canKill = false;
@@ -543,7 +544,6 @@ function getPowerUp() {
     fetch(`/game/powerup/${player.value.personalAttributes.level}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
             playerPowerUps.value = [];
             data.forEach((element: any) => {
                 playerPowerUps.value.push(element);

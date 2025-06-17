@@ -2,13 +2,18 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import PowerUpDialogContent from './PowerUpDialogContent.vue';
+import { ScrollArea } from './ui/scroll-area';
 
 const props = defineProps<{
     isBoostPageOpen: boolean;
     playerPowerUps: any[];
 }>();
 
-const emits = defineEmits<['update:HandlePauseStateWhenBonusPageOpen']>();
+// const emits = defineEmits(['update:HandlePauseStateWhenBonusPageOpen']);
+const emits = defineEmits<{
+    (e: 'update:HandlePauseStateWhenBonusPageOpen'): void;
+}>();
 </script>
 
 <template>
