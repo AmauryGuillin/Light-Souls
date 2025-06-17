@@ -5,14 +5,12 @@ import Enemy from '@/components/Enemy.vue';
 import GamePauseDialog from '@/components/GamePauseDialog.vue';
 import Player from '@/components/Player.vue';
 import PlayerInfo from '@/components/PlayerInfo.vue';
+import PowerUpDialog from '@/components/PowerUpDialog.vue';
 import Projectile from '@/components/Projectile.vue';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
-import { PowerUpType } from '@/types/game/powerup';
+
 import { ProjectileType } from '@/types/game/projectile';
 import { calculColisionBetweenTwoEntities, randomPositionX, randomPositionY } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -26,7 +24,7 @@ const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
 const enemies = ref<EnemyType[]>([]);
-const playerBonus = ref<PowerUpType | null>(null);
+const playerPowerUps = ref<App.Data.PowerupData[]>([]);
 let fireInterval: ReturnType<typeof setInterval> | null = null;
 let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
 let animationFrameId: number;
@@ -451,25 +449,6 @@ function spawnEnemy() {
 }
 
 /**
- * Make a bonus spawn into the scene
- * @Beta
- */
-function spawnPlayerBonus() {
-    if (isGamePaused.value) return;
-
-    const bonus = {
-        name: '',
-        bonusType: 'attack',
-        boost: {
-            damageMultiplier: 1.1,
-        },
-        description: '',
-    } as PowerUpType;
-
-    playerBonus.value = bonus;
-}
-
-/**
  * Prevent an entity to move out of a certain perimeter
  * @param val The entity position on the scene (X or Y axis)
  * @param min The minimum value in % (0 recommended)
@@ -551,6 +530,7 @@ onMounted(() => {
     window.addEventListener('keydown', pauseGame);
     window.addEventListener('keyup', movementKeyUp);
     animationFrameId = requestAnimationFrame(gameLoop);
+    spawnPlayer();
 });
 
 onUnmounted(() => {
@@ -558,6 +538,19 @@ onUnmounted(() => {
     window.removeEventListener('keyup', movementKeyUp);
     cancelAnimationFrame(animationFrameId);
 });
+
+function getPowerUp() {
+    fetch(`/game/powerup/${player.value.personalAttributes.level}`)
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            playerPowerUps.value = [];
+            data.forEach((element: any) => {
+                playerPowerUps.value.push(element);
+            });
+            isBoostPageOpen.value = true;
+        });
+}
 </script>
 
 <template>
@@ -567,57 +560,15 @@ onUnmounted(() => {
             @showHitboxes="showHitboxes"
             @spawnPlayer="spawnPlayer"
             @spawnEnemy="spawnEnemy"
-            @spawnPlayerBonus="spawnPlayerBonus"
             @playerStartShooting="playerStartShooting"
             @pause-game="pauseGame"
+            @get-power-up="getPowerUp"
         ></DebbugButtons>
-        <Dialog :open="isBoostPageOpen">
-            <DialogContent>
-                <DialogHeader class="gap-10">
-                    <DialogTitle>
-                        <h1 class="flex items-center justify-center text-4xl">SELECT AN UPGRADE</h1>
-                    </DialogTitle>
-                    <DialogDescription class="flex justify-center">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>
-                                    <img src="/assets/boost/damage-boost.png" alt="" srcset="" />
-                                </CardTitle>
-                                <CardDescription>Damage boost</CardDescription>
-                            </CardHeader>
-                            <CardContent> Increase by 10% your damages </CardContent>
-                            <CardFooter>
-                                <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
-                            </CardFooter>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>
-                                    <img src="/assets/boost/damage-boost.png" alt="" srcset="" />
-                                </CardTitle>
-                                <CardDescription>Damage boost</CardDescription>
-                            </CardHeader>
-                            <CardContent> Increase by 10% your damages </CardContent>
-                            <CardFooter>
-                                <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
-                            </CardFooter>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>
-                                    <img src="/assets/boost/damage-boost.png" alt="" srcset="" />
-                                </CardTitle>
-                                <CardDescription>Damage boost</CardDescription>
-                            </CardHeader>
-                            <CardContent> Increase by 10% your damages </CardContent>
-                            <CardFooter>
-                                <Button @click="HandlePauseStateWhenBonusPageOpen" class="w-full cursor-pointer">Select</Button>
-                            </CardFooter>
-                        </Card>
-                    </DialogDescription>
-                </DialogHeader>
-            </DialogContent>
-        </Dialog>
+        <PowerUpDialog
+            :is-boost-page-open="isBoostPageOpen"
+            :player-power-ups="playerPowerUps"
+            @update:HandlePauseStateWhenBonusPageOpen="HandlePauseStateWhenBonusPageOpen"
+        />
         <GamePauseDialog
             :open="isGamePaused"
             :isGameDevModeEnabled="isGameDevModeEnabled"
