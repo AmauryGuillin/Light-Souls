@@ -23,7 +23,7 @@ const props = defineProps<{
     >
         <img
             class=""
-            src="assets/enemie/Walk.gif"
+            src="assets/enemy/Walk.gif"
             alt=""
             :style="{
                 height: `${props.enemyDimH}px`,
