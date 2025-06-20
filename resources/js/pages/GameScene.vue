@@ -62,12 +62,14 @@ const player = ref<PlayerType>({
     },
     personalAttributes: {
         HP: 100,
-        fireRate: 1000, //ms
+        fireRate: 2000, //ms
         score: 0,
         XP: 1,
         level: 0,
     },
 } as PlayerType);
+
+const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
 
 watch(
     () => player.value.states.isSpawned,
@@ -551,6 +553,11 @@ function getPowerUp() {
             isBoostPageOpen.value = true;
         });
 }
+
+function upgradeAtkSpeed(value: number) {
+    previousPlayerFireRate.value = player.value.personalAttributes.fireRate;
+    player.value.personalAttributes.fireRate /= value;
+}
 </script>
 
 <template>
@@ -568,6 +575,7 @@ function getPowerUp() {
             :is-boost-page-open="isBoostPageOpen"
             :player-power-ups="playerPowerUps"
             @update:HandlePauseStateWhenBonusPageOpen="HandlePauseStateWhenBonusPageOpen"
+            @update:upgrade-atk-speed="upgradeAtkSpeed"
         />
         <GamePauseDialog
             :open="isGamePaused"
@@ -588,6 +596,8 @@ function getPowerUp() {
             :player-x-p="player.personalAttributes.XP"
             :player-level="player.personalAttributes.level"
             :player-spawn-state="player.states.isSpawned"
+            :player-fire-rate="player.personalAttributes.fireRate"
+            :previous-player-fire-rate="previousPlayerFireRate"
         />
 
         <Player

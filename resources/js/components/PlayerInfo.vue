@@ -9,6 +9,8 @@ const props = defineProps<{
     playerXP: number;
     playerLevel: number;
     playerSpawnState: boolean;
+    playerFireRate: number;
+    previousPlayerFireRate: number;
 }>();
 
 let percentage = 1;
@@ -31,5 +33,6 @@ watch(
         <div v-if="props.isGameDevModeEnabled" class="az-50 font-bold text-red-500">{{ props.playerHP }} HP</div>
         <div class="z-50 font-bold text-red-500">Level: {{ props.playerLevel }}</div>
         <div class="z-50 font-bold text-red-500">Score: {{ props.playerScore }}</div>
+        <div class="z-50 font-bold text-red-500">FireRate: {{ props.playerFireRate }}</div>
     </div>
 </template>

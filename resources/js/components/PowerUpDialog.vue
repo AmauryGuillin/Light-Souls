@@ -13,6 +13,7 @@ const props = defineProps<{
 // const emits = defineEmits(['update:HandlePauseStateWhenBonusPageOpen']);
 const emits = defineEmits<{
     (e: 'update:HandlePauseStateWhenBonusPageOpen'): void;
+    (e: 'update:upgradeAtkSpeed', value: number): void;
 }>();
 </script>
 
@@ -50,7 +51,7 @@ const emits = defineEmits<{
                         </ScrollArea>
 
                         <Button
-                            @Click="emits('update:HandlePauseStateWhenBonusPageOpen')"
+                            @Click="emits('update:upgradeAtkSpeed', powerup.boost.multiplier)"
                             class="w-full transform rounded-lg bg-amber-600 px-4 py-3 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-amber-500 hover:shadow-lg hover:shadow-amber-500/30"
                         >
                             SELECT
