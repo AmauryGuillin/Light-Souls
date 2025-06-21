@@ -557,6 +557,7 @@ function getPowerUp() {
 function upgradeAtkSpeed(value: number) {
     previousPlayerFireRate.value = player.value.personalAttributes.fireRate;
     player.value.personalAttributes.fireRate /= value;
+    isBoostPageOpen.value = false;
 }
 </script>
 
