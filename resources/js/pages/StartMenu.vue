@@ -21,11 +21,20 @@ function onVideoProgress(event: Event) {
 }
 
 function handleClick(item: string) {
-    if (item === menuItems[0]) {
-        console.log('start');
-        window.location.href = '/LightSouls';
-    } else if (item === menuItems[1]) {
-        console.log('settings');
+    switch (item) {
+        case menuItems[0]:
+            //window.open('https://light-souls.test/LightSouls');
+            window.location.href = '/LightSouls';
+            break;
+        case menuItems[1]:
+            console.log('setting');
+            break;
+        case menuItems[2]:
+            window.close();
+            break;
+        default:
+            console.log('default action', 'none');
+            break;
     }
 }
 </script>
@@ -51,7 +60,7 @@ function handleClick(item: string) {
             </div>
             <span class="text-xs text-white">{{ Math.round(videoProgress) }}%</span>
         </div>
-        <h1 v-if="videoLoaded" class="z-50 cursor-default text-9xl font-bold">Light Souls</h1>
+        <h1 v-if="videoLoaded" class="z-50 cursor-default text-9xl font-bold drop-shadow-[0_1.2px_1.2px_rgba(252,124,0,1)]">Light Souls</h1>
         <div v-if="videoLoaded" class="z-50 flex w-full flex-col items-center justify-center">
             <div class="z-50 flex flex-col items-center justify-center gap-3 text-xl">
                 <h2
