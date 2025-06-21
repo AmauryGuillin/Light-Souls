@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('StartMenu');
+    return Inertia::render('Landing');
 })->name('home');
 
 Route::get('LightSouls', function () {
@@ -22,3 +22,4 @@ Route::get('game/powerup/{playerLevel}', [GameController::class, 'powerup'])->mi
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/powerup.php';
+require __DIR__ . '/game.php';

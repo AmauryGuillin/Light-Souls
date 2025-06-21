@@ -23,7 +23,6 @@ function onVideoProgress(event: Event) {
 function handleClick(item: string) {
     switch (item) {
         case menuItems[0]:
-            //window.open('https://light-souls.test/LightSouls');
             window.location.href = '/LightSouls';
             break;
         case menuItems[1]:
