@@ -1,5 +1,24 @@
 <script setup lang="ts">
+import { Progress } from '@/components/ui/progress';
+import { LoaderCircle } from 'lucide-vue-next';
+import { ref } from 'vue';
+
 const menuItems = ['Start game', 'Settings', 'Quit game'];
+const videoLoaded = ref<boolean>(false);
+const videoProgress = ref<number>(0);
+
+function onVideoLoaded() {
+    videoLoaded.value = true;
+}
+
+function onVideoProgress(event: Event) {
+    const video = event.target as HTMLVideoElement;
+    if (video.buffered.length > 0) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        const duration = video.duration || 1;
+        videoProgress.value = Math.min((bufferedEnd / duration) * 100, 100);
+    }
+}
 
 function handleClick(item: string) {
     if (item === menuItems[0]) {
@@ -13,12 +32,27 @@ function handleClick(item: string) {
 
 <template>
     <div class="relative flex max-h-screen min-h-screen w-full flex-col items-center justify-center gap-10 font-(family-name:--font-game)">
-        <video id="intro-video" class="fixed inset-0 z-0 h-full w-full object-cover" autoplay loop preload="auto">
+        <video
+            id="intro-video"
+            class="fixed inset-0 z-0 h-full w-full object-cover"
+            autoplay
+            loop
+            preload="auto"
+            @canplaythrough="onVideoLoaded"
+            @progress="onVideoProgress"
+        >
             <source src="/assets/mainMenu/main-menu.mp4" type="video/mp4" />
             Your browser does not support the video tag.
         </video>
-        <h1 class="z-50 cursor-default text-9xl font-bold">Light Souls</h1>
-        <div class="z-50 flex w-full flex-col items-center justify-center">
+        <div v-if="!videoLoaded" class="h-fill z-50 flex w-full flex-col items-center justify-center gap-4">
+            <LoaderCircle class="animate-spin" />
+            <div class="h-2 w-1/2 rounded bg-gray-700">
+                <Progress class="w-full" :model-value="videoProgress" />
+            </div>
+            <span class="text-xs text-white">{{ Math.round(videoProgress) }}%</span>
+        </div>
+        <h1 v-if="videoLoaded" class="z-50 cursor-default text-9xl font-bold">Light Souls</h1>
+        <div v-if="videoLoaded" class="z-50 flex w-full flex-col items-center justify-center">
             <div class="z-50 flex flex-col items-center justify-center gap-3 text-xl">
                 <h2
                     v-for="item in menuItems"
