@@ -54,8 +54,8 @@ function handleClick(item: string) {
             Your browser does not support the video tag.
         </video>
         <div v-if="!videoLoaded" class="h-fill z-50 flex w-full flex-col items-center justify-center gap-4">
-            <LoaderCircle class="animate-spin" />
-            <div class="h-2 w-1/2 rounded bg-gray-700">
+            <span>Loading...</span> <LoaderCircle class="animate-spin" />
+            <div class="h-2 w-1/3 rounded bg-gray-700">
                 <Progress class="w-full" :model-value="videoProgress" />
             </div>
             <span class="text-xs text-white">{{ Math.round(videoProgress) }}%</span>
