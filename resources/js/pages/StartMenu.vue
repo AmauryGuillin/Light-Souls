@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Progress } from '@/components/ui/progress';
+import { Howl } from 'howler';
 import { LoaderCircle } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -17,12 +18,14 @@ function onVideoProgress(event: Event) {
         const bufferedEnd = video.buffered.end(video.buffered.length - 1);
         const duration = video.duration || 1;
         videoProgress.value = Math.min((bufferedEnd / duration) * 100, 100);
+        playMusic();
     }
 }
 
-function handleClick(item: string) {
+async function handleClick(item: string) {
     switch (item) {
         case menuItems[0]:
+            await playMenuSelectionSound();
             window.location.href = '/LightSouls';
             break;
         case menuItems[1]:
@@ -35,6 +38,34 @@ function handleClick(item: string) {
             console.log('default action', 'none');
             break;
     }
+}
+
+function playMusic() {
+    const sound = new Howl({
+        src: ['/assets/music/mainMenu/main-menu.mp3'],
+        volume: 0.5,
+        loop: true,
+    });
+    sound.play();
+}
+
+function playSelectSound() {
+    const sound = new Howl({
+        src: ['/assets/music/mainMenu/selection/Modern1.mp3'],
+        volume: 0.3,
+    });
+    sound.play();
+}
+
+function playMenuSelectionSound() {
+    return new Promise((resolve) => {
+        const sound = new Howl({
+            src: ['/assets/music/mainMenu/selection/menu-selection.mp3'],
+            volume: 0.3,
+            onend: resolve,
+        });
+        sound.play();
+    });
 }
 </script>
 
@@ -67,6 +98,7 @@ function handleClick(item: string) {
                     :key="item"
                     class="cursor-pointer transition-all duration-200 hover:scale-110 hover:font-bold hover:text-orange-400"
                     @click="handleClick(item)"
+                    @mouseenter="playSelectSound()"
                 >
                     {{ item }}
                 </h2>
