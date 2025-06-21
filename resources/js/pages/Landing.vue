@@ -30,17 +30,44 @@ const tutorialCardsContent = [
                         <span class="font-game text-2xl font-bold text-white">Light Souls</span>
                     </div>
                     <div class="hidden items-center space-x-6 md:flex">
-                        <Link href="/play" class="text-white transition-colors hover:text-purple-300"> Play Now </Link>
-                        <Link href="/leaderboard" class="text-white transition-colors hover:text-purple-300"> Leaderboard </Link>
-                        <Link href="/community" class="text-white transition-colors hover:text-purple-300"> Community </Link>
-                        <Link href="/about" class="text-white transition-colors hover:text-purple-300"> About </Link>
+                        <Link href="/play" class="text-white transition-colors hover:text-red-300"> Profile </Link>
+                        <Link href="/leaderboard" class="text-white transition-colors hover:text-red-300"> Leaderboard </Link>
+                        <a
+                            href="https://github.com/AmauryGuillin/Light-Souls"
+                            target="_blank"
+                            rel="noopener"
+                            class="text-white transition-colors hover:text-red-300"
+                        >
+                            GitHub
+                        </a>
+                        <Link href="/about" class="text-white transition-colors hover:text-red-300"> About </Link>
                     </div>
-                    <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700" @click="lauchGame">
-                        <div>
-                            <Play class="mr-2 h-4 w-4" />
-                            Play Now
-                        </div>
-                    </Button>
+                    <div class="flex space-x-2">
+                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700" @click="lauchGame">
+                            <div>
+                                <Play class="mr-2 h-4 w-4" />
+                                Play Now
+                            </div>
+                        </Button>
+                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
+                            <div>
+                                <Play class="h-4 w-4" />
+                                Disconnect
+                            </div>
+                        </Button>
+                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
+                            <div>
+                                <Play class="h-4 w-4" />
+                                Login
+                            </div>
+                        </Button>
+                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
+                            <div>
+                                <Play class="h-4 w-4" />
+                                Register
+                            </div>
+                        </Button>
+                    </div>
                 </nav>
             </div>
         </header>
