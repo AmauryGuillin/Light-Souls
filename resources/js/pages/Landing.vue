@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { ArrowRight, Play } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 function lauchGame() {
     window.open('https://light-souls.test/game/mainMenu');
@@ -17,6 +18,11 @@ const tutorialCardsContent = [
         subDescription: 'Keys used to move your character can be changed in the settings (WASD and ZQSD available).',
     },
 ];
+
+const page = usePage();
+const auth = (page.props as { auth?: { user?: any } }).auth;
+const user = auth?.user;
+const isAuthenticated = computed(() => !!user);
 </script>
 
 <template>
@@ -43,25 +49,25 @@ const tutorialCardsContent = [
                         <Link href="/about" class="text-white transition-colors hover:text-red-300"> About </Link>
                     </div>
                     <div class="flex space-x-2">
-                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700" @click="lauchGame">
+                        <Button v-if="isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700" @click="lauchGame">
                             <div>
                                 <Play class="mr-2 h-4 w-4" />
                                 Play Now
                             </div>
                         </Button>
-                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
+                        <Button v-if="isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
                             <div>
                                 <Play class="h-4 w-4" />
                                 Disconnect
                             </div>
                         </Button>
-                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
+                        <Button v-if="!isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
                             <div>
                                 <Play class="h-4 w-4" />
                                 Login
                             </div>
                         </Button>
-                        <Button asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
+                        <Button v-if="!isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
                             <div>
                                 <Play class="h-4 w-4" />
                                 Register

@@ -1,14 +1,12 @@
 <?php
 
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\PowerupController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Landing');
-})->name('home');
+Route::get('/', [LandingController::class, 'index'])->name('home');
 
 Route::get('LightSouls', function () {
     return Inertia::render('GameScene');

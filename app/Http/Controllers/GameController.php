@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\RetreivePowerUp;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class GameController extends Controller
