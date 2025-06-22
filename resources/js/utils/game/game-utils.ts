@@ -66,8 +66,9 @@ export function calculColisionBetweenTwoEntities(
 
 /**
  * Gère la fermeture de la page de bonus et enlève la pause du jeu.
- * @param isBoostPageOpen Ref<boolean> de l'état d'ouverture de la page de bonus
- * @param isGamePaused Ref<boolean> de l'état de pause du jeu
+ * @param isBoostPageOpen Ref<boolean> for the boost page open state
+ * @param isGamePaused Ref<boolean> for the pause state of the game
+ *
  */
 export function handlePauseStateWhenBonusPageOpen(isBoostPageOpen: Ref<boolean>, isGamePaused: Ref<boolean>) {
     isBoostPageOpen.value = false;
@@ -190,4 +191,66 @@ export function handleEnemiesMovementAnimations(enemies: Ref<EnemyType[]>, playe
             }
         }
     });
+}
+
+/**
+ * Démarre la boucle de tir du joueur.
+ * @param fireIntervalRef Ref<ReturnType<typeof setInterval> | null>
+ * @param player Ref<PlayerType>
+ * @param playerStartShooting Call this function for each shoot
+ * @param stopFiring Call this function to stop the shoot loop
+ *
+ */
+export function startFiring(
+    fireIntervalRef: Ref<ReturnType<typeof setInterval> | null>,
+    player: Ref<PlayerType>,
+    playerStartShooting: () => void,
+    stopFiring: () => void,
+) {
+    if (fireIntervalRef.value || !player.value.states.isSpawned) return;
+
+    fireIntervalRef.value = setInterval(() => {
+        if (!player.value.states.isSpawned) {
+            stopFiring();
+            return;
+        }
+        playerStartShooting();
+    }, player.value.personalAttributes.fireRate);
+}
+
+/**
+ * Démarre la boucle de spawn des ennemis.
+ * @param enemySpawnIntervalRef Ref<ReturnType<typeof setInterval> | null>
+ * @param player Ref<PlayerType>
+ * @param spawnEnemy Fonction à appeler pour faire apparaître un ennemi
+ * @param stopEnemySpawn Fonction pour arrêter la boucle de spawn
+ */
+export function startEnemiSpawn(
+    enemySpawnIntervalRef: Ref<ReturnType<typeof setInterval> | null>,
+    player: Ref<PlayerType>,
+    spawnEnemy: () => void,
+    stopEnemySpawn: () => void,
+) {
+    if (enemySpawnIntervalRef.value || !player.value.states.isSpawned) return;
+
+    const spawningRate = 1225 - player.value.personalAttributes.score / 20;
+
+    enemySpawnIntervalRef.value = setInterval(() => {
+        if (!player.value.states.isSpawned) {
+            stopEnemySpawn();
+            return;
+        }
+        spawnEnemy();
+    }, spawningRate);
+}
+
+/**
+ * Stoppe la boucle de tir du joueur.
+ * @param fireIntervalRef Ref<ReturnType<typeof setInterval> | null>
+ */
+export function stopFiring(fireIntervalRef: Ref<ReturnType<typeof setInterval> | null>) {
+    if (fireIntervalRef.value) {
+        clearInterval(fireIntervalRef.value);
+        fireIntervalRef.value = null;
+    }
 }

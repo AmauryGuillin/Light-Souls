@@ -21,6 +21,9 @@ import {
     handleProjectilesMovementAnimations,
     randomPositionX,
     randomPositionY,
+    startEnemiSpawn,
+    startFiring,
+    stopFiring,
 } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
@@ -34,8 +37,9 @@ const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
 const enemies = ref<EnemyType[]>([]);
 const playerPowerUps = ref<App.Data.PowerupData[]>([]);
-let fireInterval: ReturnType<typeof setInterval> | null = null;
-let enemySpawnInterval: ReturnType<typeof setInterval> | null = null;
+const fireInterval: ReturnType<typeof setInterval> | null = null;
+const fireIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
+const enemySpawnIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 let animationFrameId: number;
 const player = ref<PlayerType>({
     name: '',
@@ -84,10 +88,10 @@ watch(
     () => player.value.states.isSpawned,
     (newVal) => {
         if (newVal) {
-            startFiring();
-            startEnemiSpawn();
+            startFiring(ref(fireInterval), player, playerStartShooting, () => stopFiring(fireIntervalRef));
+            startEnemiSpawn(enemySpawnIntervalRef, player, spawnEnemy, stopEnemySpawn);
         } else {
-            stopFiring();
+            stopFiring(fireIntervalRef);
             stopEnemySpawn();
         }
     },
@@ -97,8 +101,8 @@ watch(
     () => player.value.personalAttributes.fireRate,
     () => {
         if (fireInterval) {
-            stopFiring();
-            startFiring();
+            stopFiring(fireIntervalRef);
+            startFiring(ref(fireInterval), player, playerStartShooting, () => stopFiring(fireIntervalRef));
         }
     },
 );
@@ -129,58 +133,13 @@ function gameLoop() {
 }
 
 /**
- * Initiate player's projectile shooting loop
- * @beta
- */
-function startFiring() {
-    if (fireInterval || !player.value.states.isSpawned) return;
-
-    fireInterval = setInterval(() => {
-        if (!player.value.states.isSpawned) {
-            stopFiring(); // sécurité
-            return;
-        }
-        playerStartShooting();
-    }, player.value.personalAttributes.fireRate);
-}
-
-/**
- * Initiate enemies spawning loop
- * @beta
- */
-function startEnemiSpawn() {
-    if (enemySpawnInterval || !player.value.states.isSpawned) return;
-
-    const spawningRate = 1225 - player.value.personalAttributes.score / 20;
-
-    enemySpawnInterval = setInterval(() => {
-        if (!player.value.states.isSpawned) {
-            stopEnemySpawn();
-            return;
-        }
-        spawnEnemy();
-    }, spawningRate);
-}
-
-/**
- * Stop player's projectile shooting loop
- * @beta
- */
-function stopFiring() {
-    if (fireInterval) {
-        clearInterval(fireInterval);
-        fireInterval = null;
-    }
-}
-
-/**
  * Stop enemies spawning loop
  * @beta
  */
 function stopEnemySpawn() {
-    if (enemySpawnInterval) {
-        clearInterval(enemySpawnInterval);
-        enemySpawnInterval = null;
+    if (enemySpawnIntervalRef.value) {
+        clearInterval(enemySpawnIntervalRef.value);
+        enemySpawnIntervalRef.value = null;
     }
 }
 
