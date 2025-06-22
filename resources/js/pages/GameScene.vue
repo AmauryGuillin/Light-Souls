@@ -12,7 +12,7 @@ import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 
 import { ProjectileType } from '@/types/game/projectile';
-import { calculColisionBetweenTwoEntities, randomPositionX, randomPositionY } from '@/utils/game/game-utils';
+import { calculColisionBetweenTwoEntities, clamp, randomPositionX, randomPositionY } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
@@ -42,7 +42,7 @@ const player = ref<PlayerType>({
                 left: false,
                 right: false,
             },
-            speed: 0.1,
+            speed: 0.5, //0.1
         },
     },
     structure: {
@@ -451,15 +451,6 @@ function spawnEnemy() {
     enemies.value.push(enemy);
 }
 
-/**
- * Prevent an entity to move out of a certain perimeter
- * @param val The entity position on the scene (X or Y axis)
- * @param min The minimum value in % (0 recommended)
- * @param max The maximum value in % (value < 100 recommended)
- */
-function clamp(val: number, min: number, max: number) {
-    return Math.max(min, Math.min(max, val));
-}
 /**
  * Handle keyboard events in order to begin player's actions in the scene
  * @param e The keyboard event to track.

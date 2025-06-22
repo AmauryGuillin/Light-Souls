@@ -1,6 +1,5 @@
 import { EnemyType } from '@/types/game/enemy';
 import { PlayerType } from '@/types/game/player';
-import { PowerUpType } from '@/types/game/powerup';
 import { ProjectileType } from '@/types/game/projectile';
 import { Ref } from 'vue';
 
@@ -21,14 +20,24 @@ export function randomPositionY(): number {
 }
 
 /**
+ * Prevent an entity to move out of a certain perimeter
+ * @param val The entity position on the scene (X or Y axis)
+ * @param min The minimum value in % (0 recommended)
+ * @param max The maximum value in % (value < 100 recommended)
+ */
+export function clamp(val: number, min: number, max: number) {
+    return Math.max(min, Math.min(max, val));
+}
+
+/**
  * Define a boolean that determine if the first entity and the second entity are colliding
  * @param firstEntity The entity that will be collided
  * @param secondEntity The entity that aims to collide the first entity
  * @beta
  */
 export function calculColisionBetweenTwoEntities(
-    firstEntity: PlayerType | EnemyType | ProjectileType | PowerUpType,
-    secondEntity: PlayerType | EnemyType | ProjectileType | PowerUpType,
+    firstEntity: PlayerType | EnemyType | ProjectileType,
+    secondEntity: PlayerType | EnemyType | ProjectileType,
     sceneRef: Ref<HTMLElement | null, HTMLElement | null>,
 ): boolean {
     if (!sceneRef.value) return false;
