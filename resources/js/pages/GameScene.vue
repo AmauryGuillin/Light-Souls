@@ -129,57 +129,6 @@ function gameLoop() {
 }
 
 /**
- * Handle enemies movement animations
- * @beta
- */
-// function handleEnemiesMovementAnimations() {
-//     enemies.value.forEach((enemy) => {
-//         if (!enemy.states.isSpawned) return;
-
-//         const dx = player.value.position.X - enemy.position.X;
-//         const dy = player.value.position.Y - enemy.position.Y;
-//         const distance = Math.sqrt(dx * dx + dy * dy);
-
-//         if (dx >= 0) {
-//             enemy.orientation.right = true;
-//             enemy.orientation.left = false;
-//         } else {
-//             enemy.orientation.right = false;
-//             enemy.orientation.left = true;
-//         }
-//         if (distance > 1e-2) {
-//             enemy.position.X += (dx / distance) * enemy.personalAttributes.movementSpeed;
-//             enemy.position.Y += (dy / distance) * enemy.personalAttributes.movementSpeed;
-//         }
-
-//         if (
-//             Math.round(enemy.position.X) === Math.round(player.value.position.X) &&
-//             Math.round(enemy.position.Y) === Math.round(player.value.position.Y)
-//         ) {
-//             const now = performance.now();
-//             const timeSinceLastHit = now - player.value.states.lastDamageTime;
-//             const damageCoolDown = 500; // ms
-
-//             if (timeSinceLastHit > damageCoolDown && player.value.personalAttributes.HP > 0) {
-//                 player.value.personalAttributes.HP -=
-//                     enemy.personalAttributes.damage *
-//                     enemies.value.filter(
-//                         (e) =>
-//                             Math.round(e.position.X) === Math.round(player.value.position.X) &&
-//                             Math.round(e.position.Y) === Math.round(player.value.position.Y),
-//                     ).length;
-//                 player.value.states.lastDamageTime = now;
-
-//                 if (player.value.personalAttributes.HP <= 0) {
-//                     player.value.states.isSpawned = false;
-//                     return;
-//                 }
-//             }
-//         }
-//     });
-// }
-
-/**
  * Initiate player's projectile shooting loop
  * @beta
  */
