@@ -2,12 +2,21 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, usePage } from '@inertiajs/vue3';
-import { ArrowRight, Play } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { ArrowRight, LogIn, LogOut, Play } from 'lucide-vue-next';
+import { computed, toRaw } from 'vue';
 
-function lauchGame() {
-    window.open('https://light-souls.test/game/mainMenu');
-}
+const props = defineProps<{
+    stats: {
+        users: number;
+    };
+}>();
+
+console.log(toRaw(props.stats.users));
+
+const page = usePage();
+const auth = (page.props as { auth?: { user?: any } }).auth;
+const user = auth?.user;
+const isAuthenticated = computed(() => !!user);
 
 const tutorialCardsContent = [
     {
@@ -19,10 +28,9 @@ const tutorialCardsContent = [
     },
 ];
 
-const page = usePage();
-const auth = (page.props as { auth?: { user?: any } }).auth;
-const user = auth?.user;
-const isAuthenticated = computed(() => !!user);
+function lauchGame() {
+    window.open('https://light-souls.test/game/mainMenu');
+}
 </script>
 
 <template>
@@ -55,23 +63,23 @@ const isAuthenticated = computed(() => !!user);
                                 Play Now
                             </div>
                         </Button>
-                        <Button v-if="isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
-                            <div>
-                                <Play class="h-4 w-4" />
+                        <Button v-if="isAuthenticated" asChild class="cursor-pointer bg-orange-500 text-white hover:bg-orange-700">
+                            <Link href="/logout" method="post">
+                                <LogOut class="h-4 w-4" />
                                 Disconnect
-                            </div>
+                            </Link>
                         </Button>
                         <Button v-if="!isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
-                            <div>
-                                <Play class="h-4 w-4" />
+                            <Link href="/login">
+                                <LogIn class="h-4 w-4" />
                                 Login
-                            </div>
+                            </Link>
                         </Button>
                         <Button v-if="!isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700">
-                            <div>
-                                <Play class="h-4 w-4" />
+                            <Link href="/register">
+                                <LogIn class="h-4 w-4" />
                                 Register
-                            </div>
+                            </Link>
                         </Button>
                     </div>
                 </nav>
@@ -109,7 +117,7 @@ const isAuthenticated = computed(() => !!user);
                     <div class="text-center">
                         <div class="mb-2 flex items-center justify-center">
                             <Users class="mr-2 h-6 w-6 text-purple-400" />
-                            <span class="text-3xl font-bold text-white">...</span>
+                            <span class="text-3xl font-bold text-white">{{ props.stats.users }}</span>
                         </div>
                         <p class="text-gray-400">Total Players</p>
                     </div>

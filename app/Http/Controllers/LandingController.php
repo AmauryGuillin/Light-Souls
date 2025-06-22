@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class LandingController extends Controller
@@ -12,7 +14,12 @@ class LandingController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Landing');
+        $totalUserNumber = User::all()->count();
+
+        $stats = [
+            'users' => $totalUserNumber
+        ];
+        return Inertia::render('Landing', ['stats' => $stats]);
     }
 
     /**

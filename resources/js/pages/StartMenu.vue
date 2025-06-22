@@ -16,7 +16,7 @@ const playerInteracted = ref<boolean>(false);
 const musicON = ref<boolean>(true);
 const soundEffectON = ref<boolean>(true);
 const musicVolume = ref<number>(0);
-const soundEffetcsVolume = ref<number>(3);
+const soundEffetcsVolume = ref<number>(0.3);
 
 const mainMenuMusic = new Howl({
     src: ['/assets/music/mainMenu/main-menu.mp3'],
