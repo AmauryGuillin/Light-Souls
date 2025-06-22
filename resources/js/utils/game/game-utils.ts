@@ -73,3 +73,46 @@ export function handlePauseStateWhenBonusPageOpen(isBoostPageOpen: Ref<boolean>,
     isBoostPageOpen.value = false;
     isGamePaused.value = false;
 }
+
+/**
+ * Handle player movement
+ * @param player Ref<PlayerType>
+ */
+export function handlePlayerMovementAnimation(player: Ref<PlayerType>) {
+    if (player.value.states.isSpawned) {
+        const keys = player.value.actions.movement.keys;
+        const speed = player.value.actions.movement.speed;
+
+        let isMoving = false;
+        let directionLeft = false;
+        let directionRight = false;
+
+        if (keys.z.pressed) {
+            player.value.position.Y -= speed;
+            isMoving = true;
+        }
+        if (keys.s.pressed) {
+            player.value.position.Y += speed;
+            isMoving = true;
+        }
+        if (keys.q.pressed) {
+            player.value.position.X -= speed;
+            directionLeft = true;
+            directionRight = false;
+            isMoving = true;
+        }
+        if (keys.d.pressed) {
+            player.value.position.X += speed;
+            directionLeft = false;
+            directionRight = true;
+            isMoving = true;
+        }
+
+        player.value.actions.movement.isMoving = isMoving;
+        player.value.actions.movement.direction.left = directionLeft;
+        player.value.actions.movement.direction.right = directionRight;
+    }
+
+    player.value.position.X = clamp(player.value.position.X, 0, 93);
+    player.value.position.Y = clamp(player.value.position.Y, 0, 86);
+}
