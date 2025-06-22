@@ -117,12 +117,21 @@ watch(
     },
 );
 
+watch(
+    () => isBoostPageOpen.value,
+    (state) => {
+        if (!state) {
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+    },
+);
+
 /**
  * Handle most animations required for the game
  * @beta
  */
 function gameLoop() {
-    if (isGamePaused.value || player.value.personalAttributes.HP <= 0) return;
+    if (isGamePaused.value || player.value.personalAttributes.HP <= 0 || isBoostPageOpen.value) return;
 
     handlePlayerMovementAnimation(player);
 
@@ -151,7 +160,7 @@ function spawnPlayer() {
  * @beta
  */
 function playerStartShooting() {
-    if (!player.value.states.isSpawned || isGamePaused.value) return;
+    if (!player.value.states.isSpawned || isGamePaused.value || isBoostPageOpen.value) return;
     if (!isPlayerProjectilesEnabled.value) return;
     const projectile = markRaw<ProjectileType>({
         id: crypto.randomUUID(),
@@ -206,12 +215,12 @@ function projectileMovement(projectile: ProjectileType) {
             return;
         }
 
-        if (isGamePaused.value || player.value.personalAttributes.HP > 0) return;
+        if (isGamePaused.value || player.value.personalAttributes.HP > 0 || isBoostPageOpen.value) return;
 
         requestAnimationFrame(animateProjectile);
     }
 
-    if (isGamePaused.value || player.value.personalAttributes.HP > 0) return;
+    if (isGamePaused.value || player.value.personalAttributes.HP > 0 || isBoostPageOpen.value) return;
 
     requestAnimationFrame(animateProjectile);
 }
@@ -247,7 +256,7 @@ function projectileHit(projectile: ProjectileType) {
  * @beta
  */
 function spawnEnemy() {
-    if (isGamePaused.value) return;
+    if (isGamePaused.value || isBoostPageOpen.value) return;
 
     if (!isEnemiesEnabled.value) return;
     const enemy = markRaw<EnemyType>({
