@@ -254,3 +254,14 @@ export function stopFiring(fireIntervalRef: Ref<ReturnType<typeof setInterval> |
         fireIntervalRef.value = null;
     }
 }
+
+/**
+ * Stoppe la boucle de spawn des ennemis.
+ * @param enemySpawnIntervalRef Ref<ReturnType<typeof setInterval> | null>
+ */
+export function stopEnemySpawn(enemySpawnIntervalRef: Ref<ReturnType<typeof setInterval> | null>) {
+    if (enemySpawnIntervalRef.value) {
+        clearInterval(enemySpawnIntervalRef.value);
+        enemySpawnIntervalRef.value = null;
+    }
+}

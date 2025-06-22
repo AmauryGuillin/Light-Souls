@@ -23,6 +23,7 @@ import {
     randomPositionY,
     startEnemiSpawn,
     startFiring,
+    stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -55,7 +56,7 @@ const player = ref<PlayerType>({
                 left: false,
                 right: false,
             },
-            speed: 0.1, //0.1
+            speed: 0.1,
         },
     },
     structure: {
@@ -89,10 +90,10 @@ watch(
     (newVal) => {
         if (newVal) {
             startFiring(ref(fireInterval), player, playerStartShooting, () => stopFiring(fireIntervalRef));
-            startEnemiSpawn(enemySpawnIntervalRef, player, spawnEnemy, stopEnemySpawn);
+            startEnemiSpawn(enemySpawnIntervalRef, player, spawnEnemy, () => stopEnemySpawn(enemySpawnIntervalRef));
         } else {
             stopFiring(fireIntervalRef);
-            stopEnemySpawn();
+            stopEnemySpawn(enemySpawnIntervalRef);
         }
     },
 );
@@ -130,17 +131,6 @@ function gameLoop() {
     handleEnemiesMovementAnimations(enemies, player);
 
     animationFrameId = requestAnimationFrame(gameLoop);
-}
-
-/**
- * Stop enemies spawning loop
- * @beta
- */
-function stopEnemySpawn() {
-    if (enemySpawnIntervalRef.value) {
-        clearInterval(enemySpawnIntervalRef.value);
-        enemySpawnIntervalRef.value = null;
-    }
 }
 
 /**
