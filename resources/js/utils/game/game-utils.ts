@@ -63,3 +63,13 @@ export function calculColisionBetweenTwoEntities(
 
     return isColliding;
 }
+
+/**
+ * Gère la fermeture de la page de bonus et enlève la pause du jeu.
+ * @param isBoostPageOpen Ref<boolean> de l'état d'ouverture de la page de bonus
+ * @param isGamePaused Ref<boolean> de l'état de pause du jeu
+ */
+export function handlePauseStateWhenBonusPageOpen(isBoostPageOpen: Ref<boolean>, isGamePaused: Ref<boolean>) {
+    isBoostPageOpen.value = false;
+    isGamePaused.value = false;
+}

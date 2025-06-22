@@ -12,7 +12,13 @@ import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 
 import { ProjectileType } from '@/types/game/projectile';
-import { calculColisionBetweenTwoEntities, clamp, randomPositionX, randomPositionY } from '@/utils/game/game-utils';
+import {
+    calculColisionBetweenTwoEntities,
+    clamp,
+    handlePauseStateWhenBonusPageOpen,
+    randomPositionX,
+    randomPositionY,
+} from '@/utils/game/game-utils';
 import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
@@ -338,12 +344,8 @@ function playerStartShooting() {
     projectileMovement(projectile);
 }
 
-/**
- * Enable the PAUSE state when the bonus selection page is displayed
- * @beta
- */
-function HandlePauseStateWhenBonusPageOpen() {
-    isBoostPageOpen.value = false;
+function onBonusPageClose() {
+    handlePauseStateWhenBonusPageOpen(isBoostPageOpen, isGamePaused);
 }
 
 /**
@@ -566,7 +568,7 @@ function upgradeAtkSpeed(value: number) {
         <PowerUpDialog
             :is-boost-page-open="isBoostPageOpen"
             :player-power-ups="playerPowerUps"
-            @update:HandlePauseStateWhenBonusPageOpen="HandlePauseStateWhenBonusPageOpen"
+            @update:HandlePauseStateWhenBonusPageOpen="onBonusPageClose"
             @update:upgrade-atk-speed="upgradeAtkSpeed"
         />
         <GamePauseDialog
