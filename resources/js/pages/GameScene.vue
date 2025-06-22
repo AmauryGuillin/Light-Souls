@@ -17,6 +17,7 @@ import {
     clamp,
     handlePauseStateWhenBonusPageOpen,
     handlePlayerMovementAnimation,
+    handleProjectilesMovementAnimations,
     randomPositionX,
     randomPositionY,
 } from '@/utils/game/game-utils';
@@ -49,7 +50,7 @@ const player = ref<PlayerType>({
                 left: false,
                 right: false,
             },
-            speed: 0.5, //0.1
+            speed: 0.1, //0.1
         },
     },
     structure: {
@@ -119,33 +120,11 @@ function gameLoop() {
 
     handlePlayerMovementAnimation(player);
 
-    handleProjectilesMovementAnimations();
+    handleProjectilesMovementAnimations(projectiles, projectileHit);
 
     handleEnemiesMovementAnimations();
 
     animationFrameId = requestAnimationFrame(gameLoop);
-}
-
-/**
- * Handle player's projectiles animations
- * @beta
- */
-function handleProjectilesMovementAnimations() {
-    projectiles.value.forEach((projectile) => {
-        if (!projectile.states.isSpawned) return;
-
-        projectile.position.X += projectile.speed;
-
-        if (projectile.states.lifeSpan <= 0 || projectile.position.X >= 99) {
-            projectile.states.isSpawned = false;
-        } else {
-            projectile.states.lifeSpan -= 16.6; // approx. frame duration
-        }
-
-        projectileHit(projectile);
-    });
-
-    projectiles.value = projectiles.value.filter((p) => p.states.isSpawned);
 }
 
 /**

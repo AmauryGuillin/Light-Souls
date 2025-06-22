@@ -116,3 +116,26 @@ export function handlePlayerMovementAnimation(player: Ref<PlayerType>) {
     player.value.position.X = clamp(player.value.position.X, 0, 93);
     player.value.position.Y = clamp(player.value.position.Y, 0, 86);
 }
+
+/**
+ * Handle player's projectiles animations
+ * @param projectiles Ref<ProjectileType[]>
+ * @param projectileHit Function to handle projectile collision
+ */
+export function handleProjectilesMovementAnimations(projectiles: Ref<ProjectileType[]>, projectileHit: (projectile: ProjectileType) => void) {
+    projectiles.value.forEach((projectile) => {
+        if (!projectile.states.isSpawned) return;
+
+        projectile.position.X += projectile.speed;
+
+        if (projectile.states.lifeSpan <= 0 || projectile.position.X >= 99) {
+            projectile.states.isSpawned = false;
+        } else {
+            projectile.states.lifeSpan -= 16.6; // approx. frame duration
+        }
+
+        projectileHit(projectile);
+    });
+
+    projectiles.value = projectiles.value.filter((p) => p.states.isSpawned);
+}
