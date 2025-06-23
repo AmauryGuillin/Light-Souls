@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Profile;
 use App\Models\Settings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SettingsController extends Controller
 {
@@ -19,8 +20,8 @@ class SettingsController extends Controller
 
     public function getUserSettings(string $userId)
     {
-        $profile = Profile::where('user_id', $userId)->first();
-        return Settings::where('profile_id', $profile->id)->first();
+        $profile = Profile::where('user_id', $userId)->firstOrFail();
+        return Settings::where('profile_id', $profile->id)->firstOrFail();
     }
 
     /**
@@ -42,9 +43,19 @@ class SettingsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        DB::transaction(function () use ($request) {
+            $profile = Profile::where('user_id', $request->input('user_id'))->firstOrFail();
+            $settings = Settings::where('profile_id', $profile->id)->firstOrFail();
+
+            $settings->update([
+                'music_volume' => $request->input('music_volume'),
+                'sound_effects_volume' => $request->input('sound_effects_volume')
+            ]);
+
+            return back();
+        });
     }
 
     /**

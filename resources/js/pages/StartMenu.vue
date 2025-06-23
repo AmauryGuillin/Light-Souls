@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
-import { usePage } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import { Howl } from 'howler';
 import { LoaderCircle } from 'lucide-vue-next';
-import { onMounted, ref, toRaw } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const menuItems = ['Start game', 'Settings', 'Quit game'];
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -32,13 +32,10 @@ const page = usePage();
 const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
 
-console.log(toRaw(user));
-
 function retreiveUserSettings(userId: number) {
     fetch(`/game/user/profile/settings/${userId}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
             musicVolume.value = data.music_volume;
             soundEffetcsVolume.value = data.sound_effects_volume;
             mainMenuMusic.volume(musicVolume.value);
@@ -47,6 +44,15 @@ function retreiveUserSettings(userId: number) {
         .then(() => {
             playMusic();
         });
+}
+
+async function sendUserSettings(userId: number) {
+    const form = useForm({
+        user_id: userId,
+        music_volume: musicVolume.value,
+        sound_effects_volume: soundEffetcsVolume.value,
+    });
+    router.patch(route('settings.update'), form.data());
 }
 
 function onVideoLoaded() {
@@ -68,14 +74,15 @@ function handlePlayerFirstInterfaction() {
     videoRef.value?.play();
 }
 
-function handleSettings() {
+async function handleSettings() {
     if (!settings.value) {
         settings.value = true;
         playMenuSelectionSound();
         return;
     }
-    settings.value = false;
     playMenuSelectionSound();
+    await sendUserSettings(user.id);
+    settings.value = false;
 }
 
 async function handleClick(item: string) {

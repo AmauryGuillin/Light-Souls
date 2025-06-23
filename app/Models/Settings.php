@@ -13,7 +13,7 @@ class Settings extends Model
         'profile_id',
         'keyboard_config',
         'music_volume',
-        'sound_effect_volume'
+        'sound_effects_volume'
     ];
 
     public function profile(): BelongsTo
