@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
 import { router, useForm, usePage } from '@inertiajs/vue3';
@@ -18,6 +19,7 @@ const musicON = ref<boolean>(true);
 const soundEffectON = ref<boolean>(true);
 const musicVolume = ref<number>(0);
 const soundEffetcsVolume = ref<number>(0.3);
+const keyboardConfig = ref<string>('WASD');
 const mainMenuMusic = new Howl({
     src: ['/assets/music/mainMenu/main-menu.mp3'],
     volume: musicVolume.value,
@@ -40,6 +42,7 @@ function retreiveUserSettings(userId: number) {
             soundEffetcsVolume.value = data.sound_effects_volume;
             mainMenuMusic.volume(musicVolume.value);
             soundEffect.volume(soundEffetcsVolume.value);
+            keyboardConfig.value = data.keyboard_config;
         })
         .then(() => {
             playMusic();
@@ -51,6 +54,7 @@ async function sendUserSettings(userId: number) {
         user_id: userId,
         music_volume: musicVolume.value,
         sound_effects_volume: soundEffetcsVolume.value,
+        keyboard_config: keyboardConfig.value,
     });
     router.patch(route('settings.update'), form.data());
 }
@@ -181,7 +185,7 @@ onMounted(() => {
             <Dialog :open="settings && playerInteracted">
                 <DialogContent class="font-game">
                     <DialogHeader>
-                        <DialogTitle class="text-center">SETTINGS</DialogTitle>
+                        <DialogTitle class="text-center text-3xl">SETTINGS</DialogTitle>
                         <DialogDescription>
                             <div class="mt-5 grid w-full grid-cols-3 items-center justify-center gap-5">
                                 <span>Music volume: </span>
@@ -205,9 +209,24 @@ onMounted(() => {
                                 />
                                 <span class="text-lg">{{ soundEffetcsVolume * 10 }}</span>
                             </div>
+                            <div class="mt-5 grid w-full grid-cols-3 items-center justify-center gap-5">
+                                <span>Keyboard configuration: </span>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger as-child>
+                                        <Button variant="outline"> {{ keyboardConfig }} </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent class="w-56">
+                                        <!-- <DropdownMenuLabel>Panel Position</DropdownMenuLabel> -->
+                                        <!-- <DropdownMenuSeparator /> -->
+                                        <DropdownMenuRadioGroup v-model="keyboardConfig">
+                                            <DropdownMenuRadioItem value="WASD"> WASD </DropdownMenuRadioItem>
+                                            <DropdownMenuRadioItem value="ZQSD"> ZQSD </DropdownMenuRadioItem>
+                                        </DropdownMenuRadioGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
                         </DialogDescription>
                     </DialogHeader>
-
                     <DialogFooter>
                         <Button @click="handleSettings" class="font-bold"> Save changes </Button>
                     </DialogFooter>

@@ -51,7 +51,8 @@ class SettingsController extends Controller
 
             $settings->update([
                 'music_volume' => $request->input('music_volume'),
-                'sound_effects_volume' => $request->input('sound_effects_volume')
+                'sound_effects_volume' => $request->input('sound_effects_volume'),
+                'keyboard_config' => $request->input('keyboard_config'),
             ]);
 
             return back();
