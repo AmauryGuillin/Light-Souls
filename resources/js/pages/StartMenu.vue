@@ -183,7 +183,7 @@ onMounted(() => {
                 <span class="animate-pulse cursor-default text-4xl" @click="handlePlayerFirstInterfaction">Click here to continue</span>
             </div>
             <Dialog :open="settings && playerInteracted">
-                <DialogContent class="font-game">
+                <DialogContent class="font-game bg-gradient-to-tr from-black via-black to-red-800">
                     <DialogHeader>
                         <DialogTitle class="text-center text-3xl">SETTINGS</DialogTitle>
                         <DialogDescription>
