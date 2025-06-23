@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
+import { usePage } from '@inertiajs/vue3';
 import { Howl } from 'howler';
 import { LoaderCircle } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onMounted, ref, toRaw } from 'vue';
 
 const menuItems = ['Start game', 'Settings', 'Quit game'];
 const videoRef = ref<HTMLVideoElement | null>(null);
@@ -17,17 +18,36 @@ const musicON = ref<boolean>(true);
 const soundEffectON = ref<boolean>(true);
 const musicVolume = ref<number>(0);
 const soundEffetcsVolume = ref<number>(0.3);
-
 const mainMenuMusic = new Howl({
     src: ['/assets/music/mainMenu/main-menu.mp3'],
     volume: musicVolume.value,
     loop: true,
 });
-
 const soundEffect = new Howl({
     src: ['/assets/music/mainMenu/selection/Modern1.mp3'],
     volume: soundEffetcsVolume.value,
 });
+
+const page = usePage();
+const auth = (page.props as { auth?: { user?: any } }).auth;
+const user = auth?.user;
+
+console.log(toRaw(user));
+
+function retreiveUserSettings(userId: number) {
+    fetch(`/game/user/profile/settings/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data);
+            musicVolume.value = data.music_volume;
+            soundEffetcsVolume.value = data.sound_effects_volume;
+            mainMenuMusic.volume(musicVolume.value);
+            soundEffect.volume(soundEffetcsVolume.value);
+        })
+        .then(() => {
+            playMusic();
+        });
+}
 
 function onVideoLoaded() {
     videoLoaded.value = true;
@@ -39,7 +59,6 @@ function onVideoProgress(event: Event) {
         const bufferedEnd = video.buffered.end(video.buffered.length - 1);
         const duration = video.duration || 1;
         videoProgress.value = Math.min((bufferedEnd / duration) * 100, 100);
-        playMusic();
     }
 }
 
@@ -108,6 +127,10 @@ function playMenuSelectionSound() {
         soundEffectSelection.play();
     });
 }
+
+onMounted(() => {
+    retreiveUserSettings(user.id);
+});
 </script>
 
 <template>
