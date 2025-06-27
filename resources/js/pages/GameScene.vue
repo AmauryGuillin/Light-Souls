@@ -42,6 +42,7 @@ const playerPowerUps = ref<App.Data.PowerupData[]>([]);
 const fireInterval: ReturnType<typeof setInterval> | null = null;
 const fireIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 const enemySpawnIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
+const damagesToDisplay = ref<DamageDisplay[]>([]);
 let animationFrameId: number;
 const player = ref<PlayerType>({
     name: '',
@@ -57,7 +58,7 @@ const player = ref<PlayerType>({
                 left: false,
                 right: false,
             },
-            speed: 0.1,
+            speed: 0.05,
         },
     },
     structure: {
@@ -83,10 +84,7 @@ const player = ref<PlayerType>({
         level: 0,
     },
 } as PlayerType);
-
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
-
-const damagesToDisplay = ref<DamageDisplay[]>([]);
 
 watch(
     () => player.value.states.isSpawned,
