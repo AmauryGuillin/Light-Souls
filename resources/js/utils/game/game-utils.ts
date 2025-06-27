@@ -16,7 +16,7 @@ export function randomPositionX(): number {
  * @returns A random number
  */
 export function randomPositionY(): number {
-    return Math.floor(Math.random() * 94);
+    return Math.floor(Math.random() * 92);
 }
 
 /**

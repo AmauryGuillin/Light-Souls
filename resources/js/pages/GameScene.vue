@@ -177,7 +177,7 @@ function playerStartShooting() {
             X: player.value.position.X + 5,
             Y: player.value.position.Y + 2,
         },
-        speed: 0.05,
+        speed: 0.07,
         hitBox: {
             height: 1,
             width: 1,
@@ -283,7 +283,7 @@ function spawnEnemy() {
         id: crypto.randomUUID(),
         personalAttributes: {
             HP: 100,
-            movementSpeed: 0.05,
+            movementSpeed: 0.03,
             damage: 10,
         },
         structure: {
