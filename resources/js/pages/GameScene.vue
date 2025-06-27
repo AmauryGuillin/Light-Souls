@@ -7,6 +7,7 @@ import Player from '@/components/Player.vue';
 import PlayerInfo from '@/components/PlayerInfo.vue';
 import PowerUpDialog from '@/components/PowerUpDialog.vue';
 import Projectile from '@/components/Projectile.vue';
+import { DamageDisplay } from '@/types/game/DamageDisplay';
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
@@ -84,14 +85,6 @@ const player = ref<PlayerType>({
 } as PlayerType);
 
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
-
-type DamageDisplay = {
-    id: string;
-    enemyId: string;
-    value: number;
-    x: number;
-    y: number;
-};
 
 const damagesToDisplay = ref<DamageDisplay[]>([]);
 
