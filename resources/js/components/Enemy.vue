@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{
+    enemyId: string;
     enemySpawnState: boolean;
     enemyPosX: number;
     enemyPosY: number;
@@ -9,6 +10,7 @@ const props = defineProps<{
         left: boolean;
         right: boolean;
     };
+    damagesToDisplay: any;
 }>();
 </script>
 
@@ -32,4 +34,16 @@ const props = defineProps<{
             }"
         />
     </div>
+    <span
+        v-for="damage in damagesToDisplay.filter((d: any) => d.enemyId === enemyId)"
+        :key="damage.id"
+        class="absolute z-50 animate-bounce text-lg font-bold text-red-500"
+        :style="{
+            top: `${enemyPosY - 2}%`,
+            left: `${enemyPosX + 2}%`,
+            pointerEvents: 'none',
+        }"
+    >
+        -{{ damage.value }}
+    </span>
 </template>

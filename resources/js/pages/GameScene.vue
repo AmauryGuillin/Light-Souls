@@ -85,6 +85,16 @@ const player = ref<PlayerType>({
 
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
 
+type DamageDisplay = {
+    id: string;
+    enemyId: string;
+    value: number;
+    x: number;
+    y: number;
+};
+
+const damagesToDisplay = ref<DamageDisplay[]>([]);
+
 watch(
     () => player.value.states.isSpawned,
     (newVal) => {
@@ -181,6 +191,7 @@ function playerStartShooting() {
             height: 1,
             width: 1,
         },
+        damage: 50,
     });
 
     projectiles.value.push(projectile);
@@ -234,17 +245,35 @@ function projectileHit(projectile: ProjectileType) {
         const isColliding = calculColisionBetweenTwoEntities(projectile, enemy, sceneRef);
 
         if (isColliding) {
-            player.value.personalAttributes.score++;
-            if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * 100) {
-                player.value.personalAttributes.XP += 10;
-            } else {
-                player.value.personalAttributes.level++;
-                player.value.personalAttributes.XP = 1;
-                getPowerUp();
+            enemy.personalAttributes.HP -= projectile.damage;
+
+            const damageId = `${enemy.id}-${Date.now()}`;
+            damagesToDisplay.value.push({
+                id: damageId,
+                enemyId: enemy.id,
+                value: projectile.damage,
+                x: enemy.position.X,
+                y: enemy.position.Y,
+            });
+
+            setTimeout(() => {
+                damagesToDisplay.value = damagesToDisplay.value.filter((d) => d.id !== damageId);
+            }, 1000);
+
+            if (enemy.personalAttributes.HP <= 0) {
+                enemy.states.isSpawned = false;
+                enemy.states.canKill = false;
+                enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
+                player.value.personalAttributes.score++;
+                if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * 100) {
+                    player.value.personalAttributes.XP += 10;
+                } else {
+                    player.value.personalAttributes.level++;
+                    player.value.personalAttributes.XP = 1;
+                    getPowerUp();
+                }
             }
-            enemy.states.isSpawned = false;
-            enemy.states.canKill = false;
-            enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
+
             projectile.states.isSpawned = false;
             projectiles.value = projectiles.value.filter((p) => p.id != projectile.id);
         }
@@ -459,12 +488,14 @@ function upgradeAtkSpeed(value: number) {
         <Enemy
             v-for="enemy in enemies"
             v-bind:key="enemy.id"
+            :enemy-id="enemy.id"
             :enemy-spawn-state="enemy.states.isSpawned"
             :enemy-pos-x="enemy.position.X"
             :enemy-pos-y="enemy.position.Y"
             :enemy-dim-w="enemy.structure.dimensions.width"
             :enemy-dim-h="enemy.structure.dimensions.height"
             :enemy-orientation="enemy.orientation"
+            :damages-to-display="damagesToDisplay"
         />
         <DebugHitboxes
             v-if="player.states.isSpawned && isHitboxesShown"

@@ -20,4 +20,5 @@ export type ProjectileType = {
         height: number;
         width: number;
     };
+    damage: number;
 };
