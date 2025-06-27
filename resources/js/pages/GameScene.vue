@@ -161,8 +161,9 @@ function spawnPlayer() {
  * @beta
  */
 function playerStartShooting() {
-    if (!player.value.states.isSpawned || isGamePaused.value || isBoostPageOpen.value) return;
-    if (!isPlayerProjectilesEnabled.value) return;
+    const isLeft = player.value.actions.movement.direction.left;
+    const speed = 0.07;
+
     const projectile = markRaw<ProjectileType>({
         id: crypto.randomUUID(),
         structure: {
@@ -174,10 +175,10 @@ function playerStartShooting() {
             createdAt: performance.now(),
         },
         position: {
-            X: player.value.position.X + 5,
+            X: isLeft ? player.value.position.X - 2 : player.value.position.X + 5,
             Y: player.value.position.Y + 2,
         },
-        speed: 0.07,
+        speed: isLeft ? -speed : speed,
         hitBox: {
             height: 1,
             width: 1,
