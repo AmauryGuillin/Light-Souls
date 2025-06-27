@@ -85,6 +85,16 @@ const player = ref<PlayerType>({
     },
 } as PlayerType);
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
+const lastDirection = ref<'left' | 'right'>('right');
+
+watch(
+    () => player.value.actions.movement.direction,
+    (dir) => {
+        if (dir.left) lastDirection.value = 'left';
+        else if (dir.right) lastDirection.value = 'right';
+    },
+    { immediate: true, deep: true },
+);
 
 watch(
     () => player.value.states.isSpawned,
@@ -161,7 +171,15 @@ function spawnPlayer() {
  * @beta
  */
 function playerStartShooting() {
-    const isLeft = player.value.actions.movement.direction.left;
+    if (!player.value.states.isSpawned || isGamePaused.value || isBoostPageOpen.value) return;
+    if (!isPlayerProjectilesEnabled.value) return;
+
+    let isLeft = false;
+    if (lastDirection.value === 'left') {
+        isLeft = true;
+    } else {
+        isLeft = false;
+    }
     const speed = 0.07;
 
     const projectile = markRaw<ProjectileType>({
