@@ -86,6 +86,7 @@ const player = ref<PlayerType>({
 } as PlayerType);
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
 const lastDirection = ref<'left' | 'right'>('right');
+const mousePosition = ref({ x: 50, y: 50 });
 
 watch(
     () => player.value.actions.movement.direction,
@@ -173,9 +174,13 @@ function spawnPlayer() {
 function playerStartShooting() {
     if (!player.value.states.isSpawned || isGamePaused.value || isBoostPageOpen.value) return;
     if (!isPlayerProjectilesEnabled.value) return;
+    if (!sceneRef.value) return;
+    const sceneWidth = sceneRef.value.offsetWidth;
 
-    let isLeft = false;
-    if (lastDirection.value === 'left') {
+    const mouseX = mousePosition.value.x;
+
+    let isLeft;
+    if (mouseX < (player.value.position.X / 100) * sceneWidth) {
         isLeft = true;
     } else {
         isLeft = false;
@@ -403,18 +408,27 @@ function pauseGame(e?: KeyboardEvent) {
     }
 }
 
+function updateMousePosition(e: MouseEvent) {
+    if (!sceneRef.value) return;
+    const rect = sceneRef.value.getBoundingClientRect();
+    mousePosition.value.x = e.clientX - rect.left;
+    mousePosition.value.y = e.clientY - rect.top;
+}
+
 onMounted(() => {
     window.addEventListener('keydown', movementKeyDown);
     window.addEventListener('keydown', pauseGame);
     window.addEventListener('keyup', movementKeyUp);
     animationFrameId = requestAnimationFrame(gameLoop);
     spawnPlayer();
+    window.addEventListener('mousemove', updateMousePosition);
 });
 
 onUnmounted(() => {
     window.removeEventListener('keydown', movementKeyDown);
     window.removeEventListener('keyup', movementKeyUp);
     cancelAnimationFrame(animationFrameId);
+    window.removeEventListener('mousemove', updateMousePosition);
 });
 
 function getPowerUp() {
@@ -437,7 +451,12 @@ function upgradeAtkSpeed(value: number) {
 </script>
 
 <template>
-    <div ref="sceneRef" id="scene" class="relative flex h-screen flex-col bg-[url(/assets/ground/ground.jpg)] bg-auto">
+    <div
+        ref="sceneRef"
+        id="scene"
+        class="relative flex h-screen flex-col bg-[url(/assets/ground/ground.jpg)] bg-auto"
+        @mousemove="updateMousePosition"
+    >
         <DebbugButtons
             v-if="isGameDevModeEnabled"
             @showHitboxes="showHitboxes"
