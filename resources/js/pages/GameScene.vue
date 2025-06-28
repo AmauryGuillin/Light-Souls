@@ -11,6 +11,7 @@ import { DamageDisplay } from '@/types/game/DamageDisplay';
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
+import { PowerUpType } from '@/types/game/powerup';
 
 import { ProjectileType } from '@/types/game/projectile';
 import {
@@ -27,7 +28,7 @@ import {
     stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
-import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
+import { markRaw, onMounted, onUnmounted, Ref, ref, toRaw, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
@@ -113,10 +114,8 @@ watch(
 watch(
     () => player.value.personalAttributes.fireRate,
     () => {
-        if (fireInterval) {
-            stopFiring(fireIntervalRef);
-            startFiring(ref(fireInterval), player, playerStartShooting, () => stopFiring(fireIntervalRef));
-        }
+        stopFiring(fireIntervalRef);
+        startFiring(fireIntervalRef, player, playerStartShooting, () => stopFiring(fireIntervalRef));
     },
 );
 
@@ -439,14 +438,40 @@ function getPowerUp() {
             data.forEach((element: any) => {
                 playerPowerUps.value.push(element);
             });
+            console.log(toRaw(playerPowerUps.value));
             isBoostPageOpen.value = true;
         });
 }
 
-function upgradeAtkSpeed(value: number) {
-    previousPlayerFireRate.value = player.value.personalAttributes.fireRate;
-    player.value.personalAttributes.fireRate /= value;
-    isBoostPageOpen.value = false;
+function upgradePlayerAttributes(powerup: Ref<PowerUpType>) {
+    switch (powerup.type.type) {
+        case 'Attack':
+            if (powerup.boost.type === 'Increase') {
+                //todo
+            }
+            break;
+        case 'Defense':
+            if (powerup.boost.type === 'Increase') {
+                //todo
+            }
+            break;
+        case 'FireRate':
+            if (powerup.boost.type === 'Increase') {
+                //todo
+            } else {
+                player.value.personalAttributes.fireRate *= powerup.boost.multiplier;
+                isBoostPageOpen.value = false;
+            }
+            break;
+        case 'Speed':
+            if (powerup.boost.type === 'Increase') {
+                player.value.actions.movement.speed *= powerup.boost.multiplier;
+                isBoostPageOpen.value = false;
+            }
+            break;
+        default:
+            console.log('no action');
+    }
 }
 </script>
 
@@ -470,7 +495,7 @@ function upgradeAtkSpeed(value: number) {
             :is-boost-page-open="isBoostPageOpen"
             :player-power-ups="playerPowerUps"
             @update:HandlePauseStateWhenBonusPageOpen="onBonusPageClose"
-            @update:upgrade-atk-speed="upgradeAtkSpeed"
+            @update:upgrade-player-attributes="upgradePlayerAttributes"
         />
         <GamePauseDialog
             :open="isGamePaused"

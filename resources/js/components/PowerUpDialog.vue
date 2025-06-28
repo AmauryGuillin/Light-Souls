@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { PowerUpType } from '@/types/game/powerup';
+import { Ref } from 'vue';
 import PowerUpDialogContent from './PowerUpDialogContent.vue';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -13,7 +15,7 @@ const props = defineProps<{
 // const emits = defineEmits(['update:HandlePauseStateWhenBonusPageOpen']);
 const emits = defineEmits<{
     (e: 'update:HandlePauseStateWhenBonusPageOpen'): void;
-    (e: 'update:upgradeAtkSpeed', value: number): void;
+    (e: 'update:upgradePlayerAttributes', powerup: Ref<PowerUpType>): void;
 }>();
 </script>
 
@@ -51,7 +53,7 @@ const emits = defineEmits<{
                         </ScrollArea>
 
                         <Button
-                            @Click="emits('update:upgradeAtkSpeed', powerup.boost.multiplier)"
+                            @Click="emits('update:upgradePlayerAttributes', powerup)"
                             class="w-full transform rounded-lg bg-amber-600 px-4 py-3 font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-amber-500 hover:shadow-lg hover:shadow-amber-500/30"
                         >
                             SELECT

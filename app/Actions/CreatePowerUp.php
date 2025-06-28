@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Data\PowerUpFormData;
 use App\Models\PowerUp;
 use App\Models\PowerUpBoost;
+use App\Models\PowerUpType;
 use Illuminate\Support\Facades\DB;
 
 class CreatePowerUp
@@ -27,13 +28,19 @@ class CreatePowerUp
 
     private function createPowerUp(PowerUpFormData $formData, PowerUpBoost $boost)
     {
+        $pupType = $this->getPowerupTypeId($formData->powerupType);
         PowerUp::create([
-            'powerup_types_id' => 1,
+            'powerup_types_id' => $pupType->id,
             'powerup_boosts_id' => $boost->id,
             'powerup_assets_id' => $formData->assetId,
             'name' => $formData->name,
             'description' => $formData->description,
             'unlockLevel' => $formData->unlockLevel,
         ]);
+    }
+
+    private function getPowerupTypeId(string $type): PowerUpType
+    {
+        return PowerUpType::where('type', $type)->first();
     }
 }
