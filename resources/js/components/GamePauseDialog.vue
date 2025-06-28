@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenu
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { usePage } from '@inertiajs/vue3';
+import { LoaderCircle } from 'lucide-vue-next';
 import { computed, defineEmits, defineProps } from 'vue';
 import { Slider } from './ui/slider';
 
@@ -16,7 +17,10 @@ const props = defineProps<{
     musicVolume: number;
     soundEffectsVolume: number;
     keyboardConfig: string;
+    isLoading: boolean;
 }>();
+
+console.log(props.isLoading);
 
 const emits = defineEmits<{
     (e: 'update:isGameDevModeEnabled', value: boolean): void;
@@ -25,6 +29,7 @@ const emits = defineEmits<{
     (e: 'update:musicVolume', value: number): void;
     (e: 'update:soundEffectsVolume', value: number): void;
     (e: 'update:keyboardConfig', value: string): void;
+    (e: 'send:profileData'): void;
     (e: 'resume'): void;
 }>();
 
@@ -101,7 +106,8 @@ function quitWithoutSaving() {
                         </DropdownMenu>
                     </div>
                     <div class="mt-3 flex w-full flex-col items-start gap-3">
-                        <Button variant="secondary">Save and quit</Button>
+                        <Button v-if="!props.isLoading" variant="secondary" @click="emits('send:profileData')">Save and quit</Button>
+                        <Button v-else variant="ghost"><LoaderCircle class="animate-spin" /></Button>
                         <Button variant="destructive" @click="quitWithoutSaving">Quit without saving</Button>
                     </div>
                 </DialogDescription>

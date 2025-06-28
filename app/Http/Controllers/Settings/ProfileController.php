@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Models\Profile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -38,6 +40,23 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return to_route('profile.edit');
+    }
+
+    public function updateProfileStats(Request $request): RedirectResponse
+    {
+        $profile = Profile::where('user_id', $request->input('user_id'))->firstOrFail();
+
+        $profile->update([
+            'total_survival_time' => $request->input('last_survival_time') > $profile->total_survival_time ? $profile->total_survival_time = $request->input('last_survival_time') : $profile->total_survival_time,
+            'last_game_enemies_killed' => $request->input('last_game_enemies_killed'),
+            'total_enemies_killed' => $profile->total_enemies_killed + $request->input('total_enemies_killed'),
+            'total_game_played' => $profile->total_game_played + 1,
+            'total_hour_played' => $profile->total_hour_played + 0, //TODO
+            'death_count' => $request->input('is_player_dead') ? $profile->death_count + 1 : $profile->death_count + 0,
+            'higher_level' => $request->input('last_game_level') > $profile->higher_level ? $request->input('last_game_level') : $profile->higher_level,
+        ]);
+
+        return back();
     }
 
     /**

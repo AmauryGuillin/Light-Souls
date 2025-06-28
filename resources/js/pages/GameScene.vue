@@ -130,6 +130,7 @@ const soundEffectPlayerHit = ['/assets/soundEffects/player/playerdamage.mp3'];
 let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
 let animationFrameId: number;
+let isLoading = false;
 
 watch(
     () => player.value.actions.movement.direction,
@@ -558,6 +559,22 @@ async function sendUserSettings(userId: number) {
     router.patch(route('settings.update'), form.data());
 }
 
+async function sendStatsToUserProfile(userId: number) {
+    const form = useForm({
+        user_id: userId,
+        last_survival_time: 0,
+        last_game_enemies_killed: player.value.personalAttributes.score,
+        last_game_level: player.value.personalAttributes.level,
+        is_player_dead: player.value.states.isSpawned ? false : true,
+    });
+    router.patch(route('profile.update'), form.data(), {
+        onProgress: () => {
+            isLoading = true;
+        },
+        onSuccess: () => window.close(),
+    });
+}
+
 function playMusic() {
     if (gameMusic) {
         gameMusic.stop();
@@ -646,6 +663,7 @@ onUnmounted(() => {
             :music-volume="musicVolume"
             :sound-effects-volume="soundEffetcsVolume"
             :keyboard-config="keyboardConfig"
+            :is-loading="isLoading"
             @update:isGameDevModeEnabled="(val) => (isGameDevModeEnabled = val)"
             @update:isEnemiesEnabled="(val) => (isEnemiesEnabled = val)"
             @update:isPlayerProjectilesEnabled="(val) => (isPlayerProjectilesEnabled = val)"
@@ -653,6 +671,7 @@ onUnmounted(() => {
             @update:sound-effects-volume="handleSoundEffectsVolume"
             @resume="pauseGame"
             @update:keyboard-config="handleKeyboardConfig"
+            @send:profile-data="sendStatsToUserProfile(user.id)"
         />
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 
