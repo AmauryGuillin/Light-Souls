@@ -9,15 +9,13 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@inertiajs/vue3';
 import { Brush, Loader2, Settings, Sparkles, Zap } from 'lucide-vue-next';
-import { ref, toRaw } from 'vue';
+import { ref } from 'vue';
 
-const props = defineProps<{
+defineProps<{
     powerupTypes: [{ id: number; type: string }];
     powerupBoosts: string[];
     powerupAssets: { path: string }[];
 }>();
-
-console.log(toRaw(props.powerupAssets));
 
 const selectedIllustration = ref<number | null>(null);
 
@@ -81,11 +79,11 @@ function deleteForm() {
                             <div class="grid gap-4 md:grid-cols-2">
                                 <div class="space-y-2">
                                     <Label htmlFor="name">Power-Up Name</Label>
-                                    <Input id="name" placeholder="Lightning Strike" class="font-medium" v-model="form.name" />
+                                    <Input required id="name" placeholder="Lightning Strike" class="font-medium" v-model="form.name" />
                                 </div>
                                 <div class="space-y-2">
                                     <Label htmlFor="type">Type</Label>
-                                    <Select v-model="form.powerupType">
+                                    <Select required v-model="form.powerupType">
                                         <SelectTrigger class="w-full">
                                             <SelectValue placeholder="Select type" />
                                         </SelectTrigger>
@@ -106,7 +104,7 @@ function deleteForm() {
                                 <div class="grid gap-4 md:grid-cols-2">
                                     <div class="space-y-2">
                                         <Label htmlFor="damage">Bonus type</Label>
-                                        <Select v-model="form.bonusType">
+                                        <Select required v-model="form.bonusType">
                                             <SelectTrigger class="w-full">
                                                 <SelectValue placeholder="Select type" />
                                             </SelectTrigger>
@@ -119,11 +117,11 @@ function deleteForm() {
                                     </div>
                                     <div class="space-y-2">
                                         <Label htmlFor="duration">Multiplier (1.1 = +10%)</Label>
-                                        <Input id="duration" type="number" placeholder="1.1" step="0.1" v-model="form.multiplier!" />
+                                        <Input required id="duration" type="number" placeholder="1.1" step="0.1" v-model="form.multiplier!" />
                                     </div>
                                     <div class="space-y-2">
                                         <Label htmlFor="unlock-level">Unlock Level</Label>
-                                        <Input id="unlock-level" type="number" placeholder="1" min="1" v-model="form.unlockLevel!" />
+                                        <Input required id="unlock-level" type="number" placeholder="1" min="1" v-model="form.unlockLevel!" />
                                     </div>
                                 </div>
                             </div>
@@ -167,6 +165,7 @@ function deleteForm() {
                             <div class="space-y-2">
                                 <Label htmlFor="description">Description</Label>
                                 <Textarea
+                                    required
                                     id="description"
                                     placeholder="Describe the power-up's effects, special mechanics..."
                                     class="min-h-[120px] resize-none"
@@ -204,19 +203,32 @@ function deleteForm() {
                                 <div class="space-y-2">
                                     <div class="flex justify-between text-sm">
                                         <span class="text-muted-foreground">Name:</span>
-                                        <span class="font-medium">Lightning Strike</span>
+                                        <span class="font-medium">{{ `${form.name.trim() === '' ? 'Attack name' : form.name}` }}</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-muted-foreground">Type:</span>
-                                        <span class="font-medium">Attack</span>
+                                        <span class="text-muted-foreground">Powerup Type:</span>
+                                        <span class="font-medium">{{ `${form.powerupType.trim() === '' ? 'Powerup type' : form.powerupType}` }}</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-muted-foreground">Rarity:</span>
-                                        <span class="font-medium text-purple-600">Epic</span>
+                                        <span class="text-muted-foreground">Bonus type:</span>
+                                        <span
+                                            class="font-medium"
+                                            :class="
+                                                form.bonusType.trim() === ''
+                                                    ? 'text-white'
+                                                    : form.bonusType === 'Increase'
+                                                      ? 'text-green-600'
+                                                      : 'text-red-600'
+                                            "
+                                        >
+                                            {{ form.bonusType.trim() === '' ? 'Bonus type' : form.bonusType }}
+                                        </span>
                                     </div>
                                     <div class="flex justify-between text-sm">
                                         <span class="text-muted-foreground">Percentage:</span>
-                                        <span class="font-medium">10%</span>
+                                        <span class="font-medium">{{
+                                            `${form.multiplier === null ? 'Multiplier' : Math.round((form.multiplier - 1) * 100) + ' %'}`
+                                        }}</span>
                                     </div>
                                 </div>
                             </div>
