@@ -11,6 +11,7 @@ import { DamageDisplay } from '@/types/game/DamageDisplay';
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
+import { Howl } from 'howler';
 
 import { ProjectileType } from '@/types/game/projectile';
 import {
@@ -27,8 +28,12 @@ import {
     stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
+import { usePage } from '@inertiajs/vue3';
 import { markRaw, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
 
+const page = usePage();
+const auth = (page.props as { auth?: { user?: any } }).auth;
+const user = auth?.user;
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
 const isGameDevModeEnabled = ref<boolean>(true);
@@ -43,7 +48,8 @@ const fireInterval: ReturnType<typeof setInterval> | null = null;
 const fireIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 const enemySpawnIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 const damagesToDisplay = ref<DamageDisplay[]>([]);
-let animationFrameId: number;
+const musicVolume = ref<number>(0);
+const soundEffetcsVolume = ref<number>(0.3);
 const player = ref<PlayerType>({
     name: '',
     actions: {
@@ -90,6 +96,20 @@ const player = ref<PlayerType>({
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
 const lastDirection = ref<'left' | 'right'>('right');
 const mousePosition = ref({ x: 50, y: 50 });
+const musicTracks = [
+    '/assets/music/game/game-music-d1-1.mp3',
+    '/assets/music/game/game-music-bg3-1.mp3',
+    '/assets/music/game/game-music-bg3-2.mp3',
+    '/assets/music/game/game-music-dofus-1.mp3',
+    '/assets/music/game/game-music-dofus-2.mp3',
+    '/assets/music/game/game-music-gw2-1.mp3',
+];
+const SoundEffectfireBall = ['/assets/soundEffects/player/fireball1.mp3', '/assets/soundEffects/player/fireball2.mp3'];
+const SoundEffectPowerUp = ['/assets/soundEffects/player/PowerUp.wav'];
+const enemyHitSoundEffect = ['/assets/soundEffects/enemy/Hit.wav'];
+let musicShuffleIndex = 0;
+let gameMusic: Howl | null = null;
+let animationFrameId: number;
 
 watch(
     () => player.value.actions.movement.direction,
@@ -214,6 +234,7 @@ function playerStartShooting() {
 
     projectiles.value.push(projectile);
     projectileMovement(projectile);
+    playSoundEffectFireBall();
 }
 
 function onBonusPageClose() {
@@ -263,6 +284,7 @@ function projectileHit(projectile: ProjectileType) {
         const isColliding = calculColisionBetweenTwoEntities(projectile, enemy, sceneRef);
 
         if (isColliding) {
+            playSoundEffectEnemyHit();
             enemy.personalAttributes.HP -= projectile.damage;
 
             const damageId = `${enemy.id}-${Date.now()}`;
@@ -289,6 +311,7 @@ function projectileHit(projectile: ProjectileType) {
                     player.value.personalAttributes.level++;
                     player.value.personalAttributes.XP = 1;
                     player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
+                    playSoundEffectPowerUp();
                     getPowerUp();
                 }
             }
@@ -421,22 +444,6 @@ function updateMousePosition(e: MouseEvent) {
     mousePosition.value.y = e.clientY - rect.top;
 }
 
-onMounted(() => {
-    window.addEventListener('keydown', movementKeyDown);
-    window.addEventListener('keydown', pauseGame);
-    window.addEventListener('keyup', movementKeyUp);
-    animationFrameId = requestAnimationFrame(gameLoop);
-    spawnPlayer();
-    window.addEventListener('mousemove', updateMousePosition);
-});
-
-onUnmounted(() => {
-    window.removeEventListener('keydown', movementKeyDown);
-    window.removeEventListener('keyup', movementKeyUp);
-    cancelAnimationFrame(animationFrameId);
-    window.removeEventListener('mousemove', updateMousePosition);
-});
-
 function getPowerUp() {
     fetch(`/game/powerup/${player.value.personalAttributes.level}`)
         .then((res) => res.json())
@@ -487,6 +494,92 @@ function upgradePlayerAttributes(powerup: any) {
             break;
     }
 }
+
+async function retreiveUserSettings(userId: number) {
+    fetch(`/game/user/profile/settings/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+            musicVolume.value = data.music_volume;
+            soundEffetcsVolume.value = data.sound_effects_volume;
+            if (gameMusic) gameMusic.volume(musicVolume.value);
+            // soundEffect.volume(soundEffetcsVolume.value);
+            // keyboardConfig.value = data.keyboard_config;
+        })
+        .then(() => {
+            playMusic();
+        });
+}
+
+function playMusic() {
+    if (gameMusic) {
+        gameMusic.stop();
+        gameMusic.unload();
+    }
+
+    let newIndex;
+    do {
+        newIndex = Math.floor(Math.random() * musicTracks.length);
+    } while (newIndex === musicShuffleIndex && musicTracks.length > 1);
+    musicShuffleIndex = newIndex;
+
+    gameMusic = new Howl({
+        src: [musicTracks[musicShuffleIndex]],
+        volume: musicVolume.value,
+        onend: playMusic,
+    });
+
+    gameMusic.play();
+}
+
+function musicShuffle() {
+    musicShuffleIndex = Math.floor(Math.random() * musicTracks.length);
+}
+
+function playSoundEffectFireBall() {
+    const soundEffectIndex = Math.floor(Math.random() * SoundEffectfireBall.length);
+
+    const soundEffectFireBallSample = new Howl({
+        src: [SoundEffectfireBall[soundEffectIndex]],
+        volume: soundEffetcsVolume.value,
+    });
+    soundEffectFireBallSample.play();
+}
+
+function playSoundEffectPowerUp() {
+    const soundEffectPowerUpSample = new Howl({
+        src: [SoundEffectPowerUp[0]],
+        volume: soundEffetcsVolume.value,
+    });
+
+    soundEffectPowerUpSample.play();
+}
+
+function playSoundEffectEnemyHit() {
+    const soundEffectEnemyHitSample = new Howl({
+        src: [enemyHitSoundEffect[0]],
+        volume: soundEffetcsVolume.value,
+    });
+
+    soundEffectEnemyHitSample.play();
+}
+
+onMounted(async () => {
+    window.addEventListener('keydown', movementKeyDown);
+    window.addEventListener('keydown', pauseGame);
+    window.addEventListener('keyup', movementKeyUp);
+    animationFrameId = requestAnimationFrame(gameLoop);
+    musicShuffle();
+    await retreiveUserSettings(user.id);
+    spawnPlayer();
+    window.addEventListener('mousemove', updateMousePosition);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', movementKeyDown);
+    window.removeEventListener('keyup', movementKeyUp);
+    cancelAnimationFrame(animationFrameId);
+    window.removeEventListener('mousemove', updateMousePosition);
+});
 </script>
 
 <template>
