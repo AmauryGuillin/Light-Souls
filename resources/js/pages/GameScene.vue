@@ -77,6 +77,7 @@ const player = ref<PlayerType>({
         lastDamageTime: 0,
     },
     personalAttributes: {
+        maxHP: 100,
         HP: 100,
         fireRate: 2000, //ms
         score: 0,
@@ -287,6 +288,7 @@ function projectileHit(projectile: ProjectileType) {
                 } else {
                     player.value.personalAttributes.level++;
                     player.value.personalAttributes.XP = 1;
+                    player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
                     getPowerUp();
                 }
             }

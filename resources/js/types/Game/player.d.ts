@@ -32,6 +32,7 @@ export type PlayerType = {
         lastDamageTime: number;
     };
     personalAttributes: {
+        maxHP: number;
         HP: number;
         fireRate: number;
         score: number;
