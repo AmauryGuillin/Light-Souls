@@ -354,41 +354,51 @@ function spawnEnemy() {
     if (isGamePaused.value || isBoostPageOpen.value) return;
 
     if (!isEnemiesEnabled.value) return;
-    const enemy = markRaw<EnemyType>({
-        id: crypto.randomUUID(),
-        personalAttributes: {
-            HP: 100 * (player.value.personalAttributes.level / 2),
-            movementSpeed: 0.03,
-            damage: Math.floor(10 * player.value.personalAttributes.defense),
-        },
-        structure: {
-            dimensions: {
-                height: 100,
-                width: 100,
-            },
-        },
-        states: {
-            isSpawned: true,
-            isShooting: false,
-            canKill: true,
-        },
-        position: {
-            X: randomPositionX(),
-            Y: randomPositionY(),
-        },
-        orientation: {
-            left: false,
-            right: false,
-        },
-        hitBox: {
-            offsetX: 0,
-            offsetY: 0,
-            width: 100,
-            height: 100,
-        },
-    });
+    const enemiesNumber = player.value.personalAttributes.level;
+    const enemiesToInject = enemyFactory(enemiesNumber);
+    enemies.value = [...enemies.value, ...enemiesToInject];
+}
 
-    enemies.value.push(enemy);
+function enemyFactory(value: number): EnemyType[] {
+    const enemiesToInject: EnemyType[] = [];
+
+    for (let i = 1; i <= value; i++) {
+        const enemy = markRaw<EnemyType>({
+            id: crypto.randomUUID(),
+            personalAttributes: {
+                HP: 100 * (player.value.personalAttributes.level / 2),
+                movementSpeed: 0.03,
+                damage: Math.floor(10 * player.value.personalAttributes.defense),
+            },
+            structure: {
+                dimensions: {
+                    height: 100,
+                    width: 100,
+                },
+            },
+            states: {
+                isSpawned: true,
+                isShooting: false,
+                canKill: true,
+            },
+            position: {
+                X: randomPositionX(),
+                Y: randomPositionY(),
+            },
+            orientation: {
+                left: false,
+                right: false,
+            },
+            hitBox: {
+                offsetX: 0,
+                offsetY: 0,
+                width: 100,
+                height: 100,
+            },
+        });
+        enemiesToInject.push(enemy);
+    }
+    return enemiesToInject;
 }
 
 /**
