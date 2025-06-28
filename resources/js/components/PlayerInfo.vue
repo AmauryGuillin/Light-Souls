@@ -55,16 +55,16 @@ watch(
                 </div>
             </div>
         </div>
-        <div class="font-game absolute top-32 right-0 z-10 w-fit -translate-y-1/2 transform">
-            <div class="rounded-l-lg border-t border-b border-l border-white/20 bg-black/70 px-3 py-6 backdrop-blur-sm">
+        <div class="font-game absolute top-60 left-0 z-10 w-fit -translate-y-1/2 transform">
+            <div class="rounded-r-lg border-t border-r border-b border-white/20 bg-black/70 px-3 py-6 backdrop-blur-sm">
                 <div class="flex flex-col gap-4 text-center">
                     <div>
-                        <div class="font-mono text-xs text-white/50">Level</div>
+                        <div class="font-mono text-xs text-green-400">Level</div>
                         <div class="font-mono text-lg font-bold text-white/80">{{ props.playerLevel }}</div>
                     </div>
                     <div class="h-px w-full bg-white/20"></div>
                     <div>
-                        <div class="font-mono text-xs text-white/50">Score</div>
+                        <div class="font-mono text-xs text-amber-500">Score</div>
                         <div class="font-mono text-sm text-white/80">{{ props.playerScore === 0 ? '0000' : props.playerScore }}</div>
                     </div>
                 </div>
