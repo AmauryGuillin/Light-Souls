@@ -17,6 +17,7 @@ const page = usePage();
 const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
 const isAuthenticated = computed(() => !!user);
+const isUserHasDevRole = computed(() => user.role_id === 2);
 
 const tutorialCardsContent = [
     {
@@ -55,6 +56,9 @@ function lauchGame() {
                             GitHub
                         </a>
                         <Link href="/about" class="text-white transition-colors hover:text-red-300"> About </Link>
+                        <Link v-if="isUserHasDevRole" href="/powerupfactory" class="text-white transition-colors hover:text-red-300"
+                            >Powerup Factory</Link
+                        >
                     </div>
                     <div class="flex space-x-2">
                         <Button v-if="isAuthenticated" asChild class="cursor-pointer bg-red-600 text-white hover:bg-red-700" @click="lauchGame">
