@@ -50,7 +50,7 @@ class ProfileController extends Controller
         $profile->update([
             'total_survival_time' => $request->input('last_survival_time') > $profile->total_survival_time ? $profile->total_survival_time = $request->input('last_survival_time') : $profile->total_survival_time,
             'last_game_enemies_killed' => $request->input('last_game_enemies_killed'),
-            'total_enemies_killed' => $profile->total_enemies_killed + $request->input('total_enemies_killed'),
+            'total_enemies_killed' => $profile->total_enemies_killed + $request->input('last_game_enemies_killed'),
             'total_game_played' => $profile->total_game_played + 1,
             'total_hour_played' => $profile->total_hour_played + 0, //TODO
             'death_count' => $request->input('is_player_dead') ? $profile->death_count + 1 : $profile->death_count + 0,
