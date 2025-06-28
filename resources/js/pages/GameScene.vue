@@ -36,7 +36,7 @@ import {
     playSoundEffectPowerUp,
 } from '@/utils/game/music-utils';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { markRaw, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
+import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const page = usePage();
 const auth = (page.props as { auth?: { user?: any } }).auth;
@@ -256,8 +256,6 @@ function playerStartShooting() {
         damage: Math.floor(50 * player.value.personalAttributes.attackPower),
     });
 
-    console.log('damage', projectile.damage);
-
     projectiles.value.push(projectile);
     projectileMovement(projectile);
     playSoundEffectFireBall(SoundEffectfireBall, soundEffetcsVolume.value);
@@ -390,8 +388,6 @@ function spawnEnemy() {
         },
     });
 
-    console.log(enemy.personalAttributes.HP);
-
     enemies.value.push(enemy);
 }
 
@@ -492,7 +488,6 @@ function getPowerUp() {
             data.forEach((element: any) => {
                 playerPowerUps.value.push(element);
             });
-            console.log(toRaw(playerPowerUps.value));
             isBoostPageOpen.value = true;
         });
 }
