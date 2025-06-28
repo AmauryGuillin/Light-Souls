@@ -146,7 +146,12 @@ export function handleProjectilesMovementAnimations(projectiles: Ref<ProjectileT
  * @param enemies Ref<EnemyType[]>
  * @param player Ref<PlayerType>
  */
-export function handleEnemiesMovementAnimations(enemies: Ref<EnemyType[]>, player: Ref<PlayerType>) {
+export function handleEnemiesMovementAnimations(
+    enemies: Ref<EnemyType[]>,
+    player: Ref<PlayerType>,
+    playSoundEffectEnemyAttack: () => void,
+    playSoundEffectPlayerHit: () => void,
+) {
     enemies.value.forEach((enemy) => {
         if (!enemy.states.isSpawned) return;
 
@@ -175,6 +180,8 @@ export function handleEnemiesMovementAnimations(enemies: Ref<EnemyType[]>, playe
             const damageCoolDown = 500; // ms
 
             if (timeSinceLastHit > damageCoolDown && player.value.personalAttributes.HP > 0) {
+                playSoundEffectEnemyAttack();
+                playSoundEffectPlayerHit();
                 player.value.personalAttributes.HP -=
                     enemy.personalAttributes.damage *
                     enemies.value.filter(

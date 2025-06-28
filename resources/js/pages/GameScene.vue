@@ -106,7 +106,9 @@ const musicTracks = [
 ];
 const SoundEffectfireBall = ['/assets/soundEffects/player/fireball1.mp3', '/assets/soundEffects/player/fireball2.mp3'];
 const SoundEffectPowerUp = ['/assets/soundEffects/player/PowerUp.wav'];
-const enemyHitSoundEffect = ['/assets/soundEffects/enemy/Hit.wav'];
+const SoundEffectenemyHit = ['/assets/soundEffects/enemy/Hit.wav'];
+const SoundEffectEnemyAttack = ['/assets/soundEffects/enemy/enemyAttack_1.mp3', '/assets/soundEffects/enemy/enemyAttack_2.mp3'];
+const soundEffectPlayerHit = ['/assets/soundEffects/player/playerdamage.mp3'];
 let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
 let animationFrameId: number;
@@ -170,7 +172,7 @@ function gameLoop() {
 
     handleProjectilesMovementAnimations(projectiles, projectileHit);
 
-    handleEnemiesMovementAnimations(enemies, player);
+    handleEnemiesMovementAnimations(enemies, player, playSoundEffectEnemyAttack, playSoundEffectPlayerHit);
 
     animationFrameId = requestAnimationFrame(gameLoop);
 }
@@ -556,11 +558,31 @@ function playSoundEffectPowerUp() {
 
 function playSoundEffectEnemyHit() {
     const soundEffectEnemyHitSample = new Howl({
-        src: [enemyHitSoundEffect[0]],
+        src: [SoundEffectenemyHit[0]],
         volume: soundEffetcsVolume.value,
     });
 
     soundEffectEnemyHitSample.play();
+}
+
+function playSoundEffectEnemyAttack() {
+    const soundEffectIndex = Math.floor(Math.random() * SoundEffectEnemyAttack.length);
+
+    const soundEffectEnemyAttackSample = new Howl({
+        src: [SoundEffectEnemyAttack[soundEffectIndex]],
+        volume: soundEffetcsVolume.value,
+    });
+
+    soundEffectEnemyAttackSample.play();
+}
+
+function playSoundEffectPlayerHit() {
+    const soundEffectPlayerHitSample = new Howl({
+        src: [soundEffectPlayerHit[0]],
+        volume: soundEffetcsVolume.value,
+    });
+
+    soundEffectPlayerHitSample.play();
 }
 
 onMounted(async () => {
