@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, usePage } from '@inertiajs/vue3';
 import { ArrowRight, LogIn, LogOut, Play } from 'lucide-vue-next';
-import { computed, toRaw } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
     stats: {
@@ -11,13 +11,11 @@ const props = defineProps<{
     };
 }>();
 
-console.log(toRaw(props.stats.users));
-
 const page = usePage();
 const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
 const isAuthenticated = computed(() => !!user);
-const isUserHasDevRole = computed(() => user.role_id === 2);
+const isUserHasDevRole = computed(() => user?.role_id === 2);
 
 const tutorialCardsContent = [
     {
