@@ -9,7 +9,7 @@ export function playSoundEffectFireBall(soundEffectFireBall: string[], volume: n
     const soundEffectIndex = Math.floor(Math.random() * soundEffectFireBall.length);
     const soundEffectFireBallSample = new Howl({
         src: [soundEffectFireBall[soundEffectIndex]],
-        volume: volume + 0.2,
+        volume: volume != 0 ? volume + 0.2 : 0,
     });
     soundEffectFireBallSample.play();
 }
