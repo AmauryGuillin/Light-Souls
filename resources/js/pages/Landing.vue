@@ -25,6 +25,14 @@ const tutorialCardsContent = [
         image: ['/assets/tutorial/1/tutorial_1.png', '/assets/player/main-menu-player.gif'],
         subDescription: 'Keys used to move your character can be changed in the settings (WASD and ZQSD available).',
     },
+    {
+        id: 2,
+        title: 'Shoot in Two Directions',
+        description: 'Use your mouse cursor to control your shooting direction.',
+        image: ['/assets/tutorial/2/tutorial_2.gif'],
+        subDescription:
+            'Your player is the reference point. Move your cursor to the right of your player to shoot right, or to the left to shoot left.',
+    },
 ];
 
 function lauchGame() {
