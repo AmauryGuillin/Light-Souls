@@ -37,7 +37,7 @@ const props = defineProps<{
     <span
         v-for="damage in damagesToDisplay.filter((d: any) => d.enemyId === enemyId)"
         :key="damage.id"
-        class="absolute z-50 animate-bounce text-lg font-bold text-red-500"
+        class="absolute z-40 animate-bounce text-lg font-bold text-red-500"
         :style="{
             top: `${enemyPosY - 2}%`,
             left: `${enemyPosX + 2}%`,

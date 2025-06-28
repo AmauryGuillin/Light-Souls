@@ -14,6 +14,7 @@ const props = defineProps<{
 }>();
 
 let percentage = 1;
+const pad = '0000';
 
 watch(
     () => props.playerXP,
@@ -39,7 +40,7 @@ watch(
         <div v-if="props.isGameDevModeEnabled" class="z-50 font-bold text-red-500">Enemy HP: {{ 100 * (props.playerLevel / 2) }}</div>
     </div> -->
     <ExperienceBar class="z-50 w-full bg-black/75" :model-value="percentage" />
-    <div class="m-5 flex w-1/5 flex-col">
+    <div class="z-50 m-5 flex w-1/5 flex-col">
         <div class="flex min-w-96 flex-col">
             <div class="rounded-lg border-2 border-red-500/70 bg-slate-900/90 p-3 shadow-lg backdrop-blur-sm">
                 <div class="mb-2 flex items-center gap-2">
@@ -64,7 +65,13 @@ watch(
                     </div>
                     <div>
                         <div class="font-mono text-xs text-amber-500">Score</div>
-                        <div class="font-mono text-sm text-white/80">{{ props.playerScore === 0 ? '0000' : props.playerScore }}</div>
+                        <div class="font-mono text-lg text-white/80">
+                            {{
+                                props.playerScore === 0
+                                    ? '0000'
+                                    : pad.substring(0, pad.length - props.playerScore.toString().length) + props.playerScore
+                            }}
+                        </div>
                     </div>
                 </div>
             </div>
