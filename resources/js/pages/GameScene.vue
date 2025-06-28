@@ -9,7 +9,7 @@ import PowerUpDialog from '@/components/PowerUpDialog.vue';
 import Projectile from '@/components/Projectile.vue';
 import { DamageDisplay } from '@/types/game/DamageDisplay';
 import { EnemyType } from '@/types/game/enemy';
-import { MovementKey } from '@/types/game/movementKey';
+import { MovementKey1, MovementKey2 } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 import { Howl } from 'howler';
 
@@ -57,16 +57,27 @@ const enemySpawnIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 const damagesToDisplay = ref<DamageDisplay[]>([]);
 const musicVolume = ref<number>(0);
 const soundEffetcsVolume = ref<number>(0.3);
+const keyboardConfig = ref<string>('WASD');
 const player = ref<PlayerType>({
     name: '',
     actions: {
         movement: {
-            keys: {
-                z: { pressed: false },
-                q: { pressed: false },
-                s: { pressed: false },
-                d: { pressed: false },
-            } as Record<MovementKey, { pressed: boolean }>,
+            ZQSD: {
+                keys: {
+                    z: { pressed: false },
+                    q: { pressed: false },
+                    s: { pressed: false },
+                    d: { pressed: false },
+                } as Record<MovementKey2, { pressed: boolean }>,
+            },
+            WASD: {
+                keys: {
+                    w: { pressed: false },
+                    a: { pressed: false },
+                    s: { pressed: false },
+                    d: { pressed: false },
+                } as Record<MovementKey1, { pressed: boolean }>,
+            },
             direction: {
                 left: false,
                 right: false,
@@ -175,7 +186,7 @@ watch(
 function gameLoop() {
     if (isGamePaused.value || player.value.personalAttributes.HP <= 0 || isBoostPageOpen.value) return;
 
-    handlePlayerMovementAnimation(player);
+    handlePlayerMovementAnimation(player, keyboardConfig.value);
 
     handleProjectilesMovementAnimations(projectiles, projectileHit);
 
@@ -391,8 +402,14 @@ function spawnEnemy() {
  */
 function movementKeyDown(e: KeyboardEvent) {
     const key = e.key.toLowerCase();
-    if (key in player.value.actions.movement.keys) {
-        player.value.actions.movement.keys[key as MovementKey].pressed = true;
+    if (keyboardConfig.value === 'ZQSD') {
+        if (key in player.value.actions.movement.ZQSD.keys) {
+            player.value.actions.movement.ZQSD.keys[key as MovementKey2].pressed = true;
+        }
+    } else {
+        if (key in player.value.actions.movement.WASD.keys) {
+            player.value.actions.movement.WASD.keys[key as MovementKey1].pressed = true;
+        }
     }
 }
 
@@ -404,8 +421,14 @@ function movementKeyDown(e: KeyboardEvent) {
  */
 function movementKeyUp(e: KeyboardEvent) {
     const key = e.key.toLowerCase();
-    if (key in player.value.actions.movement.keys) {
-        player.value.actions.movement.keys[key as MovementKey].pressed = false;
+    if (keyboardConfig.value === 'ZQSD') {
+        if (key in player.value.actions.movement.ZQSD.keys) {
+            player.value.actions.movement.ZQSD.keys[key as MovementKey2].pressed = false;
+        }
+    } else {
+        if (key in player.value.actions.movement.WASD.keys) {
+            player.value.actions.movement.WASD.keys[key as MovementKey1].pressed = false;
+        }
     }
 }
 
@@ -518,7 +541,7 @@ async function retreiveUserSettings(userId: number) {
             musicVolume.value = data.music_volume;
             soundEffetcsVolume.value = data.sound_effects_volume;
             if (gameMusic) gameMusic.volume(musicVolume.value);
-            //keyboardConfig.value = data.keyboard_config;
+            keyboardConfig.value = data.keyboard_config;
         })
         .then(() => {
             playMusic();
@@ -530,8 +553,7 @@ async function sendUserSettings(userId: number) {
         user_id: userId,
         music_volume: musicVolume.value,
         sound_effects_volume: soundEffetcsVolume.value,
-        // keyboard_config: keyboardConfig.value,
-        keyboard_config: 'ZQSD',
+        keyboard_config: keyboardConfig.value,
     });
     router.patch(route('settings.update'), form.data());
 }
@@ -569,6 +591,10 @@ function handleMusicVolume(value: number) {
 
 function handleSoundEffectsVolume(value: number) {
     soundEffetcsVolume.value = value;
+}
+
+function handleKeyboardConfig(value: string) {
+    keyboardConfig.value = value;
 }
 
 onMounted(async () => {
@@ -619,12 +645,14 @@ onUnmounted(() => {
             :isPlayerProjectilesEnabled="isPlayerProjectilesEnabled"
             :music-volume="musicVolume"
             :sound-effects-volume="soundEffetcsVolume"
+            :keyboard-config="keyboardConfig"
             @update:isGameDevModeEnabled="(val) => (isGameDevModeEnabled = val)"
             @update:isEnemiesEnabled="(val) => (isEnemiesEnabled = val)"
             @update:isPlayerProjectilesEnabled="(val) => (isPlayerProjectilesEnabled = val)"
             @update:music-volume="handleMusicVolume"
             @update:sound-effects-volume="handleSoundEffectsVolume"
             @resume="pauseGame"
+            @update:keyboard-config="handleKeyboardConfig"
         />
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
 

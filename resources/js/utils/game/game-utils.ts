@@ -79,39 +79,71 @@ export function handlePauseStateWhenBonusPageOpen(isBoostPageOpen: Ref<boolean>,
  * Handle player movement
  * @param player Ref<PlayerType>
  */
-export function handlePlayerMovementAnimation(player: Ref<PlayerType>) {
+export function handlePlayerMovementAnimation(player: Ref<PlayerType>, keyboardConfig: string) {
     if (player.value.states.isSpawned) {
-        const keys = player.value.actions.movement.keys;
-        const speed = player.value.actions.movement.speed;
+        if (keyboardConfig === 'WASD') {
+            const keys = player.value.actions.movement.WASD.keys;
+            const speed = player.value.actions.movement.speed;
 
-        let isMoving = false;
-        let directionLeft = false;
-        let directionRight = false;
+            let isMoving = false;
+            let directionLeft = false;
+            let directionRight = false;
 
-        if (keys.z.pressed) {
-            player.value.position.Y -= speed;
-            isMoving = true;
-        }
-        if (keys.s.pressed) {
-            player.value.position.Y += speed;
-            isMoving = true;
-        }
-        if (keys.q.pressed) {
-            player.value.position.X -= speed;
-            directionLeft = true;
-            directionRight = false;
-            isMoving = true;
-        }
-        if (keys.d.pressed) {
-            player.value.position.X += speed;
-            directionLeft = false;
-            directionRight = true;
-            isMoving = true;
-        }
+            if (keys.w.pressed) {
+                player.value.position.Y -= speed;
+                isMoving = true;
+            }
+            if (keys.s.pressed) {
+                player.value.position.Y += speed;
+                isMoving = true;
+            }
+            if (keys.a.pressed) {
+                player.value.position.X -= speed;
+                directionLeft = true;
+                directionRight = false;
+                isMoving = true;
+            }
+            if (keys.d.pressed) {
+                player.value.position.X += speed;
+                directionLeft = false;
+                directionRight = true;
+                isMoving = true;
+            }
+            player.value.actions.movement.isMoving = isMoving;
+            player.value.actions.movement.direction.left = directionLeft;
+            player.value.actions.movement.direction.right = directionRight;
+        } else {
+            const keys = player.value.actions.movement.ZQSD.keys;
+            const speed = player.value.actions.movement.speed;
 
-        player.value.actions.movement.isMoving = isMoving;
-        player.value.actions.movement.direction.left = directionLeft;
-        player.value.actions.movement.direction.right = directionRight;
+            let isMoving = false;
+            let directionLeft = false;
+            let directionRight = false;
+
+            if (keys.z.pressed) {
+                player.value.position.Y -= speed;
+                isMoving = true;
+            }
+            if (keys.s.pressed) {
+                player.value.position.Y += speed;
+                isMoving = true;
+            }
+            if (keys.q.pressed) {
+                player.value.position.X -= speed;
+                directionLeft = true;
+                directionRight = false;
+                isMoving = true;
+            }
+            if (keys.d.pressed) {
+                player.value.position.X += speed;
+                directionLeft = false;
+                directionRight = true;
+                isMoving = true;
+            }
+            player.value.actions.movement.isMoving = isMoving;
+            player.value.actions.movement.direction.left = directionLeft;
+            player.value.actions.movement.direction.right = directionRight;
+        }
     }
 
     player.value.position.X = clamp(player.value.position.X, 0, 93);

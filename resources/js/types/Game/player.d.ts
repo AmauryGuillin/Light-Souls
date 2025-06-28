@@ -2,11 +2,21 @@ export type PlayerType = {
     name: string;
     actions: {
         movement: {
-            keys: {
-                z: { pressed: boolean };
-                q: { pressed: boolean };
-                s: { pressed: boolean };
-                d: { pressed: boolean };
+            ZQSD: {
+                keys: {
+                    z: { pressed: boolean };
+                    q: { pressed: boolean };
+                    s: { pressed: boolean };
+                    d: { pressed: boolean };
+                };
+            };
+            WASD: {
+                keys: {
+                    w: { pressed: boolean };
+                    a: { pressed: boolean };
+                    s: { pressed: boolean };
+                    d: { pressed: boolean };
+                };
             };
             direction: {
                 left: boolean;

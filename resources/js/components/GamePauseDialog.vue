@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { usePage } from '@inertiajs/vue3';
@@ -14,6 +15,7 @@ const props = defineProps<{
     isPlayerProjectilesEnabled: boolean;
     musicVolume: number;
     soundEffectsVolume: number;
+    keyboardConfig: string;
 }>();
 
 const emits = defineEmits<{
@@ -22,6 +24,7 @@ const emits = defineEmits<{
     (e: 'update:isPlayerProjectilesEnabled', value: boolean): void;
     (e: 'update:musicVolume', value: number): void;
     (e: 'update:soundEffectsVolume', value: number): void;
+    (e: 'update:keyboardConfig', value: string): void;
     (e: 'resume'): void;
 }>();
 
@@ -79,6 +82,23 @@ function quitWithoutSaving() {
                             @update:modelValue="(val) => emits('update:soundEffectsVolume', val![0])"
                         />
                         <span class="text-lg">{{ props.soundEffectsVolume * 10 }}</span>
+                    </div>
+                    <div class="mt-5 grid w-full grid-cols-3 items-center justify-center gap-5">
+                        <span>Keyboard configuration: </span>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger as-child>
+                                <Button variant="outline"> {{ keyboardConfig }} </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent class="w-56">
+                                <DropdownMenuRadioGroup
+                                    :model-value="props.keyboardConfig"
+                                    @update:modelValue="(val) => emits('update:keyboardConfig', val)"
+                                >
+                                    <DropdownMenuRadioItem value="WASD"> WASD </DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="ZQSD"> ZQSD </DropdownMenuRadioItem>
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                     <div class="mt-3 flex w-full flex-col items-start gap-3">
                         <Button>Save and quit</Button>

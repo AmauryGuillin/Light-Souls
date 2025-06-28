@@ -216,8 +216,6 @@ onMounted(() => {
                                         <Button variant="outline"> {{ keyboardConfig }} </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent class="w-56">
-                                        <!-- <DropdownMenuLabel>Panel Position</DropdownMenuLabel> -->
-                                        <!-- <DropdownMenuSeparator /> -->
                                         <DropdownMenuRadioGroup v-model="keyboardConfig">
                                             <DropdownMenuRadioItem value="WASD"> WASD </DropdownMenuRadioItem>
                                             <DropdownMenuRadioItem value="ZQSD"> ZQSD </DropdownMenuRadioItem>
