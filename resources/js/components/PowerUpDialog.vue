@@ -2,8 +2,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { PowerUpType } from '@/types/game/powerup';
-import { Ref } from 'vue';
 import PowerUpDialogContent from './PowerUpDialogContent.vue';
 import { ScrollArea } from './ui/scroll-area';
 
@@ -15,7 +13,7 @@ const props = defineProps<{
 // const emits = defineEmits(['update:HandlePauseStateWhenBonusPageOpen']);
 const emits = defineEmits<{
     (e: 'update:HandlePauseStateWhenBonusPageOpen'): void;
-    (e: 'update:upgradePlayerAttributes', powerup: Ref<PowerUpType>): void;
+    (e: 'update:upgradePlayerAttributes', powerup: any): any;
 }>();
 </script>
 

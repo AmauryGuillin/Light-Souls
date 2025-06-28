@@ -11,7 +11,6 @@ import { DamageDisplay } from '@/types/game/DamageDisplay';
 import { EnemyType } from '@/types/game/enemy';
 import { MovementKey } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
-import { PowerUpType } from '@/types/game/powerup';
 
 import { ProjectileType } from '@/types/game/projectile';
 import {
@@ -28,7 +27,7 @@ import {
     stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
-import { markRaw, onMounted, onUnmounted, Ref, ref, toRaw, watch } from 'vue';
+import { markRaw, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
 
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
@@ -305,7 +304,7 @@ function spawnEnemy() {
     const enemy = markRaw<EnemyType>({
         id: crypto.randomUUID(),
         personalAttributes: {
-            HP: 100,
+            HP: 100 * (player.value.personalAttributes.level / 2),
             movementSpeed: 0.03,
             damage: 10,
         },
@@ -335,6 +334,8 @@ function spawnEnemy() {
             height: 100,
         },
     });
+
+    console.log(enemy.personalAttributes.HP);
 
     enemies.value.push(enemy);
 }
@@ -443,21 +444,24 @@ function getPowerUp() {
         });
 }
 
-function upgradePlayerAttributes(powerup: Ref<PowerUpType>) {
+function upgradePlayerAttributes(powerup: any) {
     switch (powerup.type.type) {
         case 'Attack':
             if (powerup.boost.type === 'Increase') {
                 //todo
+                isBoostPageOpen.value = false;
             }
             break;
         case 'Defense':
             if (powerup.boost.type === 'Increase') {
                 //todo
+                isBoostPageOpen.value = false;
             }
             break;
         case 'FireRate':
             if (powerup.boost.type === 'Increase') {
                 //todo
+                isBoostPageOpen.value = false;
             } else {
                 player.value.personalAttributes.fireRate *= powerup.boost.multiplier;
                 isBoostPageOpen.value = false;
@@ -471,6 +475,7 @@ function upgradePlayerAttributes(powerup: Ref<PowerUpType>) {
             break;
         default:
             console.log('no action');
+            break;
     }
 }
 </script>
