@@ -43,9 +43,9 @@ const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
-const isGameDevModeEnabled = ref<boolean>(true);
-const isEnemiesEnabled = ref<boolean>(false);
-const isPlayerProjectilesEnabled = ref<boolean>(false);
+const isGameDevModeEnabled = ref<boolean>(false);
+const isEnemiesEnabled = ref<boolean>(true);
+const isPlayerProjectilesEnabled = ref<boolean>(true);
 const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
@@ -653,7 +653,7 @@ onUnmounted(() => {
         @mousemove="updateMousePosition"
     >
         <DebbugButtons
-            v-if="isGameDevModeEnabled"
+            v-if="isGameDevModeEnabled && user.role_id === 2"
             @showHitboxes="showHitboxes"
             @spawnPlayer="spawnPlayer"
             @spawnEnemy="spawnEnemy"
