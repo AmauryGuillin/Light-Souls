@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->dateTime('max_survival_time')->nullable();
             $table->integer('last_game_enemies_killed')->nullable();
-            $table->integet('enemies_killed_best')->nullable();
+            $table->integer('enemies_killed_best')->nullable();
             $table->integer('total_enemies_killed')->nullable();
             $table->integer('total_game_played')->nullable();
             $table->dateTime('total_hour_played')->nullable();
