@@ -466,7 +466,6 @@ function upgradePlayerAttributes(powerup: any) {
             break;
         case 'FireRate':
             if (powerup.boost.type === 'Increase') {
-                //todo
                 isBoostPageOpen.value = false;
             } else {
                 player.value.personalAttributes.fireRate *= powerup.boost.multiplier;
@@ -480,6 +479,7 @@ function upgradePlayerAttributes(powerup: any) {
             }
             break;
         case 'Health':
+            //todo
             isBoostPageOpen.value = false;
             break;
         default:
