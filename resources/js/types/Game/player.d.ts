@@ -37,5 +37,7 @@ export type PlayerType = {
         score: number;
         XP: number;
         level: number;
+        defense: number;
+        attackPower: number;
     };
 };

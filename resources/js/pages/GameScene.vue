@@ -82,6 +82,8 @@ const player = ref<PlayerType>({
         score: 0,
         XP: 1,
         level: 0,
+        defense: 1,
+        attackPower: 1,
     },
 } as PlayerType);
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
