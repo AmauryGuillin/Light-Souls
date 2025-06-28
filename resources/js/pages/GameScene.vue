@@ -310,7 +310,7 @@ function spawnEnemy() {
         personalAttributes: {
             HP: 100 * (player.value.personalAttributes.level / 2),
             movementSpeed: 0.03,
-            damage: 10,
+            damage: Math.floor(10 * player.value.personalAttributes.defense),
         },
         structure: {
             dimensions: {
@@ -458,7 +458,7 @@ function upgradePlayerAttributes(powerup: any) {
             break;
         case 'Defense':
             if (powerup.boost.type === 'Increase') {
-                //todo
+                player.value.personalAttributes.defense *= powerup.boost.multiplier;
                 isBoostPageOpen.value = false;
             }
             break;
@@ -476,6 +476,9 @@ function upgradePlayerAttributes(powerup: any) {
                 player.value.actions.movement.speed *= powerup.boost.multiplier;
                 isBoostPageOpen.value = false;
             }
+            break;
+        case 'Health':
+            isBoostPageOpen.value = false;
             break;
         default:
             console.log('no action');
