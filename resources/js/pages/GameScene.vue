@@ -351,10 +351,12 @@ function projectileHit(projectile: ProjectileType) {
  * @beta
  */
 function spawnEnemy() {
-    if (isGamePaused.value || isBoostPageOpen.value) return;
+    if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 50) return;
 
     if (!isEnemiesEnabled.value) return;
-    const enemiesNumber = player.value.personalAttributes.level;
+    let enemiesNumber = player.value.personalAttributes.level;
+    if (enemiesNumber >= 15) enemiesNumber = 15;
+
     const enemiesToInject = enemyFactory(enemiesNumber);
     enemies.value = [...enemies.value, ...enemiesToInject];
 }
