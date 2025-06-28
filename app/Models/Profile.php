@@ -12,6 +12,7 @@ class Profile extends Model
         'user_id',
         'max_survival_time',
         'last_game_enemies_killed',
+        'enemies_killed_best',
         'total_enemies_killed',
         'total_game_played',
         'total_hour_played',
