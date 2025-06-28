@@ -559,7 +559,7 @@ async function sendUserSettings(userId: number) {
     router.patch(route('settings.update'), form.data());
 }
 
-async function sendStatsToUserProfile(userId: number) {
+async function sendStatsToUserProfile(userId: number, close?: boolean) {
     const form = useForm({
         user_id: userId,
         last_survival_time: 0,
@@ -571,8 +571,13 @@ async function sendStatsToUserProfile(userId: number) {
         onProgress: () => {
             isLoading = true;
         },
-        onSuccess: () => window.close(),
+        onSuccess: () => (close ? window.close() : goToMainMenu()),
     });
+}
+
+function goToMainMenu() {
+    gameMusic?.stop();
+    router.get('/game/mainMenu');
 }
 
 function playMusic() {
@@ -673,7 +678,23 @@ onUnmounted(() => {
             @update:keyboard-config="handleKeyboardConfig"
             @send:profile-data="sendStatsToUserProfile(user.id)"
         />
-        <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
+
+        <div
+            v-if="player.personalAttributes.HP <= 0"
+            class="font-game absolute top-[50%] left-[50%] z-50 flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"
+        >
+            <span class="w-full bg-black/95 pt-2 text-7xl font-bold text-red-500">YOU DIED</span>
+            <span
+                @click="sendStatsToUserProfile(user.id)"
+                class="cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-amber-500"
+                >Replay</span
+            >
+            <span
+                @click="sendStatsToUserProfile(user.id, true)"
+                class="hover:text-amber-500q cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-red-500"
+                >Quit game</span
+            >
+        </div>
 
         <PlayerInfo
             :is-game-dev-mode-enabled="isGameDevModeEnabled"

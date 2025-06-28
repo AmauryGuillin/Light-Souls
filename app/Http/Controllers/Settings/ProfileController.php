@@ -46,6 +46,7 @@ class ProfileController extends Controller
     {
         $profile = Profile::where('user_id', $request->input('user_id'))->firstOrFail();
 
+
         $profile->update([
             'total_survival_time' => $request->input('last_survival_time') > $profile->total_survival_time ? $profile->total_survival_time = $request->input('last_survival_time') : $profile->total_survival_time,
             'last_game_enemies_killed' => $request->input('last_game_enemies_killed'),
