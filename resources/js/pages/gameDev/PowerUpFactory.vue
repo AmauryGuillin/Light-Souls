@@ -9,13 +9,15 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@inertiajs/vue3';
 import { Brush, Loader2, Settings, Sparkles, Zap } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     powerupTypes: [{ id: number; type: string }];
     powerupBoosts: string[];
     powerupAssets: { path: string }[];
 }>();
+
+console.log(toRaw(props.powerupAssets));
 
 const selectedIllustration = ref<number | null>(null);
 
@@ -31,7 +33,7 @@ const form = useForm<App.Data.PowerUpFormData>({
 
 function handleSelectedIllustration(selectedIllustrationId: number) {
     selectedIllustration.value = selectedIllustrationId;
-    form.assetId = selectedIllustration.value;
+    form.assetId = selectedIllustration.value + 1;
 }
 
 function deleteForm() {
@@ -142,9 +144,9 @@ function deleteForm() {
                                             <CarouselItem v-for="(image, index) in powerupAssets" :key="index" class="pl-1 md:basis-1/2 lg:basis-1/3">
                                                 <div class="p-1">
                                                     <Card
-                                                        @Click="handleSelectedIllustration(index + 1)"
+                                                        @Click="handleSelectedIllustration(index)"
                                                         class="cursor-pointer transition-all hover:border-white"
-                                                        :class="selectedIllustration === index + 1 ? 'border-green-400' : ''"
+                                                        :class="selectedIllustration === index ? 'border-green-400' : ''"
                                                     >
                                                         <CardContent class="flex aspect-square items-center justify-center p-6">
                                                             <img :src="image.path" alt="" />

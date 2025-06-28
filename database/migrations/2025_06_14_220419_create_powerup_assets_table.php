@@ -22,8 +22,7 @@ return new class extends Migration
             [
                 ['path' => '/assets/boost/powerup_asset_1.png', 'created_at' => now()],
                 ['path' => '/assets/boost/powerup_asset_2.png', 'created_at' => now()],
-                ['path' => '/assets/boost/powerup_asset_3
-                .png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_3.png', 'created_at' => now()],
             ]
         );
     }
