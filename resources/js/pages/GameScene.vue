@@ -504,8 +504,7 @@ async function retreiveUserSettings(userId: number) {
             musicVolume.value = data.music_volume;
             soundEffetcsVolume.value = data.sound_effects_volume;
             if (gameMusic) gameMusic.volume(musicVolume.value);
-            // soundEffect.volume(soundEffetcsVolume.value);
-            // keyboardConfig.value = data.keyboard_config;
+            //keyboardConfig.value = data.keyboard_config;
         })
         .then(() => {
             playMusic();
@@ -585,6 +584,16 @@ function playSoundEffectPlayerHit() {
     soundEffectPlayerHitSample.play();
 }
 
+function handleMusicVolume(value: number) {
+    musicVolume.value = value;
+    if (!gameMusic) return;
+    gameMusic.volume(value);
+}
+
+function handleSoundEffectsVolume(value: number) {
+    soundEffetcsVolume.value = value;
+}
+
 onMounted(async () => {
     window.addEventListener('keydown', movementKeyDown);
     window.addEventListener('keydown', pauseGame);
@@ -631,9 +640,13 @@ onUnmounted(() => {
             :isGameDevModeEnabled="isGameDevModeEnabled"
             :isEnemiesEnabled="isEnemiesEnabled"
             :isPlayerProjectilesEnabled="isPlayerProjectilesEnabled"
+            :music-volume="musicVolume"
+            :sound-effects-volume="soundEffetcsVolume"
             @update:isGameDevModeEnabled="(val) => (isGameDevModeEnabled = val)"
             @update:isEnemiesEnabled="(val) => (isEnemiesEnabled = val)"
             @update:isPlayerProjectilesEnabled="(val) => (isPlayerProjectilesEnabled = val)"
+            @update:music-volume="handleMusicVolume"
+            @update:sound-effects-volume="handleSoundEffectsVolume"
             @resume="pauseGame"
         />
         <div v-if="player.personalAttributes.HP <= 0" class="z-50 bg-red-500 text-7xl font-bold text-black">YOU DIED</div>
