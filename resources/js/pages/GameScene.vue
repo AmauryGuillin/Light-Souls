@@ -206,8 +206,10 @@ function playerStartShooting() {
             height: 1,
             width: 1,
         },
-        damage: 50,
+        damage: Math.floor(50 * player.value.personalAttributes.attackPower),
     });
+
+    console.log('damage', projectile.damage);
 
     projectiles.value.push(projectile);
     projectileMovement(projectile);
@@ -450,7 +452,7 @@ function upgradePlayerAttributes(powerup: any) {
     switch (powerup.type.type) {
         case 'Attack':
             if (powerup.boost.type === 'Increase') {
-                //todo
+                player.value.personalAttributes.attackPower *= powerup.boost.multiplier;
                 isBoostPageOpen.value = false;
             }
             break;
