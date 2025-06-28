@@ -39,8 +39,8 @@ watch(
         <div v-if="props.isGameDevModeEnabled" class="z-50 font-bold text-red-500">Enemy HP: {{ 100 * (props.playerLevel / 2) }}</div>
     </div> -->
     <ExperienceBar class="z-50 w-full bg-black/75" :model-value="percentage" />
-    <div class="m-5 flex w-1/5 flex-col gap-5">
-        <div class="flex min-w-96 flex-col gap-3">
+    <div class="m-5 flex w-1/5 flex-col">
+        <div class="flex min-w-96 flex-col">
             <div class="rounded-lg border-2 border-red-500/70 bg-slate-900/90 p-3 shadow-lg backdrop-blur-sm">
                 <div class="mb-2 flex items-center gap-2">
                     <Heart class="h-5 w-5 text-red-500" />
@@ -54,15 +54,14 @@ watch(
                     />
                 </div>
             </div>
-        </div>
-        <div class="font-game absolute top-60 left-0 z-10 w-fit -translate-y-1/2 transform">
-            <div class="rounded-r-lg border-t border-r border-b border-white/20 bg-black/70 px-3 py-6 backdrop-blur-sm">
-                <div class="flex flex-col gap-4 text-center">
+            <div
+                class="mx-auto flex w-fit items-center justify-center rounded-br-lg rounded-bl-lg border-r-2 border-b-2 border-l-2 border-white/20 bg-black/70 backdrop-blur-sm"
+            >
+                <div class="flex gap-4 px-4 text-center">
                     <div>
                         <div class="font-mono text-xs text-green-400">Level</div>
                         <div class="font-mono text-lg font-bold text-white/80">{{ props.playerLevel }}</div>
                     </div>
-                    <div class="h-px w-full bg-white/20"></div>
                     <div>
                         <div class="font-mono text-xs text-amber-500">Score</div>
                         <div class="font-mono text-sm text-white/80">{{ props.playerScore === 0 ? '0000' : props.playerScore }}</div>
