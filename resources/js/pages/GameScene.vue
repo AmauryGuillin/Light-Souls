@@ -28,6 +28,13 @@ import {
     stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
+import {
+    playSoundEffectEnemyAttack,
+    playSoundEffectEnemyHit,
+    playSoundEffectFireBall,
+    playSoundEffectPlayerHit,
+    playSoundEffectPowerUp,
+} from '@/utils/game/music-utils';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { markRaw, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
 
@@ -172,7 +179,12 @@ function gameLoop() {
 
     handleProjectilesMovementAnimations(projectiles, projectileHit);
 
-    handleEnemiesMovementAnimations(enemies, player, playSoundEffectEnemyAttack, playSoundEffectPlayerHit);
+    handleEnemiesMovementAnimations(
+        enemies,
+        player,
+        () => playSoundEffectEnemyAttack(SoundEffectEnemyAttack, soundEffetcsVolume.value),
+        () => playSoundEffectPlayerHit(soundEffectPlayerHit, soundEffetcsVolume.value),
+    );
 
     animationFrameId = requestAnimationFrame(gameLoop);
 }
@@ -236,7 +248,7 @@ function playerStartShooting() {
 
     projectiles.value.push(projectile);
     projectileMovement(projectile);
-    playSoundEffectFireBall();
+    playSoundEffectFireBall(SoundEffectfireBall, soundEffetcsVolume.value);
 }
 
 function onBonusPageClose() {
@@ -286,7 +298,7 @@ function projectileHit(projectile: ProjectileType) {
         const isColliding = calculColisionBetweenTwoEntities(projectile, enemy, sceneRef);
 
         if (isColliding) {
-            playSoundEffectEnemyHit();
+            playSoundEffectEnemyHit(SoundEffectenemyHit, soundEffetcsVolume.value);
             enemy.personalAttributes.HP -= projectile.damage;
 
             const damageId = `${enemy.id}-${Date.now()}`;
@@ -313,7 +325,7 @@ function projectileHit(projectile: ProjectileType) {
                     player.value.personalAttributes.level++;
                     player.value.personalAttributes.XP = 1;
                     player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
-                    playSoundEffectPowerUp();
+                    playSoundEffectPowerUp(SoundEffectPowerUp, soundEffetcsVolume.value);
                     getPowerUp();
                 }
             }
@@ -547,54 +559,6 @@ function playMusic() {
 
 function musicShuffle() {
     musicShuffleIndex = Math.floor(Math.random() * musicTracks.length);
-}
-
-function playSoundEffectFireBall() {
-    const soundEffectIndex = Math.floor(Math.random() * SoundEffectfireBall.length);
-
-    const soundEffectFireBallSample = new Howl({
-        src: [SoundEffectfireBall[soundEffectIndex]],
-        volume: soundEffetcsVolume.value + 0.2,
-    });
-    soundEffectFireBallSample.play();
-}
-
-function playSoundEffectPowerUp() {
-    const soundEffectPowerUpSample = new Howl({
-        src: [SoundEffectPowerUp[0]],
-        volume: soundEffetcsVolume.value,
-    });
-
-    soundEffectPowerUpSample.play();
-}
-
-function playSoundEffectEnemyHit() {
-    const soundEffectEnemyHitSample = new Howl({
-        src: [SoundEffectenemyHit[0]],
-        volume: soundEffetcsVolume.value,
-    });
-
-    soundEffectEnemyHitSample.play();
-}
-
-function playSoundEffectEnemyAttack() {
-    const soundEffectIndex = Math.floor(Math.random() * SoundEffectEnemyAttack.length);
-
-    const soundEffectEnemyAttackSample = new Howl({
-        src: [SoundEffectEnemyAttack[soundEffectIndex]],
-        volume: soundEffetcsVolume.value - 0.2,
-    });
-
-    soundEffectEnemyAttackSample.play();
-}
-
-function playSoundEffectPlayerHit() {
-    const soundEffectPlayerHitSample = new Howl({
-        src: [soundEffectPlayerHit[0]],
-        volume: soundEffetcsVolume.value - 0.2,
-    });
-
-    soundEffectPlayerHitSample.play();
 }
 
 function handleMusicVolume(value: number) {
