@@ -101,13 +101,13 @@ function quitWithoutSaving() {
                         </DropdownMenu>
                     </div>
                     <div class="mt-3 flex w-full flex-col items-start gap-3">
-                        <Button>Save and quit</Button>
-                        <Button @click="quitWithoutSaving">Quit without saving</Button>
+                        <Button variant="secondary">Save and quit</Button>
+                        <Button variant="destructive" @click="quitWithoutSaving">Quit without saving</Button>
                     </div>
                 </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-                <Button type="button" class="cursor-pointer" @click="emits('resume')">Resume</Button>
+                <Button type="button" variant="secondary" @click="emits('resume')">Resume</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
