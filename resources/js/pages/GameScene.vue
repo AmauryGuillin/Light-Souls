@@ -28,7 +28,7 @@ import {
     stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
-import { usePage } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import { markRaw, onMounted, onUnmounted, ref, toRaw, watch } from 'vue';
 
 const page = usePage();
@@ -418,11 +418,12 @@ function showHitboxes() {
  * @remark
  * Activated on **KeyDown** of the "Escape" key to pause or resume the game.
  */
-function pauseGame(e?: KeyboardEvent) {
+async function pauseGame(e?: KeyboardEvent) {
     const key = e?.key;
     if (key !== undefined && key === 'Escape') {
         if (isGamePaused.value) {
             isGamePaused.value = false;
+            await sendUserSettings(user.id);
             animationFrameId = requestAnimationFrame(gameLoop);
             return;
         }
@@ -433,6 +434,7 @@ function pauseGame(e?: KeyboardEvent) {
         if (isGamePaused.value) {
             isGamePaused.value = false;
             animationFrameId = requestAnimationFrame(gameLoop);
+            await sendUserSettings(user.id);
             return;
         }
         isGamePaused.value = true;
@@ -511,6 +513,17 @@ async function retreiveUserSettings(userId: number) {
         });
 }
 
+async function sendUserSettings(userId: number) {
+    const form = useForm({
+        user_id: userId,
+        music_volume: musicVolume.value,
+        sound_effects_volume: soundEffetcsVolume.value,
+        // keyboard_config: keyboardConfig.value,
+        keyboard_config: 'ZQSD',
+    });
+    router.patch(route('settings.update'), form.data());
+}
+
 function playMusic() {
     if (gameMusic) {
         gameMusic.stop();
@@ -541,7 +554,7 @@ function playSoundEffectFireBall() {
 
     const soundEffectFireBallSample = new Howl({
         src: [SoundEffectfireBall[soundEffectIndex]],
-        volume: soundEffetcsVolume.value,
+        volume: soundEffetcsVolume.value + 0.2,
     });
     soundEffectFireBallSample.play();
 }
@@ -569,7 +582,7 @@ function playSoundEffectEnemyAttack() {
 
     const soundEffectEnemyAttackSample = new Howl({
         src: [SoundEffectEnemyAttack[soundEffectIndex]],
-        volume: soundEffetcsVolume.value,
+        volume: soundEffetcsVolume.value - 0.2,
     });
 
     soundEffectEnemyAttackSample.play();
@@ -578,7 +591,7 @@ function playSoundEffectEnemyAttack() {
 function playSoundEffectPlayerHit() {
     const soundEffectPlayerHitSample = new Howl({
         src: [soundEffectPlayerHit[0]],
-        volume: soundEffetcsVolume.value,
+        volume: soundEffetcsVolume.value - 0.2,
     });
 
     soundEffectPlayerHitSample.play();
