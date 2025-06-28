@@ -39,7 +39,7 @@ watch(
         <div v-if="props.isGameDevModeEnabled" class="z-50 font-bold text-red-500">FireRate: {{ props.playerFireRate }}</div>
         <div v-if="props.isGameDevModeEnabled" class="z-50 font-bold text-red-500">Enemy HP: {{ 100 * (props.playerLevel / 2) }}</div>
     </div> -->
-    <ExperienceBar class="z-50 w-full bg-black/75" :model-value="percentage" />
+    <ExperienceBar class="z-50 w-full bg-black/75" :model-value="percentage" :class="`${props.playerXP >= 99 ? 'animate-pulse' : ''}`" />
     <div class="z-50 m-5 flex w-1/5 flex-col">
         <div class="flex min-w-96 flex-col">
             <div class="rounded-lg border-2 border-red-500/70 bg-slate-900/90 p-3 shadow-lg backdrop-blur-sm">
