@@ -272,7 +272,7 @@ export function startEnemiSpawn(
 ) {
     if (enemySpawnIntervalRef.value || !player.value.states.isSpawned) return;
 
-    const spawningRate = 4000 - player.value.personalAttributes.score / 20;
+    const spawningRate = 4000;
 
     enemySpawnIntervalRef.value = setInterval(() => {
         if (!player.value.states.isSpawned) {
