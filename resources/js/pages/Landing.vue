@@ -27,9 +27,16 @@ const tutorialCardsContent = [
     },
     {
         id: 2,
+        title: 'Automatic Shoot',
+        description: 'No need to click your screen to fire a shot.',
+        image: ['/assets/tutorial/2/tutorial_2.gif'],
+        subDescription: "It would've been too easy if you could choose when to shoot. :)",
+    },
+    {
+        id: 3,
         title: 'Shoot in Two Directions',
         description: 'Use your mouse cursor to control your shooting direction.',
-        image: ['/assets/tutorial/2/tutorial_2.gif'],
+        image: ['/assets/tutorial/3/tutorial_3.gif'],
         subDescription:
             'Your player is the reference point. Move your cursor to the right of your player to shoot right, or to the left to shoot left.',
     },
