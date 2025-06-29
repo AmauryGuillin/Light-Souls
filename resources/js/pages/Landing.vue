@@ -36,7 +36,7 @@ const tutorialCardsContent = [
         id: 3,
         title: 'Shoot In Two Directions',
         description: 'Use your mouse cursor to control your shooting direction.',
-        image: ['/assets/tutorial/3/tutorial_3.gif'],
+        image: ['/assets/tutorial/3/tutorial_3_2.gif'],
         subDescription:
             'Your player is the reference point. Move your cursor to the right of your player to shoot right, or to the left to shoot left.',
     },
