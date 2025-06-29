@@ -36,7 +36,7 @@ watch(
                 <div class="mb-2 flex w-fit items-center gap-2">
                     <Heart class="h-5 w-5 text-red-500" />
                     <span class="text-sm font-bold tracking-wider text-red-400">HEALTH</span>
-                    <span class="ml-auto text-sm font-bold text-white">{{ props.playerHP }}/{{ props.playerMaxHP }}</span>
+                    <span class="ml-auto text-sm font-bold text-white">{{ Math.floor(props.playerHP) }}/{{ Math.floor(props.playerMaxHP) }}</span>
                 </div>
                 <div class="h-4 w-full rounded-full border border-slate-600 bg-slate-700 shadow-inner">
                     <div

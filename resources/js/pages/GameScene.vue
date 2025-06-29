@@ -219,7 +219,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 1;
+    player.value.personalAttributes.level = 5;
 }
 
 /**

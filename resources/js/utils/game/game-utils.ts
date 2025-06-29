@@ -250,6 +250,7 @@ export function handleEnemiesMovementAnimations(
                 player.value.states.lastDamageTime = now;
 
                 if (player.value.personalAttributes.HP <= 0) {
+                    player.value.personalAttributes.HP = 0;
                     player.value.states.isSpawned = false;
                     return;
                 }
