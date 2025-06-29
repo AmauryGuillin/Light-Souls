@@ -51,7 +51,6 @@ const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
 const enemies = ref<EnemyType[]>([]);
 const playerPowerUps = ref<App.Data.PowerupData[]>([]);
-const fireInterval: ReturnType<typeof setInterval> | null = null;
 const fireIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 const enemySpawnIntervalRef = ref<ReturnType<typeof setInterval> | null>(null);
 const damagesToDisplay = ref<DamageDisplay[]>([]);
@@ -145,7 +144,7 @@ watch(
     () => player.value.states.isSpawned,
     (newVal) => {
         if (newVal) {
-            startFiring(ref(fireInterval), player, playerStartShooting, () => stopFiring(fireIntervalRef));
+            startFiring(fireIntervalRef, player, playerStartShooting, () => stopFiring(fireIntervalRef));
             startEnemiSpawn(enemySpawnIntervalRef, player, spawnEnemy, () => stopEnemySpawn(enemySpawnIntervalRef));
         } else {
             stopFiring(fireIntervalRef);
@@ -520,8 +519,6 @@ function upgradePlayerAttributes(powerup: any) {
             break;
         case 'FireRate':
             if (powerup.boost.type === 'Increase') {
-                isBoostPageOpen.value = false;
-            } else {
                 player.value.personalAttributes.fireRate *= powerup.boost.multiplier;
                 isBoostPageOpen.value = false;
             }

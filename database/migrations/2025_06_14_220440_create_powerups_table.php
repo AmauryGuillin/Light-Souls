@@ -35,7 +35,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Crystal Aegis',
-                'description' => 'Emplify your defense by 15%',
+                'description' => 'Emplify your defense by 25%',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 2,
                 'powerup_boosts_id' => 2,
@@ -44,7 +44,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Wind Rush',
-                'description' => 'Emplify your movement speed by 6%',
+                'description' => 'Emplify your movement speed by 10%',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 3,
                 'powerup_boosts_id' => 3,
@@ -53,7 +53,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Rapid Spark',
-                'description' => 'Emplify your fire rate by 5%',
+                'description' => 'Emplify your fire rate by 15%',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 4,
                 'powerup_boosts_id' => 4,
