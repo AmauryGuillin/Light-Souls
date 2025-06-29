@@ -45,6 +45,7 @@ import { toast } from 'vue-sonner';
 const page = usePage();
 const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
+const gameStartTime = ref<number | null>(null);
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
 const isGameDevModeEnabled = ref<boolean>(true);
@@ -220,6 +221,7 @@ function spawnPlayer() {
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
     player.value.personalAttributes.level = 5;
+    gameStartTime.value = Date.now();
 }
 
 /**
@@ -589,12 +591,15 @@ async function sendUserSettings(userId: number) {
 }
 
 async function sendStatsToUserProfile(userId: number, close?: boolean) {
+    const now = Date.now();
+    const survivalTime = gameStartTime.value ? Math.floor((now - gameStartTime.value) / 1000) : 0;
+
     const form = useForm({
         user_id: userId,
-        last_survival_time: 0,
+        last_survival_time: survivalTime,
         last_game_enemies_killed: player.value.personalAttributes.score,
         last_game_level: player.value.personalAttributes.level,
-        is_player_dead: player.value.states.isSpawned ? false : true,
+        is_player_dead: !player.value.states.isSpawned,
     });
     router.patch(route('profile.update'), form.data(), {
         onProgress: () => {

@@ -48,11 +48,11 @@ class ProfileController extends Controller
 
 
         $profile->update([
-            'total_survival_time' => $request->input('last_survival_time') > $profile->total_survival_time ? $profile->total_survival_time = $request->input('last_survival_time') : $profile->total_survival_time, //TODO
+            'max_survival_time' => $request->input('last_survival_time') > $profile->max_survival_time ? $profile->max_survival_time = $request->input('last_survival_time') : $profile->max_survival_time, //TODO
             'last_game_enemies_killed' => $request->input('last_game_enemies_killed'),
             'total_enemies_killed' => $profile->total_enemies_killed + $request->input('last_game_enemies_killed'),
             'total_game_played' => $profile->total_game_played + 1,
-            'total_hour_played' => $profile->total_hour_played + 0, //TODO
+            'total_hour_played' => $profile->total_hour_played + $request->input('last_survival_time'), //TODO
             'enemies_killed_best' => $request->input('last_game_enemies_killed') > $profile->enemies_killed_best ? $profile->enemies_killed_best = $request->input('last_game_enemies_killed') : $profile->enemies_killed_best = $profile->enemies_killed_best,
             'death_count' => $request->input('is_player_dead') ? $profile->death_count + 1 : $profile->death_count + 0,
             'higher_level' => $request->input('last_game_level') > $profile->higher_level ? $request->input('last_game_level') : $profile->higher_level,

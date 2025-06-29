@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->dateTime('max_survival_time')->nullable();
+            $table->integer('max_survival_time')->nullable();
             $table->integer('last_game_enemies_killed')->nullable();
             $table->integer('enemies_killed_best')->nullable();
             $table->integer('total_enemies_killed')->nullable();
             $table->integer('total_game_played')->nullable();
-            $table->dateTime('total_hour_played')->nullable();
+            $table->integer('total_hour_played')->nullable();
             $table->integer('death_count')->nullable();
             $table->integer('higher_level')->nullable();
             $table->timestamps();
