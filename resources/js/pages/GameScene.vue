@@ -351,7 +351,7 @@ function projectileHit(projectile: ProjectileType) {
  * @beta
  */
 function spawnEnemy() {
-    if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 50) return;
+    if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 75) return;
 
     if (!isEnemiesEnabled.value) return;
     let enemiesNumber = player.value.personalAttributes.level;
