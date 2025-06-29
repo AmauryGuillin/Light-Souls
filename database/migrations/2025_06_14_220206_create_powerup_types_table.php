@@ -24,6 +24,8 @@ return new class extends Migration
             ['type' => PowerupTypes::DEFENSE, 'created_at' => now()],
             ['type' => PowerupTypes::SPEED, 'created_at' => now()],
             ['type' => PowerupTypes::FIRERATE, 'created_at' => now()],
+            ['type' => PowerupTypes::HEAL, 'created_at' => now()],
+            ['type' => PowerupTypes::HEALTH, 'created_at' => now()],
         ]);
     }
 

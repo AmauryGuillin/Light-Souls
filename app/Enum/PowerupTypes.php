@@ -14,4 +14,8 @@ enum PowerupTypes: string
     case SPEED = 'Speed';
 
     case FIRERATE = 'FireRate';
+
+    case HEAL = 'Heal';
+
+    case HEALTH = 'Health';
 }

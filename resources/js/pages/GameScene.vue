@@ -532,6 +532,10 @@ function upgradePlayerAttributes(powerup: any) {
                 isBoostPageOpen.value = false;
             }
             break;
+        case 'Heal':
+            //todo
+            isBoostPageOpen.value = false;
+            break;
         case 'Health':
             //todo
             isBoostPageOpen.value = false;
