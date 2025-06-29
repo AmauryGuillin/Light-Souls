@@ -29,11 +29,7 @@ watch(
 </script>
 
 <template>
-    <ExperienceBar
-        class="z-50 w-full bg-black/75"
-        :model-value="percentage"
-        :class="`${props.playerXP >= Math.round((props.playerXP / (props.playerLevel * 100)) * 100) ? 'animate-pulse' : ''}`"
-    />
+    <ExperienceBar class="z-50 w-full bg-black/75" :model-value="percentage" :class="`${percentage >= 100 ? 'animate-pulse' : ''}`" />
     <div class="z-50 m-5 flex w-1/5 flex-col">
         <div class="flex min-w-96 flex-col">
             <div class="rounded-lg border-2 border-red-500/70 bg-slate-900/90 p-3 shadow-lg backdrop-blur-sm">

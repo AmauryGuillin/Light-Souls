@@ -22,7 +22,7 @@ return new class extends Migration
 
         DB::table('powerup_boosts')->insert([
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.35, 'created_at' => now()],
-            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.15, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 0.85, 'created_at' => now()],
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.06, 'created_at' => now()],
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.05, 'created_at' => now()],
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.30, 'created_at' => now()],

@@ -368,9 +368,9 @@ function enemyFactory(value: number): EnemyType[] {
         const enemy = markRaw<EnemyType>({
             id: crypto.randomUUID(),
             personalAttributes: {
-                HP: 100 * (player.value.personalAttributes.level / 2),
+                HP: Math.floor(100 * (player.value.personalAttributes.level / 3)),
                 movementSpeed: 0.03,
-                damage: Math.floor(10 * player.value.personalAttributes.defense),
+                damage: 10,
             },
             structure: {
                 dimensions: {
