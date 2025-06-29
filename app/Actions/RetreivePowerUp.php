@@ -19,6 +19,15 @@ class RetreivePowerUp
     private function getThreeRandomPowerUps(int $playerLevel): Collection
     {
         $powerUps = collect(PowerUp::with('type', 'boost', 'asset')->where('unlockLevel', '<=', $playerLevel)->get());
+        if ($playerLevel >= 5) {
+            $powerUps = $powerUps->filter(function ($p) {
+                return $p->unlockLevel === 5;
+            });
+        } else if ($playerLevel >= 2) {
+            $powerUps = $powerUps->filter(function ($p) {
+                return $p->unlockLevel === 2;
+            });
+        }
         return $powerUps->random(min(3, $powerUps->count()));
     }
 }

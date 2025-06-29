@@ -64,6 +64,35 @@ export function calculColisionBetweenTwoEntities(
     return isColliding;
 }
 
+export function calculEnemyHitColision(
+    firstEntity: PlayerType | EnemyType | ProjectileType,
+    secondEntity: PlayerType | EnemyType | ProjectileType,
+    sceneRef: Ref<HTMLElement | null, HTMLElement | null>,
+): boolean {
+    if (!sceneRef.value) return false;
+
+    const sceneWidth = sceneRef.value.offsetWidth;
+    const sceneHeight = sceneRef.value.offsetHeight;
+
+    const firstEntityPositionXPx = (firstEntity.position.X / 100) * sceneWidth;
+    const firstEntityPositionYPx = (firstEntity.position.Y / 100) * sceneHeight;
+    const firstEntityWidth = firstEntity.structure.dimensions.width - 90;
+    const firstEntityHeight = firstEntity.structure.dimensions.height;
+
+    const secondEntityPositionXPx = (secondEntity.position.X / 100) * sceneWidth;
+    const secondEntityPositionYPx = (secondEntity.position.Y / 100) * sceneHeight;
+    const secondEntityWidth = secondEntity.structure.dimensions.width - 70;
+    const secondEntityHeight = secondEntity.structure.dimensions.height - 70;
+
+    const isColliding =
+        firstEntityPositionXPx < secondEntityPositionXPx + secondEntityWidth &&
+        firstEntityPositionXPx + firstEntityHeight > secondEntityPositionXPx &&
+        firstEntityPositionYPx < secondEntityPositionYPx + secondEntityHeight &&
+        firstEntityPositionYPx + firstEntityWidth > secondEntityPositionYPx;
+
+    return isColliding;
+}
+
 /**
  * Gère la fermeture de la page de bonus et enlève la pause du jeu.
  * @param isBoostPageOpen Ref<boolean> for the boost page open state
@@ -183,6 +212,7 @@ export function handleEnemiesMovementAnimations(
     player: Ref<PlayerType>,
     playSoundEffectEnemyAttack: () => void,
     playSoundEffectPlayerHit: () => void,
+    sceneRef: Ref<HTMLElement | null>,
 ) {
     enemies.value.forEach((enemy) => {
         if (!enemy.states.isSpawned) return;
@@ -203,10 +233,7 @@ export function handleEnemiesMovementAnimations(
             enemy.position.Y += (dy / distance) * enemy.personalAttributes.movementSpeed;
         }
 
-        if (
-            Math.round(enemy.position.X) === Math.round(player.value.position.X) &&
-            Math.round(enemy.position.Y) === Math.round(player.value.position.Y)
-        ) {
+        if (calculEnemyHitColision(enemy, player.value, sceneRef)) {
             const now = performance.now();
             const timeSinceLastHit = now - player.value.states.lastDamageTime;
             const damageCoolDown = 500; // ms
@@ -219,11 +246,7 @@ export function handleEnemiesMovementAnimations(
                     enemy.personalAttributes.damage *
                     levelMultiplier *
                     player.value.personalAttributes.defense *
-                    enemies.value.filter(
-                        (e) =>
-                            Math.round(e.position.X) === Math.round(player.value.position.X) &&
-                            Math.round(e.position.Y) === Math.round(player.value.position.Y),
-                    ).length;
+                    enemies.value.filter((e) => calculEnemyHitColision(e, player.value, sceneRef)).length;
                 player.value.states.lastDamageTime = now;
 
                 if (player.value.personalAttributes.HP <= 0) {

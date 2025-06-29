@@ -195,6 +195,7 @@ function gameLoop() {
         player,
         () => playSoundEffectEnemyAttack(SoundEffectEnemyAttack, soundEffetcsVolume.value),
         () => playSoundEffectPlayerHit(soundEffectPlayerHit, soundEffetcsVolume.value),
+        sceneRef,
     );
 
     animationFrameId = requestAnimationFrame(gameLoop);
@@ -324,11 +325,12 @@ function projectileHit(projectile: ProjectileType) {
             }, 1000);
 
             if (enemy.personalAttributes.HP <= 0) {
+                const xpHandler = 40;
                 enemy.states.isSpawned = false;
                 enemy.states.canKill = false;
                 enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
                 player.value.personalAttributes.score++;
-                if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * 100) {
+                if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * xpHandler) {
                     player.value.personalAttributes.XP += 10;
                 } else {
                     player.value.personalAttributes.level++;

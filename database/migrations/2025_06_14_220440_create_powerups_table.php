@@ -79,7 +79,7 @@ return new class extends Migration
                 'created_at' => now()
             ], // level 5
             [
-                'name' => '',
+                'name' => 'Inferno Strike',
                 'description' => 'Emplify your attack power by 45%',
                 'unlockLevel' => 5,
                 'powerup_types_id' => 1,
@@ -88,7 +88,7 @@ return new class extends Migration
                 'created_at' => now()
             ],
             [
-                'name' => '',
+                'name' => 'Titan Guard',
                 'description' => 'Emplify your defense by 35%',
                 'unlockLevel' => 5,
                 'powerup_types_id' => 2,
@@ -97,7 +97,7 @@ return new class extends Migration
                 'created_at' => now()
             ],
             [
-                'name' => '',
+                'name' => 'Phantom Dash',
                 'description' => 'Emplify your movement speed by 15%',
                 'unlockLevel' => 5,
                 'powerup_types_id' => 3,
@@ -106,7 +106,7 @@ return new class extends Migration
                 'created_at' => now()
             ],
             [
-                'name' => '',
+                'name' => 'Blitz Core',
                 'description' => 'Emplify your fire rate by 30%',
                 'unlockLevel' => 5,
                 'powerup_types_id' => 4,
@@ -115,7 +115,7 @@ return new class extends Migration
                 'created_at' => now()
             ],
             [
-                'name' => '',
+                'name' => 'Elixir of Renewal',
                 'description' => 'Restores 35% of your max HP',
                 'unlockLevel' => 5,
                 'powerup_types_id' => 5,
@@ -124,7 +124,7 @@ return new class extends Migration
                 'created_at' => now()
             ],
             [
-                'name' => '',
+                'name' => 'Heartstone',
                 'description' => 'Increase your max HP by 10 HP',
                 'unlockLevel' => 5,
                 'powerup_types_id' => 6,
