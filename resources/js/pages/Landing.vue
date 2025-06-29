@@ -34,11 +34,18 @@ const tutorialCardsContent = [
     },
     {
         id: 3,
-        title: 'Shoot in Two Directions',
+        title: 'Shoot In Two Directions',
         description: 'Use your mouse cursor to control your shooting direction.',
         image: ['/assets/tutorial/3/tutorial_3.gif'],
         subDescription:
             'Your player is the reference point. Move your cursor to the right of your player to shoot right, or to the left to shoot left.',
+    },
+    {
+        id: 4,
+        title: 'Select Power-Ups',
+        description: 'Each time you level up, choose a power-up to boost your progress.',
+        image: ['/assets/tutorial/4/tutorial_4.jpg'],
+        subDescription: 'Three power-ups are selected at random. Choose wisely!',
     },
 ];
 
