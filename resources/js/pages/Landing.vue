@@ -65,7 +65,7 @@ function lauchGame() {
                         <span class="font-game text-2xl font-bold text-white">Light Souls</span>
                     </div>
                     <div class="hidden items-center space-x-6 md:flex">
-                        <Link href="/play" class="text-white transition-colors hover:text-red-300"> Profile </Link>
+                        <Link :href="`/profile/stats/${user.id}`" class="text-white transition-colors hover:text-red-300"> Profile </Link>
                         <Link href="/leaderboard" class="text-white transition-colors hover:text-red-300"> Leaderboard </Link>
                         <a
                             href="https://github.com/AmauryGuillin/Light-Souls"

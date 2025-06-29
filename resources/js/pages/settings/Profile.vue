@@ -70,7 +70,7 @@ const submit = () => {
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">
-                        <p class="-mt-4 text-sm text-muted-foreground">
+                        <p class="text-muted-foreground -mt-4 text-sm">
                             Your email address is unverified.
                             <Link
                                 :href="route('verification.send')"
@@ -92,7 +92,7 @@ const submit = () => {
 
                         <Transition
                             enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
+                            enter-from-class="ocity-0"
                             leave-active-class="transition ease-in-out"
                             leave-to-class="opacity-0"
                         >
