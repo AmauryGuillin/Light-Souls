@@ -19,9 +19,9 @@ class RetreivePowerUp
     private function getThreeRandomPowerUps(int $playerLevel): Collection
     {
         $powerUps = collect(PowerUp::with('type', 'boost', 'asset')->where('unlockLevel', '<=', $playerLevel)->get());
-        if ($playerLevel >= 5) {
+        if ($playerLevel >= 10) {
             $powerUps = $powerUps->filter(function ($p) {
-                return $p->unlockLevel === 5;
+                return $p->unlockLevel === 10;
             });
         } else if ($playerLevel >= 2) {
             $powerUps = $powerUps->filter(function ($p) {

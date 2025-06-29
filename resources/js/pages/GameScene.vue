@@ -325,17 +325,15 @@ function projectileHit(projectile: ProjectileType) {
             }, 1000);
 
             if (enemy.personalAttributes.HP <= 0) {
-                const xpHandler = 40;
                 enemy.states.isSpawned = false;
                 enemy.states.canKill = false;
                 enemies.value = enemies.value.filter((e) => e.id !== enemy.id);
                 player.value.personalAttributes.score++;
-                if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * xpHandler) {
-                    player.value.personalAttributes.XP += 10;
+                if (player.value.personalAttributes.XP <= player.value.personalAttributes.level * 100) {
+                    player.value.personalAttributes.XP += 20;
                 } else {
                     player.value.personalAttributes.level++;
                     player.value.personalAttributes.XP = 1;
-                    //player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
                     playSoundEffectPowerUp(SoundEffectPowerUp, soundEffetcsVolume.value);
                     getPowerUp();
                 }

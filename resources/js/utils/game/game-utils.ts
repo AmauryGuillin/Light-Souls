@@ -77,7 +77,7 @@ export function calculEnemyHitColision(
     const firstEntityPositionXPx = (firstEntity.position.X / 100) * sceneWidth;
     const firstEntityPositionYPx = (firstEntity.position.Y / 100) * sceneHeight;
     const firstEntityWidth = firstEntity.structure.dimensions.width - 90;
-    const firstEntityHeight = firstEntity.structure.dimensions.height;
+    const firstEntityHeight = firstEntity.structure.dimensions.height - 50;
 
     const secondEntityPositionXPx = (secondEntity.position.X / 100) * sceneWidth;
     const secondEntityPositionYPx = (secondEntity.position.Y / 100) * sceneHeight;
