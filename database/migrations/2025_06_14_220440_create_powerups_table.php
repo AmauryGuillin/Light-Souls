@@ -26,7 +26,7 @@ return new class extends Migration
         DB::table('powerups')->insert([
             [
                 'name' => 'Ember Fist',
-                'description' => 'Emplify your attack power by 35%',
+                'description' => 'Emplify your attack power by 25%',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 1,
                 'powerup_boosts_id' => 1,
@@ -53,7 +53,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Rapid Spark',
-                'description' => 'Emplify your fire rate by 15%',
+                'description' => 'Emplify your fire rate by 25%',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 4,
                 'powerup_boosts_id' => 4,
@@ -62,7 +62,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Rapid Spark',
-                'description' => 'Restores 30% of your max HP',
+                'description' => 'Restores 20% of your max HP',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 5,
                 'powerup_boosts_id' => 5,
@@ -71,10 +71,64 @@ return new class extends Migration
             ],
             [
                 'name' => 'Rune of Vitality',
-                'description' => 'Increase your max HP by 30 HP',
+                'description' => 'Increase your max HP by 5 HP',
                 'unlockLevel' => 2,
                 'powerup_types_id' => 6,
                 'powerup_boosts_id' => 6,
+                'powerup_assets_id' => 7,
+                'created_at' => now()
+            ], // level 5
+            [
+                'name' => '',
+                'description' => 'Emplify your attack power by 45%',
+                'unlockLevel' => 5,
+                'powerup_types_id' => 1,
+                'powerup_boosts_id' => 7,
+                'powerup_assets_id' => 1,
+                'created_at' => now()
+            ],
+            [
+                'name' => '',
+                'description' => 'Emplify your defense by 35%',
+                'unlockLevel' => 5,
+                'powerup_types_id' => 2,
+                'powerup_boosts_id' => 8,
+                'powerup_assets_id' => 4,
+                'created_at' => now()
+            ],
+            [
+                'name' => '',
+                'description' => 'Emplify your movement speed by 15%',
+                'unlockLevel' => 5,
+                'powerup_types_id' => 3,
+                'powerup_boosts_id' => 9,
+                'powerup_assets_id' => 6,
+                'created_at' => now()
+            ],
+            [
+                'name' => '',
+                'description' => 'Emplify your fire rate by 30%',
+                'unlockLevel' => 5,
+                'powerup_types_id' => 4,
+                'powerup_boosts_id' => 10,
+                'powerup_assets_id' => 5,
+                'created_at' => now()
+            ],
+            [
+                'name' => '',
+                'description' => 'Restores 35% of your max HP',
+                'unlockLevel' => 5,
+                'powerup_types_id' => 5,
+                'powerup_boosts_id' => 11,
+                'powerup_assets_id' => 7,
+                'created_at' => now()
+            ],
+            [
+                'name' => '',
+                'description' => 'Increase your max HP by 10 HP',
+                'unlockLevel' => 5,
+                'powerup_types_id' => 6,
+                'powerup_boosts_id' => 12,
                 'powerup_assets_id' => 7,
                 'created_at' => now()
             ],

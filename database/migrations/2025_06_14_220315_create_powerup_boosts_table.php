@@ -21,12 +21,18 @@ return new class extends Migration
         });
 
         DB::table('powerup_boosts')->insert([
-            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.35, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.25, 'created_at' => now()],
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 0.75, 'created_at' => now()],
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.10, 'created_at' => now()],
             ['type' => PowerupBoosts::INCREASE, 'multiplier' => 0.85, 'created_at' => now()],
-            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.30, 'created_at' => now()],
-            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.30, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.20, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.05, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.45, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 0.65, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.15, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 0.80, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.35, 'created_at' => now()],
+            ['type' => PowerupBoosts::INCREASE, 'multiplier' => 1.10, 'created_at' => now()],
         ]);
     }
 
