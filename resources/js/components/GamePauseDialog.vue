@@ -20,8 +20,6 @@ const props = defineProps<{
     isLoading: boolean;
 }>();
 
-console.log(props.isLoading);
-
 const emits = defineEmits<{
     (e: 'update:isGameDevModeEnabled', value: boolean): void;
     (e: 'update:isEnemiesEnabled', value: boolean): void;

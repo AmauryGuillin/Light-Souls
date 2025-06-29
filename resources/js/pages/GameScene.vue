@@ -547,7 +547,6 @@ function upgradePlayerAttributes(powerup: any) {
             isBoostPageOpen.value = false;
             break;
         default:
-            console.log('no action');
             break;
     }
 }

@@ -2,7 +2,6 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { toRaw } from 'vue';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -16,8 +15,6 @@ const props = defineProps<{
     user: string;
     role: string;
 }>();
-
-console.log(toRaw(props.user));
 </script>
 
 <template>

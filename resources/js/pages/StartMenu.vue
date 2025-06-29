@@ -102,7 +102,6 @@ async function handleClick(item: string) {
             window.close();
             break;
         default:
-            console.log('default action', 'none');
             break;
     }
 }
