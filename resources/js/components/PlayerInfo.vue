@@ -5,6 +5,7 @@ import { ExperienceBar } from './ui/progress-experience-bar';
 const props = defineProps<{
     isGameDevModeEnabled: boolean;
     playerHP: number;
+    playerMaxHP: number;
     playerScore: number;
     playerXP: number;
     playerLevel: number;
@@ -28,30 +29,23 @@ watch(
 </script>
 
 <template>
-    <!-- <div class="font-game mt-5 ml-5 flex flex-col gap-2">
-        <div class="flex flex-col gap-2 bg-black/70 p-5">
-            <HealthBar class="z-50 h-5 w-2/5 bg-white" :model-value="props.playerHP" />
-            <ExperienceBar class="z-50 w-1/5 bg-white" :model-value="percentage" />
-        </div>
-        <div v-if="props.isGameDevModeEnabled" class="az-50 font-bold text-red-500">{{ props.playerHP }} HP</div>
-        <div class="font-game z-50 w-fit rounded bg-black/70 px-2 py-1 text-lg text-red-400">Level : {{ props.playerLevel }}</div>
-        <div class="z-50 font-bold text-red-500">Score : {{ props.playerScore }}</div>
-        <div v-if="props.isGameDevModeEnabled" class="z-50 font-bold text-red-500">FireRate: {{ props.playerFireRate }}</div>
-        <div v-if="props.isGameDevModeEnabled" class="z-50 font-bold text-red-500">Enemy HP: {{ 100 * (props.playerLevel / 2) }}</div>
-    </div> -->
-    <ExperienceBar class="z-50 w-full bg-black/75" :model-value="percentage" :class="`${props.playerXP >= 99 ? 'animate-pulse' : ''}`" />
+    <ExperienceBar
+        class="z-50 w-full bg-black/75"
+        :model-value="percentage"
+        :class="`${props.playerXP >= Math.round((props.playerXP / (props.playerLevel * 100)) * 100) ? 'animate-pulse' : ''}`"
+    />
     <div class="z-50 m-5 flex w-1/5 flex-col">
         <div class="flex min-w-96 flex-col">
             <div class="rounded-lg border-2 border-red-500/70 bg-slate-900/90 p-3 shadow-lg backdrop-blur-sm">
-                <div class="mb-2 flex items-center gap-2">
+                <div class="mb-2 flex w-fit items-center gap-2">
                     <Heart class="h-5 w-5 text-red-500" />
                     <span class="text-sm font-bold tracking-wider text-red-400">HEALTH</span>
-                    <span class="ml-auto text-sm font-bold text-white">{{ props.playerHP }}/100</span>
+                    <span class="ml-auto text-sm font-bold text-white">{{ props.playerHP }}/{{ props.playerMaxHP }}</span>
                 </div>
                 <div class="h-4 w-full rounded-full border border-slate-600 bg-slate-700 shadow-inner">
                     <div
                         class="h-full rounded-full bg-gradient-to-r from-red-600 via-red-500 to-red-400 shadow-sm transition-all duration-500"
-                        :style="{ width: `${props.playerHP}%` }"
+                        :style="{ width: `${Math.round((props.playerHP / props.playerMaxHP) * 100)}%` }"
                     />
                 </div>
             </div>

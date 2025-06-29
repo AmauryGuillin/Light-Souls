@@ -24,7 +24,60 @@ return new class extends Migration
         });
 
         DB::table('powerups')->insert([
-            ['name' => 'Ring of power', 'description' => 'Used by strong wizards to emplify their attack power by 5%', 'unlockLevel' => 1, 'powerup_types_id' => 1, 'powerup_boosts_id' => 1, 'powerup_assets_id' => 2, 'created_at' => now()]
+            [
+                'name' => 'Ember Fist',
+                'description' => 'Emplify your attack power by 35%',
+                'unlockLevel' => 2,
+                'powerup_types_id' => 1,
+                'powerup_boosts_id' => 1,
+                'powerup_assets_id' => 2,
+                'created_at' => now()
+            ],
+            [
+                'name' => 'Crystal Aegis',
+                'description' => 'Emplify your defense by 15%',
+                'unlockLevel' => 2,
+                'powerup_types_id' => 2,
+                'powerup_boosts_id' => 2,
+                'powerup_assets_id' => 8,
+                'created_at' => now()
+            ],
+            [
+                'name' => 'Wind Rush',
+                'description' => 'Emplify your movement speed by 6%',
+                'unlockLevel' => 2,
+                'powerup_types_id' => 3,
+                'powerup_boosts_id' => 3,
+                'powerup_assets_id' => 3,
+                'created_at' => now()
+            ],
+            [
+                'name' => 'Rapid Spark',
+                'description' => 'Emplify your fire rate by 5%',
+                'unlockLevel' => 2,
+                'powerup_types_id' => 4,
+                'powerup_boosts_id' => 4,
+                'powerup_assets_id' => 5,
+                'created_at' => now()
+            ],
+            [
+                'name' => 'Rapid Spark',
+                'description' => 'Restores 30% of your max HP',
+                'unlockLevel' => 2,
+                'powerup_types_id' => 5,
+                'powerup_boosts_id' => 5,
+                'powerup_assets_id' => 7,
+                'created_at' => now()
+            ],
+            [
+                'name' => 'Rune of Vitality',
+                'description' => 'Increase your max HP by 30 HP',
+                'unlockLevel' => 2,
+                'powerup_types_id' => 6,
+                'powerup_boosts_id' => 6,
+                'powerup_assets_id' => 7,
+                'created_at' => now()
+            ],
         ]);
     }
 

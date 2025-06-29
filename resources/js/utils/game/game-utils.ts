@@ -212,10 +212,13 @@ export function handleEnemiesMovementAnimations(
             const damageCoolDown = 500; // ms
 
             if (timeSinceLastHit > damageCoolDown && player.value.personalAttributes.HP > 0) {
+                const levelMultiplier = 1 + 0.1 * Math.max(0, player.value.personalAttributes.level - 1);
                 playSoundEffectEnemyAttack();
                 playSoundEffectPlayerHit();
                 player.value.personalAttributes.HP -=
                     enemy.personalAttributes.damage *
+                    levelMultiplier *
+                    player.value.personalAttributes.defense *
                     enemies.value.filter(
                         (e) =>
                             Math.round(e.position.X) === Math.round(player.value.position.X) &&

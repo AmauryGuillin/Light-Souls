@@ -43,9 +43,9 @@ const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
 const sceneRef = ref<HTMLElement | null>(null);
 const isGamePaused = ref<boolean>(false);
-const isGameDevModeEnabled = ref<boolean>(false);
-const isEnemiesEnabled = ref<boolean>(true);
-const isPlayerProjectilesEnabled = ref<boolean>(true);
+const isGameDevModeEnabled = ref<boolean>(true);
+const isEnemiesEnabled = ref<boolean>(false);
+const isPlayerProjectilesEnabled = ref<boolean>(false);
 const isBoostPageOpen = ref<boolean>(false);
 const isHitboxesShown = ref<boolean>(false);
 const projectiles = ref<ProjectileType[]>([]);
@@ -334,7 +334,7 @@ function projectileHit(projectile: ProjectileType) {
                 } else {
                     player.value.personalAttributes.level++;
                     player.value.personalAttributes.XP = 1;
-                    player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
+                    //player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
                     playSoundEffectPowerUp(SoundEffectPowerUp, soundEffetcsVolume.value);
                     getPowerUp();
                 }
@@ -533,11 +533,20 @@ function upgradePlayerAttributes(powerup: any) {
             }
             break;
         case 'Heal':
-            //todo
+            if (powerup.boost.type === 'Increase') {
+                if ((player.value.personalAttributes.HP += (powerup.boost.multiplier - 1) * 100) >= player.value.personalAttributes.maxHP) {
+                    player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
+                    isBoostPageOpen.value = false;
+                    break;
+                }
+                player.value.personalAttributes.HP += (powerup.boost.multiplier - 1) * 100;
+            }
             isBoostPageOpen.value = false;
             break;
         case 'Health':
-            //todo
+            if (powerup.boost.type === 'Increase') {
+                player.value.personalAttributes.maxHP += (player.value.personalAttributes.maxHP * ((powerup.boost.multiplier - 1) * 100)) / 100;
+            }
             isBoostPageOpen.value = false;
             break;
         default:
@@ -710,6 +719,7 @@ onUnmounted(() => {
         <PlayerInfo
             :is-game-dev-mode-enabled="isGameDevModeEnabled"
             :player-h-p="player.personalAttributes.HP"
+            :player-max-h-p="player.personalAttributes.maxHP"
             :player-score="player.personalAttributes.score"
             :player-x-p="player.personalAttributes.XP"
             :player-level="player.personalAttributes.level"
