@@ -12,7 +12,9 @@ import { EnemyType } from '@/types/game/enemy';
 import { MovementKey1, MovementKey2 } from '@/types/game/movementKey';
 import { PlayerType } from '@/types/game/player';
 import { Howl } from 'howler';
+import 'vue-sonner/style.css';
 
+import { Toaster } from '@/components/ui/sonner';
 import { ProjectileType } from '@/types/game/projectile';
 import {
     calculColisionBetweenTwoEntities,
@@ -29,6 +31,7 @@ import {
     stopFiring,
 } from '@/utils/game/game-utils';
 import {
+    getMusicName,
     playSoundEffectEnemyAttack,
     playSoundEffectEnemyHit,
     playSoundEffectFireBall,
@@ -36,7 +39,8 @@ import {
     playSoundEffectPowerUp,
 } from '@/utils/game/music-utils';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
+import { h, markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
+import { toast } from 'vue-sonner';
 
 const page = usePage();
 const auth = (page.props as { auth?: { user?: any } }).auth;
@@ -120,7 +124,9 @@ const musicTracks = [
     '/assets/music/game/game-music-dofus-1.mp3',
     '/assets/music/game/game-music-dofus-2.mp3',
     '/assets/music/game/game-music-dofus-3.mp3',
+    '/assets/music/game/game-music-dofus-4.mp3',
     '/assets/music/game/game-music-gw2-1.mp3',
+    '/assets/music/game/game-music-gw2-2.mp3',
     '/assets/music/game/game-music-ff-1.mp3',
     '/assets/music/game/game-music-na-1.mp3',
 ];
@@ -617,6 +623,19 @@ function playMusic() {
         onend: playMusic,
     });
 
+    const musicName = getMusicName(musicShuffleIndex);
+
+    setTimeout(() => {
+        //TODO TOAST BUG????
+        toast({
+            render: () =>
+                h('div', {}, [
+                    h('p', { class: 'text-lg font-bold text-white' }, 'Now playing'),
+                    h('p', { class: 'text-sm text-gray-300' }, musicName),
+                ]),
+        });
+    }, 3000);
+
     gameMusic.play();
 }
 
@@ -768,4 +787,5 @@ onUnmounted(() => {
             :enemies-array="enemies"
         />
     </div>
+    <Toaster position="top-right" />
 </template>
