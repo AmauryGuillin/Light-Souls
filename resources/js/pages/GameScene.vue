@@ -238,8 +238,12 @@ function playerStartShooting() {
     let isLeft;
     if (mouseX < (player.value.position.X / 100) * sceneWidth) {
         isLeft = true;
+        player.value.actions.movement.direction.left = true;
+        player.value.actions.movement.direction.right = false;
     } else {
         isLeft = false;
+        player.value.actions.movement.direction.left = false;
+        player.value.actions.movement.direction.right = true;
     }
     const speed = 0.07;
 

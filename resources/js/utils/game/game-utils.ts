@@ -146,8 +146,8 @@ export function handlePlayerMovementAnimation(player: Ref<PlayerType>, keyboardC
             const speed = player.value.actions.movement.speed;
 
             let isMoving = false;
-            let directionLeft = false;
-            let directionRight = false;
+            // let directionLeft = false;
+            // let directionRight = false;
 
             if (keys.z.pressed) {
                 player.value.position.Y -= speed;
@@ -159,19 +159,19 @@ export function handlePlayerMovementAnimation(player: Ref<PlayerType>, keyboardC
             }
             if (keys.q.pressed) {
                 player.value.position.X -= speed;
-                directionLeft = true;
-                directionRight = false;
+                // directionLeft = true;
+                // directionRight = false;
                 isMoving = true;
             }
             if (keys.d.pressed) {
                 player.value.position.X += speed;
-                directionLeft = false;
-                directionRight = true;
+                //directionLeft = false;
+                //directionRight = true;
                 isMoving = true;
             }
             player.value.actions.movement.isMoving = isMoving;
-            player.value.actions.movement.direction.left = directionLeft;
-            player.value.actions.movement.direction.right = directionRight;
+            //player.value.actions.movement.direction.left = directionLeft;
+            //player.value.actions.movement.direction.right = directionRight;
         }
     }
 
