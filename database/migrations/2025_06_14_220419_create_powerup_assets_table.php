@@ -23,6 +23,12 @@ return new class extends Migration
                 ['path' => '/assets/boost/powerup_asset_1.png', 'created_at' => now()],
                 ['path' => '/assets/boost/powerup_asset_2.png', 'created_at' => now()],
                 ['path' => '/assets/boost/powerup_asset_3.png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_4.png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_5.png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_6.png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_7.png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_8.png', 'created_at' => now()],
+                ['path' => '/assets/boost/powerup_asset_9.png', 'created_at' => now()],
             ]
         );
     }
