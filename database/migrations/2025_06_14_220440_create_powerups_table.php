@@ -81,7 +81,7 @@ return new class extends Migration
             [
                 'name' => 'Inferno Strike',
                 'description' => 'Emplify your attack power by 45%',
-                'unlockLevel' => 5,
+                'unlockLevel' => 10,
                 'powerup_types_id' => 1,
                 'powerup_boosts_id' => 7,
                 'powerup_assets_id' => 1,
@@ -90,7 +90,7 @@ return new class extends Migration
             [
                 'name' => 'Titan Guard',
                 'description' => 'Emplify your defense by 35%',
-                'unlockLevel' => 5,
+                'unlockLevel' => 10,
                 'powerup_types_id' => 2,
                 'powerup_boosts_id' => 8,
                 'powerup_assets_id' => 4,
@@ -99,7 +99,7 @@ return new class extends Migration
             [
                 'name' => 'Phantom Dash',
                 'description' => 'Emplify your movement speed by 15%',
-                'unlockLevel' => 5,
+                'unlockLevel' => 10,
                 'powerup_types_id' => 3,
                 'powerup_boosts_id' => 9,
                 'powerup_assets_id' => 6,
@@ -108,7 +108,7 @@ return new class extends Migration
             [
                 'name' => 'Blitz Core',
                 'description' => 'Emplify your fire rate by 30%',
-                'unlockLevel' => 5,
+                'unlockLevel' => 10,
                 'powerup_types_id' => 4,
                 'powerup_boosts_id' => 10,
                 'powerup_assets_id' => 5,
@@ -117,7 +117,7 @@ return new class extends Migration
             [
                 'name' => 'Elixir of Renewal',
                 'description' => 'Restores 35% of your max HP',
-                'unlockLevel' => 5,
+                'unlockLevel' => 10,
                 'powerup_types_id' => 5,
                 'powerup_boosts_id' => 11,
                 'powerup_assets_id' => 7,
@@ -126,7 +126,7 @@ return new class extends Migration
             [
                 'name' => 'Heartstone',
                 'description' => 'Increase your max HP by 10 HP',
-                'unlockLevel' => 5,
+                'unlockLevel' => 10,
                 'powerup_types_id' => 6,
                 'powerup_boosts_id' => 12,
                 'powerup_assets_id' => 7,
