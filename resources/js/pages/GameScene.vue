@@ -752,22 +752,24 @@ onUnmounted(() => {
             @send:profile-data="sendStatsToUserProfile(user.id)"
         />
 
-        <div
-            v-if="player.personalAttributes.HP <= 0"
-            class="font-game absolute top-[50%] left-[50%] z-50 flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"
-        >
-            <span class="w-full bg-black/95 pt-2 text-7xl font-bold text-red-500">YOU DIED</span>
-            <span
-                @click="sendStatsToUserProfile(user.id)"
-                class="cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-amber-500"
-                >Replay</span
+        <Transition enter-active-class="transition-opacity duration-700" enter-from-class="opacity-0" enter-to-class="opacity-100">
+            <div
+                v-if="player.personalAttributes.HP <= 0"
+                class="font-game absolute top-[50%] left-[50%] z-50 flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"
             >
-            <span
-                @click="sendStatsToUserProfile(user.id, true)"
-                class="hover:text-amber-500q cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-red-500"
-                >Quit game</span
-            >
-        </div>
+                <span class="w-full bg-black/95 pt-2 text-7xl font-bold text-red-500">YOU DIED</span>
+                <span
+                    @click="sendStatsToUserProfile(user.id)"
+                    class="cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-amber-500"
+                    >Replay</span
+                >
+                <span
+                    @click="sendStatsToUserProfile(user.id, true)"
+                    class="hover:text-amber-500q cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-red-500"
+                    >Quit game</span
+                >
+            </div>
+        </Transition>
 
         <PlayerInfo
             :is-game-dev-mode-enabled="isGameDevModeEnabled"
