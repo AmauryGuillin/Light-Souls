@@ -36,8 +36,10 @@ import {
     playSoundEffectEnemyAttack,
     playSoundEffectEnemyHit,
     playSoundEffectFireBall,
+    playSoundEffectPlayerDeath,
     playSoundEffectPlayerHit,
     playSoundEffectPowerUp,
+    stopGameMusic,
 } from '@/utils/game/music-utils';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { h, markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
@@ -137,6 +139,7 @@ const SoundEffectPowerUp = ['/assets/soundEffects/player/PowerUp.wav'];
 const SoundEffectenemyHit = ['/assets/soundEffects/enemy/Hit.wav'];
 const SoundEffectEnemyAttack = ['/assets/soundEffects/enemy/enemyAttack_1.mp3', '/assets/soundEffects/enemy/enemyAttack_2.mp3'];
 const soundEffectPlayerHit = ['/assets/soundEffects/player/playerdamage.mp3'];
+const soundEffectPlayerDeath = ['/assets/soundEffects/player/player-death.mp3'];
 let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
 let animationFrameId: number;
@@ -160,6 +163,8 @@ watch(
         } else {
             stopFiring(fireIntervalRef);
             stopEnemySpawn(enemySpawnIntervalRef);
+            stopGameMusic(gameMusic);
+            playSoundEffectPlayerDeath(soundEffectPlayerDeath, soundEffetcsVolume.value);
         }
     },
 );
@@ -743,7 +748,7 @@ onUnmounted(() => {
             @send:profile-data="sendStatsToUserProfile(user.id)"
         />
 
-        <Transition enter-active-class="transition-opacity duration-700" enter-from-class="opacity-0" enter-to-class="opacity-100">
+        <Transition enter-active-class="transition-opacity duration-1500" enter-from-class="opacity-0" enter-to-class="opacity-100">
             <div
                 v-if="player.personalAttributes.HP <= 0"
                 class="font-game absolute top-[50%] left-[50%] z-50 flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"

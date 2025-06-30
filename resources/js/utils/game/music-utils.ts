@@ -121,3 +121,15 @@ export function playSoundEffectPlayerHit(soundEffectPlayerHit: string[], volume:
     });
     soundEffectPlayerHitSample.play();
 }
+
+export function playSoundEffectPlayerDeath(soundEffectPlayerDeath: string[], volume: number) {
+    const soundEffectPlayerDeathSample = new Howl({
+        src: [soundEffectPlayerDeath[0]],
+        volume: volume,
+    });
+    soundEffectPlayerDeathSample.play();
+}
+
+export function stopGameMusic(music: Howl | null) {
+    music?.stop();
+}
