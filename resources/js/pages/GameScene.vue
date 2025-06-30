@@ -272,7 +272,7 @@ function playerStartShooting() {
             height: player.value.personalAttributes.level >= 10 ? 2 : 1,
             width: player.value.personalAttributes.level >= 10 ? 2 : 1,
         },
-        damage: Math.floor(getRandomNumber(50, 90) * player.value.personalAttributes.attackPower),
+        damage: Math.floor(getRandomNumber(50, 90) * player.value.personalAttributes.attackPower + player.value.personalAttributes.level * 5),
         hitEnemies: [],
     });
 
@@ -358,8 +358,17 @@ function projectileHit(projectile: ProjectileType) {
                         toast({
                             render: () =>
                                 h('div', {}, [
-                                    h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY'),
+                                    h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY UNLOCKED'),
                                     h('p', { class: 'text-sm text-gray-300' }, 'Your fireball now passes through enemies'),
+                                ]),
+                        });
+                    }
+                    if (player.value.personalAttributes.level === 10) {
+                        toast({
+                            render: () =>
+                                h('div', {}, [
+                                    h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY UNLOCKED'),
+                                    h('p', { class: 'text-sm text-gray-300' }, 'Your fireballs are now bigger'),
                                 ]),
                         });
                     }
@@ -382,7 +391,7 @@ function projectileHit(projectile: ProjectileType) {
  * @beta
  */
 function spawnEnemy() {
-    if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 75) return;
+    if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 200) return;
 
     if (!isEnemiesEnabled.value) return;
     const enemiesNumber = getEnemiesNumber(player.value.personalAttributes.level);
@@ -399,7 +408,7 @@ function enemyFactory(value: number): EnemyType[] {
         const enemy = markRaw<EnemyType>({
             id: crypto.randomUUID(),
             personalAttributes: {
-                HP: Math.floor(100 * (player.value.personalAttributes.level / 3)),
+                HP: Math.floor(100 * (player.value.personalAttributes.level / 2)),
                 movementSpeed: 0.03,
                 damage: 10,
             },
