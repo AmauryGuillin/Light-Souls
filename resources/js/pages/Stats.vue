@@ -208,7 +208,7 @@ function lauchGame() {
                             <span class="text-gray-300">Total Hours</span>
                             <span class="flex items-center gap-1 font-bold text-red-400">
                                 <Clock class="h-4 w-4" />
-                                {{ profile.total_hour_played || 'N/A' }}h
+                                {{ totalTimePlayed || 'N/A' }}h
                             </span>
                         </div>
                     </CardContent>
