@@ -374,7 +374,6 @@ function spawnEnemy() {
 
     if (!isEnemiesEnabled.value) return;
     const enemiesNumber = getEnemiesNumber(player.value.personalAttributes.level);
-    console.log(enemiesNumber);
 
     const enemiesToInject = enemyFactory(enemiesNumber);
     enemies.value = [...enemies.value, ...enemiesToInject];
