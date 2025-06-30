@@ -8,7 +8,8 @@ import { Ref } from 'vue';
  * @returns A random number
  */
 export function randomPositionX(): number {
-    return Math.floor(Math.random() * 97);
+    //return Math.floor(Math.random() * 97);
+    return getRandomNumber(97, 105);
 }
 
 /**
@@ -16,11 +17,44 @@ export function randomPositionX(): number {
  * @returns A random number
  */
 export function randomPositionY(): number {
-    return Math.floor(Math.random() * 92);
+    //return Math.floor(Math.random() * 92);
+    return getRandomNumber(92, 105);
 }
 
 export function getRandomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+export function randomEnemyPosition(playerX: number, playerY: number, safeRadius = 20) {
+    let x = 0,
+        y = 0;
+    let tries = 0;
+    do {
+        // Choisit un bord au hasard
+        const border = Math.floor(Math.random() * 4);
+        switch (border) {
+            case 0: // haut
+                x = getRandomNumber(0, 99);
+                y = 0;
+                break;
+            case 1: // bas
+                x = getRandomNumber(0, 99);
+                y = 99;
+                break;
+            case 2: // gauche
+                x = 0;
+                y = getRandomNumber(0, 99);
+                break;
+            case 3: // droite
+                x = 99;
+                y = getRandomNumber(0, 99);
+                break;
+        }
+        tries++;
+        // Sécurité pour éviter une boucle infinie
+        if (tries > 10) break;
+    } while (Math.hypot(x - playerX, y - playerY) < safeRadius);
+    return { X: x, Y: y };
 }
 
 /**

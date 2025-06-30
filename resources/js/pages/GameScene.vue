@@ -24,8 +24,7 @@ import {
     handlePauseStateWhenBonusPageOpen,
     handlePlayerMovementAnimation,
     handleProjectilesMovementAnimations,
-    randomPositionX,
-    randomPositionY,
+    randomEnemyPosition,
     startEnemiSpawn,
     startFiring,
     stopEnemySpawn,
@@ -380,6 +379,7 @@ function enemyFactory(value: number): EnemyType[] {
     const enemiesToInject: EnemyType[] = [];
 
     for (let i = 1; i <= value; i++) {
+        const { X, Y } = randomEnemyPosition(player.value.position.X, player.value.position.Y, 20);
         const enemy = markRaw<EnemyType>({
             id: crypto.randomUUID(),
             personalAttributes: {
@@ -399,8 +399,8 @@ function enemyFactory(value: number): EnemyType[] {
                 canKill: true,
             },
             position: {
-                X: randomPositionX(),
-                Y: randomPositionY(),
+                X: X,
+                Y: Y,
             },
             orientation: {
                 left: false,
@@ -690,7 +690,7 @@ onUnmounted(() => {
     <div
         ref="sceneRef"
         id="scene"
-        class="relative flex h-screen flex-col bg-[url(/assets/ground/ground.jpg)] bg-auto"
+        class="relative flex h-screen flex-col overflow-hidden bg-[url(/assets/ground/ground.jpg)] bg-auto"
         @mousemove="updateMousePosition"
     >
         <DebbugButtons
