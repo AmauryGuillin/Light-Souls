@@ -21,4 +21,5 @@ export type ProjectileType = {
         width: number;
     };
     damage: number;
+    hitEnemies: string[];
 };

@@ -269,6 +269,7 @@ function playerStartShooting() {
             width: 1,
         },
         damage: Math.floor(getRandomNumber(50, 90) * player.value.personalAttributes.attackPower),
+        hitEnemies: [],
     });
 
     projectiles.value.push(projectile);
@@ -322,8 +323,9 @@ function projectileHit(projectile: ProjectileType) {
     enemies.value.forEach((enemy: EnemyType) => {
         const isColliding = calculColisionBetweenTwoEntities(projectile, enemy, sceneRef);
 
-        if (isColliding) {
+        if (isColliding && !projectile.hitEnemies.includes(enemy.id)) {
             playSoundEffectEnemyHit(SoundEffectenemyHit, soundEffetcsVolume.value);
+            projectile.hitEnemies.push(enemy.id);
             enemy.personalAttributes.HP -= projectile.damage;
 
             const damageId = `${enemy.id}-${Date.now()}`;
@@ -354,8 +356,10 @@ function projectileHit(projectile: ProjectileType) {
                 }
             }
 
-            projectile.states.isSpawned = false;
-            projectiles.value = projectiles.value.filter((p) => p.id != projectile.id);
+            if (player.value.personalAttributes.level < 5) {
+                projectile.states.isSpawned = false;
+                projectiles.value = projectiles.value.filter((p) => p.id != projectile.id);
+            }
         }
     });
 }
@@ -368,7 +372,14 @@ function spawnEnemy() {
     if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 75) return;
 
     if (!isEnemiesEnabled.value) return;
-    let enemiesNumber = player.value.personalAttributes.level;
+    let enemiesNumber = 0;
+
+    if (player.value.personalAttributes.level <= 3) enemiesNumber = 2;
+    if (player.value.personalAttributes.level > 3 && player.value.personalAttributes.level <= 6) enemiesNumber = 3;
+    if (player.value.personalAttributes.level > 6 && player.value.personalAttributes.level <= 9) enemiesNumber = 4;
+    if (player.value.personalAttributes.level > 9 && player.value.personalAttributes.level <= 12) enemiesNumber = 5;
+    if (player.value.personalAttributes.level > 12) enemiesNumber = 6;
+
     if (enemiesNumber >= 15) enemiesNumber = 15;
 
     const enemiesToInject = enemyFactory(enemiesNumber);
