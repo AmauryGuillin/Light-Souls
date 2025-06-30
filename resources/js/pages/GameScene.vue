@@ -253,7 +253,10 @@ function playerStartShooting() {
     const projectile = markRaw<ProjectileType>({
         id: crypto.randomUUID(),
         structure: {
-            dimensions: { height: 10, width: 10 },
+            dimensions: {
+                height: player.value.personalAttributes.level >= 10 ? 20 : 10,
+                width: player.value.personalAttributes.level >= 10 ? 20 : 10,
+            },
         },
         states: {
             isSpawned: true,
@@ -266,8 +269,8 @@ function playerStartShooting() {
         },
         speed: isLeft ? -speed : speed,
         hitBox: {
-            height: 1,
-            width: 1,
+            height: player.value.personalAttributes.level >= 10 ? 2 : 1,
+            width: player.value.personalAttributes.level >= 10 ? 2 : 1,
         },
         damage: Math.floor(getRandomNumber(50, 90) * player.value.personalAttributes.attackPower),
         hitEnemies: [],
