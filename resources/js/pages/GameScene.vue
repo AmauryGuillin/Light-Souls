@@ -718,15 +718,6 @@ onUnmounted(() => {
         class="relative flex h-screen flex-col overflow-hidden bg-[url(/assets/ground/ground.jpg)] bg-auto"
         @mousemove="updateMousePosition"
     >
-        <DebbugButtons
-            v-if="isGameDevModeEnabled && user.role_id === 2"
-            @showHitboxes="showHitboxes"
-            @spawnPlayer="spawnPlayer"
-            @spawnEnemy="spawnEnemy"
-            @playerStartShooting="playerStartShooting"
-            @pause-game="pauseGame"
-            @get-power-up="getPowerUp"
-        ></DebbugButtons>
         <PowerUpDialog
             :is-boost-page-open="isBoostPageOpen"
             :player-power-ups="playerPowerUps"
@@ -782,6 +773,15 @@ onUnmounted(() => {
             :player-fire-rate="player.personalAttributes.fireRate"
             :previous-player-fire-rate="previousPlayerFireRate"
         />
+        <DebbugButtons
+            v-if="isGameDevModeEnabled && user.role_id === 2"
+            @showHitboxes="showHitboxes"
+            @spawnPlayer="spawnPlayer"
+            @spawnEnemy="spawnEnemy"
+            @playerStartShooting="playerStartShooting"
+            @pause-game="pauseGame"
+            @get-power-up="getPowerUp"
+        ></DebbugButtons>
 
         <Player
             v-if="player.states.isSpawned"
