@@ -30,6 +30,7 @@ import {
     stopEnemySpawn,
     stopFiring,
 } from '@/utils/game/game-utils';
+import { getEnemiesNumber } from '@/utils/game/level-stages';
 import {
     getMusicName,
     playSoundEffectEnemyAttack,
@@ -372,15 +373,8 @@ function spawnEnemy() {
     if (isGamePaused.value || isBoostPageOpen.value || enemies.value.length >= 75) return;
 
     if (!isEnemiesEnabled.value) return;
-    let enemiesNumber = 0;
-
-    if (player.value.personalAttributes.level <= 3) enemiesNumber = 2;
-    if (player.value.personalAttributes.level > 3 && player.value.personalAttributes.level <= 6) enemiesNumber = 3;
-    if (player.value.personalAttributes.level > 6 && player.value.personalAttributes.level <= 9) enemiesNumber = 4;
-    if (player.value.personalAttributes.level > 9 && player.value.personalAttributes.level <= 12) enemiesNumber = 5;
-    if (player.value.personalAttributes.level > 12) enemiesNumber = 6;
-
-    if (enemiesNumber >= 15) enemiesNumber = 15;
+    const enemiesNumber = getEnemiesNumber(player.value.personalAttributes.level);
+    console.log(enemiesNumber);
 
     const enemiesToInject = enemyFactory(enemiesNumber);
     enemies.value = [...enemies.value, ...enemiesToInject];
