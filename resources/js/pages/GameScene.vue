@@ -351,6 +351,15 @@ function projectileHit(projectile: ProjectileType) {
                     player.value.personalAttributes.XP += 20;
                 } else {
                     player.value.personalAttributes.level++;
+                    if (player.value.personalAttributes.level === 5) {
+                        toast({
+                            render: () =>
+                                h('div', {}, [
+                                    h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY'),
+                                    h('p', { class: 'text-sm text-gray-300' }, 'Your fireball now passes through enemies'),
+                                ]),
+                        });
+                    }
                     player.value.personalAttributes.XP = 1;
                     playSoundEffectPowerUp(SoundEffectPowerUp, soundEffetcsVolume.value);
                     getPowerUp();
