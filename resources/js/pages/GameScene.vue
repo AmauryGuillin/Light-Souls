@@ -19,6 +19,7 @@ import { ProjectileType } from '@/types/game/projectile';
 import {
     calculColisionBetweenTwoEntities,
     clamp,
+    getRandomNumber,
     handleEnemiesMovementAnimations,
     handlePauseStateWhenBonusPageOpen,
     handlePlayerMovementAnimation,
@@ -220,7 +221,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 5;
+    player.value.personalAttributes.level = 1;
     gameStartTime.value = Date.now();
 }
 
@@ -268,7 +269,7 @@ function playerStartShooting() {
             height: 1,
             width: 1,
         },
-        damage: Math.floor(50 * player.value.personalAttributes.attackPower),
+        damage: Math.floor(getRandomNumber(50, 90) * player.value.personalAttributes.attackPower),
     });
 
     projectiles.value.push(projectile);

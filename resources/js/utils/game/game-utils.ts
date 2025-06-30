@@ -19,6 +19,10 @@ export function randomPositionY(): number {
     return Math.floor(Math.random() * 92);
 }
 
+export function getRandomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 /**
  * Prevent an entity to move out of a certain perimeter
  * @param val The entity position on the scene (X or Y axis)
