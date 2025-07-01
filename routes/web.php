@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\LeaderBoardController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,6 +16,8 @@ Route::get('LightSouls', function () {
 Route::get('dashboard', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('game/powerup/{playerLevel}', [GameController::class, 'powerup'])->middleware(['auth', 'verified'])->name('test');
+
+Route::get('leaderboard', [LeaderBoardController::class, 'index'])->name('leaderboard');
 
 
 require __DIR__ . '/settings.php';
