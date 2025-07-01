@@ -148,7 +148,7 @@ onMounted(() => {
         <video
             ref="videoRef"
             id="intro-video"
-            class="fixed inset-0 z-0 h-full w-full object-cover"
+            class="pointer-events-none fixed inset-0 z-0 h-full w-full object-cover"
             autoplay
             loop
             preload="auto"
