@@ -13,11 +13,16 @@ Route::get('LightSouls', function () {
     return Inertia::render('GameScene');
 })->middleware(['auth', 'verified'])->name('LightSouls');
 
+Route::get('about', function () {
+    return Inertia::render('About');
+})->name('about');
+
 Route::get('dashboard', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('game/powerup/{playerLevel}', [GameController::class, 'powerup'])->middleware(['auth', 'verified'])->name('test');
 
 Route::get('leaderboard', [LeaderBoardController::class, 'index'])->name('leaderboard');
+
 
 
 require __DIR__ . '/settings.php';
