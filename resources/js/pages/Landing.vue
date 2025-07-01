@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { lauchGame } from '@/utils/game/game-utils';
 import { Link, usePage } from '@inertiajs/vue3';
 import { ArrowRight, LogIn, LogOut, Play } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -50,10 +51,6 @@ const tutorialCardsContent = [
         subDescription: 'Three power-ups are selected at random. Choose wisely!',
     },
 ];
-
-function lauchGame() {
-    window.open('https://light-souls.test/game/mainMenu');
-}
 </script>
 
 <template>

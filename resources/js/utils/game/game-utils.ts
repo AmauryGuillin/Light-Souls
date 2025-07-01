@@ -3,6 +3,10 @@ import { PlayerType } from '@/types/game/player';
 import { ProjectileType } from '@/types/game/projectile';
 import { Ref } from 'vue';
 
+export function lauchGame() {
+    window.open(import.meta.env.VITE_GAME_URL);
+}
+
 /**
  * Define an entity position on the X axis
  * @returns A random number

@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { lauchGame } from '@/utils/game/game-utils';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Award, Clock, Crosshair, GamepadIcon, LogIn, LogOut, Play, Shield, Skull, Target, Trophy, Zap } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -19,10 +20,6 @@ const isAuthenticated = computed(() => !!userPage);
 const isUserHasDevRole = computed(() => userPage?.role_id === 2);
 const totalTimePlayed = new Date(props.profile.total_hour_played * 1000).toISOString().substring(11, 16);
 const maxSurvivalTime = new Date(props.profile.max_survival_time * 1000).toISOString().substring(11, 16);
-
-function lauchGame() {
-    window.open('https://light-souls.test/game/mainMenu');
-}
 </script>
 
 <template>

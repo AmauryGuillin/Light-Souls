@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableRow } from '@/components/ui/table';
+import { lauchGame } from '@/utils/game/game-utils';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Crown, LogIn, LogOut, Play } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -16,10 +17,6 @@ const auth = (page.props as { auth?: { user?: any } }).auth;
 const user = auth?.user;
 const isAuthenticated = computed(() => !!user);
 const isUserHasDevRole = computed(() => user?.role_id === 2);
-
-function lauchGame() {
-    window.open('https://light-souls.test/game/mainMenu');
-}
 </script>
 
 <template>
