@@ -14,16 +14,16 @@ class PowerUp extends Model
 
     public function type(): BelongsTo
     {
-        return $this->belongsTo(PowerupType::class, 'powerup_types_id');
+        return $this->belongsTo(PowerUpType::class, 'powerup_types_id');
     }
 
     public function boost(): BelongsTo
     {
-        return $this->belongsTo(PowerupBoost::class, 'powerup_boosts_id');
+        return $this->belongsTo(PowerUpBoost::class, 'powerup_boosts_id');
     }
 
     public function asset(): BelongsTo
     {
-        return $this->belongsTo(PowerupAsset::class, 'powerup_assets_id');
+        return $this->belongsTo(PowerUpAsset::class, 'powerup_assets_id');
     }
 }
