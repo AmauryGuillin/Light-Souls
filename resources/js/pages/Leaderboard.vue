@@ -76,8 +76,9 @@ function lauchGame() {
                 </nav>
             </div>
         </header>
-        <div class="flex w-full flex-col items-center justify-center gap-5 p-5">
+        <div class="flex w-full flex-col items-center justify-center gap-5 pt-10">
             <h1 class="font-game text-5xl font-bold underline underline-offset-8">LEADERBOARD</h1>
+            <h1 class="text-2xl font-bold">Top players</h1>
             <div class="w-1/2">
                 <Table>
                     <TableCaption>Light Souls - leaderboard</TableCaption>
