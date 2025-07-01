@@ -143,21 +143,21 @@ function lauchGame() {
                     <div class="text-center">
                         <div class="mb-2 flex items-center justify-center">
                             <Users class="mr-2 h-6 w-6 text-purple-400" />
-                            <span class="text-3xl font-bold text-white">{{ props.stats.users }}</span>
+                            <span class="text-3xl font-bold text-white">{{ props.stats.users || '0' }}</span>
                         </div>
                         <p class="text-gray-400">Total Players</p>
                     </div>
                     <div class="text-center">
                         <div class="mb-2 flex items-center justify-center">
                             <Trophy class="mr-2 h-6 w-6 text-yellow-400" />
-                            <span class="text-3xl font-bold text-white">{{ props.stats.totalEnemiesKilled }}</span>
+                            <span class="text-3xl font-bold text-white">{{ props.stats.totalEnemiesKilled || '0' }}</span>
                         </div>
                         <p class="text-gray-400">Total enemies killed</p>
                     </div>
                     <div class="text-center">
                         <div class="mb-2 flex items-center justify-center">
                             <Zap class="mr-2 h-6 w-6 text-blue-400" />
-                            <span class="text-3xl font-bold text-white">{{ props.stats.bestPlayer }}</span>
+                            <span class="text-3xl font-bold text-white">{{ props.stats.bestPlayer || '0' }}</span>
                         </div>
                         <p class="text-gray-400">Best player</p>
                     </div>
