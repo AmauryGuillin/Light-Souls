@@ -549,7 +549,7 @@ function getPowerUp() {
             data.forEach((element: any) => {
                 playerPowerUps.value.push(element);
             });
-            isBoostPageOpen.value = true;
+            if (data != null || data != undefined) isBoostPageOpen.value = true;
         });
 }
 
