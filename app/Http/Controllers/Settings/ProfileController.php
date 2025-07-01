@@ -64,6 +64,8 @@ class ProfileController extends Controller
             'enemies_killed_best' => $request->input('last_game_enemies_killed') > $profile->enemies_killed_best ? $profile->enemies_killed_best = $request->input('last_game_enemies_killed') : $profile->enemies_killed_best = $profile->enemies_killed_best,
             'death_count' => $request->input('is_player_dead') ? $profile->death_count + 1 : $profile->death_count + 0,
             'higher_level' => $request->input('last_game_level') > $profile->higher_level ? $request->input('last_game_level') : $profile->higher_level,
+            'total_fireball_shot' => $profile->total_fireball_shot += $request->input('total_fireball_shot'),
+            'total_player_dps' => $profile->total_player_dps += $request->input('total_player_dps'),
         ]);
 
         return back();

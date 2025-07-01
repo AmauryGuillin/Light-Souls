@@ -18,6 +18,8 @@ class Profile extends Model
         'total_hour_played',
         'death_count',
         'higher_level',
+        'total_fireball_shot',
+        'total_player_dps',
     ];
 
     public function user(): BelongsTo

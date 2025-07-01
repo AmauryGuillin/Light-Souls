@@ -144,6 +144,8 @@ let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
 let animationFrameId: number;
 let isLoading = false;
+let nbOfProjectiles = 0;
+let playerDps = 0;
 
 watch(
     () => player.value.actions.movement.direction,
@@ -282,6 +284,7 @@ function playerStartShooting() {
     });
 
     projectiles.value.push(projectile);
+    nbOfProjectiles++;
     projectileMovement(projectile);
     playSoundEffectFireBall(SoundEffectfireBall, soundEffetcsVolume.value);
 }
@@ -336,6 +339,7 @@ function projectileHit(projectile: ProjectileType) {
             playSoundEffectEnemyHit(SoundEffectenemyHit, soundEffetcsVolume.value);
             projectile.hitEnemies.push(enemy.id);
             enemy.personalAttributes.HP -= projectile.damage;
+            playerDps += projectile.damage;
 
             const damageId = `${enemy.id}-${Date.now()}`;
             damagesToDisplay.value.push({
@@ -631,6 +635,8 @@ async function sendStatsToUserProfile(userId: number, close?: boolean) {
         last_game_enemies_killed: player.value.personalAttributes.score,
         last_game_level: player.value.personalAttributes.level,
         is_player_dead: !player.value.states.isSpawned,
+        total_fireball_shot: nbOfProjectiles,
+        total_player_dps: playerDps,
     });
     router.patch(route('profile.update'), form.data(), {
         onProgress: () => {

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('total_hour_played')->nullable();
             $table->integer('death_count')->nullable();
             $table->integer('higher_level')->nullable();
+            $table->integer('total_fireball_shot')->nullable();
+            $table->integer('total_player_dps')->nullable();
             $table->timestamps();
         });
     }
