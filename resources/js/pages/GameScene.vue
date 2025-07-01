@@ -339,6 +339,8 @@ function projectileHit(projectile: ProjectileType) {
             playSoundEffectEnemyHit(SoundEffectenemyHit, soundEffetcsVolume.value);
             projectile.hitEnemies.push(enemy.id);
             enemy.personalAttributes.HP -= projectile.damage;
+            if (player.value.personalAttributes.level >= 15 && player.value.personalAttributes.HP < player.value.personalAttributes.maxHP)
+                player.value.personalAttributes.HP += 0.05;
             playerDps += projectile.damage;
 
             const damageId = `${enemy.id}-${Date.now()}`;
@@ -363,24 +365,12 @@ function projectileHit(projectile: ProjectileType) {
                     player.value.personalAttributes.XP += 20;
                 } else {
                     player.value.personalAttributes.level++;
-                    if (player.value.personalAttributes.level === 5) {
-                        toast({
-                            render: () =>
-                                h('div', {}, [
-                                    h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY UNLOCKED'),
-                                    h('p', { class: 'text-sm text-gray-300' }, 'Your fireball now passes through enemies'),
-                                ]),
-                        });
-                    }
-                    if (player.value.personalAttributes.level === 10) {
-                        toast({
-                            render: () =>
-                                h('div', {}, [
-                                    h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY UNLOCKED'),
-                                    h('p', { class: 'text-sm text-gray-300' }, 'Your fireballs are now bigger'),
-                                ]),
-                        });
-                    }
+                    if (player.value.personalAttributes.level === 5) createToast('Your fireball now passes through enemies');
+
+                    if (player.value.personalAttributes.level === 10) createToast('Your fireballs are now bigger');
+
+                    if (player.value.personalAttributes.level === 15) createToast('Your fireballs now still life');
+
                     player.value.personalAttributes.XP = 1;
                     playSoundEffectPowerUp(SoundEffectPowerUp, soundEffetcsVolume.value);
                     getPowerUp();
@@ -392,6 +382,16 @@ function projectileHit(projectile: ProjectileType) {
                 projectiles.value = projectiles.value.filter((p) => p.id != projectile.id);
             }
         }
+    });
+}
+
+function createToast(message: string) {
+    toast({
+        render: () =>
+            h('div', {}, [
+                h('p', { class: 'text-lg font-bold text-white' }, 'NEW CAPACITY UNLOCKED'),
+                h('p', { class: 'text-sm text-gray-300' }, message),
+            ]),
     });
 }
 
