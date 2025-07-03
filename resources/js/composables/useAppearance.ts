@@ -46,7 +46,7 @@ const getStoredAppearance = () => {
 const handleSystemThemeChange = () => {
     const currentAppearance = getStoredAppearance();
 
-    updateTheme(currentAppearance || 'system');
+    updateTheme(currentAppearance || 'dark');
 };
 
 export function initializeTheme() {
@@ -56,14 +56,14 @@ export function initializeTheme() {
 
     // Initialize theme from saved preference or default to system...
     const savedAppearance = getStoredAppearance();
-    updateTheme(savedAppearance || 'system');
+    updateTheme(savedAppearance || 'dark');
 
     // Set up system theme change listener...
     mediaQuery()?.addEventListener('change', handleSystemThemeChange);
 }
 
 export function useAppearance() {
-    const appearance = ref<Appearance>('system');
+    const appearance = ref<Appearance>('dark');
 
     onMounted(() => {
         const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
@@ -74,8 +74,9 @@ export function useAppearance() {
     });
 
     function updateAppearance(value: Appearance) {
-        appearance.value = value;
-
+        //appearance.value = value;
+        appearance.value = 'dark';
+        value = 'dark';
         // Store in localStorage for client-side persistence...
         localStorage.setItem('appearance', value);
 
