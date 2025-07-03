@@ -130,6 +130,7 @@ const player = ref<PlayerType>({
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
 const lastDirection = ref<'left' | 'right'>('right');
 const mousePosition = ref({ x: 50, y: 50 });
+const powerUpIsLoading = ref<boolean>(false);
 
 let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
@@ -219,7 +220,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 1;
+    player.value.personalAttributes.level = 5;
     gameStartTime.value = Date.now();
 }
 
@@ -533,6 +534,7 @@ function updateMousePosition(e: MouseEvent) {
 }
 
 function getPowerUp() {
+    powerUpIsLoading.value = true;
     fetch(`/game/powerup/${player.value.personalAttributes.level}`)
         .then((res) => res.json())
         .then((data) => {
@@ -541,7 +543,8 @@ function getPowerUp() {
                 playerPowerUps.value.push(element);
             });
             if (data != null || data != undefined) isBoostPageOpen.value = true;
-        });
+        })
+        .then(() => (powerUpIsLoading.value = false));
 }
 
 function upgradePlayerAttributes(powerup: any) {
@@ -722,6 +725,7 @@ onUnmounted(() => {
     >
         <PowerUpDialog
             :is-boost-page-open="isBoostPageOpen"
+            :is-power-up-loading="powerUpIsLoading"
             :player-power-ups="playerPowerUps"
             @update:HandlePauseStateWhenBonusPageOpen="onBonusPageClose"
             @update:upgrade-player-attributes="upgradePlayerAttributes"

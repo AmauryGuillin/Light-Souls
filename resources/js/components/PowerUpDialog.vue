@@ -2,11 +2,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-vue-next';
 import PowerUpDialogContent from './PowerUpDialogContent.vue';
 import { ScrollArea } from './ui/scroll-area';
 
 const props = defineProps<{
     isBoostPageOpen: boolean;
+    isPowerUpLoading: boolean;
     playerPowerUps: any[];
 }>();
 
@@ -31,7 +33,10 @@ const emits = defineEmits<{
                     :key="powerup.id"
                     class="group border-slate-600 bg-slate-700 transition-all duration-300 hover:border-amber-500 hover:shadow-lg hover:shadow-amber-500/20"
                 >
-                    <CardContent class="space-y-4 p-6 text-center">
+                    <CardContent v-if="isPowerUpLoading" class="flex flex-col items-center justify-center space-y-4 p-6 text-center">
+                        Loading...<Loader2 class="animate-spin" />
+                    </CardContent>
+                    <CardContent v-else class="space-y-4 p-6 text-center">
                         <div class="flex justify-center">
                             <div
                                 class="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-slate-500 bg-slate-600 transition-colors duration-300 group-hover:border-amber-400"
