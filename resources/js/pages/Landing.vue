@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { lauchGame } from '@/utils/game/game-utils';
-import { ArrowRight, Play, Trophy, Users, Zap } from 'lucide-vue-next';
+import { ArrowRight, Bone, Play, Users, Zap } from 'lucide-vue-next';
 import Nav from './Nav.vue';
 
 const props = defineProps<{
@@ -87,7 +87,7 @@ const tutorialCardsContent = [
                     </div>
                     <div class="text-center">
                         <div class="mb-2 flex items-center justify-center">
-                            <Trophy class="mr-2 h-6 w-6 text-yellow-400" />
+                            <Bone class="mr-2 h-6 w-6 text-gray-200" />
                             <span class="text-3xl font-bold text-white">{{ props.stats?.totalEnemiesKilled || '0' }}</span>
                         </div>
                         <p class="text-gray-400">Total enemies killed</p>
