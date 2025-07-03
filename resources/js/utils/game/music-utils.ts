@@ -104,7 +104,7 @@ export function playSoundEffectEnemyAttack(soundEffectEnemyAttack: string[], vol
     const soundEffectIndex = Math.floor(Math.random() * soundEffectEnemyAttack.length);
     const soundEffectEnemyAttackSample = new Howl({
         src: [soundEffectEnemyAttack[soundEffectIndex]],
-        volume: volume - 0.2,
+        volume: volume != 0 ? (volume -= 0.2) : 0,
     });
     soundEffectEnemyAttackSample.play();
 }
@@ -117,7 +117,7 @@ export function playSoundEffectEnemyAttack(soundEffectEnemyAttack: string[], vol
 export function playSoundEffectPlayerHit(soundEffectPlayerHit: string[], volume: number) {
     const soundEffectPlayerHitSample = new Howl({
         src: [soundEffectPlayerHit[0]],
-        volume: volume - 0.2,
+        volume: volume != 0 ? (volume -= 0.2) : 0,
     });
     soundEffectPlayerHitSample.play();
 }
