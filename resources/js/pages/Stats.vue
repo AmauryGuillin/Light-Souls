@@ -101,6 +101,11 @@ const maxSurvivalTime = new Date(props.profile.max_survival_time * 1000).toISOSt
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <Button variant="secondary">
+                                <Link :href="'/settings/profile'">Settings</Link>
+                            </Button>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
