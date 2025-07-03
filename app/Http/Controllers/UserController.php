@@ -14,7 +14,6 @@ class UserController extends Controller
     public function index()
     {
         $user = User::select('name', 'role_id')->with('role')->where('id', 1)->first();
-        //dd($user);
         if ($user->role_id !== 2) return to_route('home');
         return Inertia::render('Dashboard', ['user' => $user->name, 'role' => $user->role->name]);
     }
