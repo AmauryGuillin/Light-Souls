@@ -41,6 +41,15 @@ import {
     playSoundEffectPowerUp,
     stopGameMusic,
 } from '@/utils/game/music-utils';
+import {
+    musicTracks,
+    SoundEffectEnemyAttack,
+    SoundEffectenemyHit,
+    SoundEffectfireBall,
+    soundEffectPlayerDeath,
+    soundEffectPlayerHit,
+    SoundEffectPowerUp,
+} from '@/utils/musics/musics';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { h, markRaw, onMounted, onUnmounted, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
@@ -121,25 +130,7 @@ const player = ref<PlayerType>({
 const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireRate);
 const lastDirection = ref<'left' | 'right'>('right');
 const mousePosition = ref({ x: 50, y: 50 });
-const musicTracks = [
-    '/assets/music/game/game-music-d1-1.mp3',
-    '/assets/music/game/game-music-bg3-1.mp3',
-    '/assets/music/game/game-music-bg3-2.mp3',
-    '/assets/music/game/game-music-dofus-1.mp3',
-    '/assets/music/game/game-music-dofus-2.mp3',
-    '/assets/music/game/game-music-dofus-3.mp3',
-    '/assets/music/game/game-music-dofus-4.mp3',
-    '/assets/music/game/game-music-gw2-1.mp3',
-    '/assets/music/game/game-music-gw2-2.mp3',
-    '/assets/music/game/game-music-ff-1.mp3',
-    '/assets/music/game/game-music-na-1.mp3',
-];
-const SoundEffectfireBall = ['/assets/soundEffects/player/fireball1.mp3', '/assets/soundEffects/player/fireball2.mp3'];
-const SoundEffectPowerUp = ['/assets/soundEffects/player/PowerUp.wav'];
-const SoundEffectenemyHit = ['/assets/soundEffects/enemy/Hit.wav'];
-const SoundEffectEnemyAttack = ['/assets/soundEffects/enemy/enemyAttack_1.mp3', '/assets/soundEffects/enemy/enemyAttack_2.mp3'];
-const soundEffectPlayerHit = ['/assets/soundEffects/player/playerdamage.mp3'];
-const soundEffectPlayerDeath = ['/assets/soundEffects/player/player-death.mp3'];
+
 let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
 let animationFrameId: number;
