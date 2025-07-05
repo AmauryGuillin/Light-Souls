@@ -223,7 +223,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 4;
+    player.value.personalAttributes.level = 1;
     gameStartTime.value = Date.now();
 }
 
@@ -777,7 +777,7 @@ onUnmounted(() => {
         <Transition enter-active-class="transition-opacity duration-1500" enter-from-class="opacity-0" enter-to-class="opacity-100">
             <div
                 v-if="showUpgrade"
-                class="font-game absolute top-[50%] left-[50%] flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"
+                class="font-game absolute top-[50%] left-[50%] z-50 flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"
             >
                 <span class="w-full bg-black/95 pt-2 text-7xl font-bold text-yellow-500">NEW SKILL ACQUIRED</span>
             </div>
