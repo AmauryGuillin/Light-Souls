@@ -130,6 +130,14 @@ export function playSoundEffectPlayerDeath(soundEffectPlayerDeath: string[], vol
     soundEffectPlayerDeathSample.play();
 }
 
+export function playSoundEffectNewSkill(soundEffectPlayerNewSkill: string[], volume: number) {
+    const soundEffectPlayerDeathSample = new Howl({
+        src: [soundEffectPlayerNewSkill[0]],
+        volume: volume != 0 ? volume + 0.2 : 0,
+    });
+    soundEffectPlayerDeathSample.play();
+}
+
 export function stopGameMusic(music: Howl | null) {
     music?.stop();
 }

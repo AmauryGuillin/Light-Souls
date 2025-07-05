@@ -36,6 +36,7 @@ import {
     playSoundEffectEnemyAttack,
     playSoundEffectEnemyHit,
     playSoundEffectFireBall,
+    playSoundEffectNewSkill,
     playSoundEffectPlayerDeath,
     playSoundEffectPlayerHit,
     playSoundEffectPowerUp,
@@ -48,6 +49,7 @@ import {
     SoundEffectfireBall,
     soundEffectPlayerDeath,
     soundEffectPlayerHit,
+    soundEffectPlayerNewSkill,
     SoundEffectPowerUp,
 } from '@/utils/musics/musics';
 import { router, useForm, usePage } from '@inertiajs/vue3';
@@ -131,6 +133,7 @@ const previousPlayerFireRate = ref<number>(player.value.personalAttributes.fireR
 const lastDirection = ref<'left' | 'right'>('right');
 const mousePosition = ref({ x: 50, y: 50 });
 const powerUpIsLoading = ref<boolean>(false);
+const showUpgrade = ref<boolean>(false);
 
 let musicShuffleIndex = 0;
 let gameMusic: Howl | null = null;
@@ -220,7 +223,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 2;
+    player.value.personalAttributes.level = 4;
     gameStartTime.value = Date.now();
 }
 
@@ -365,7 +368,7 @@ function projectileHit(projectile: ProjectileType) {
 
                     player.value.personalAttributes.XP = 1;
                     playSoundEffectPowerUp(SoundEffectPowerUp, soundEffetcsVolume.value);
-                    getPowerUp();
+                    if (!showUpgrade.value) getPowerUp();
                 }
             }
 
@@ -378,6 +381,8 @@ function projectileHit(projectile: ProjectileType) {
 }
 
 function createToast(message: string) {
+    showUpgrade.value = true;
+    playSoundEffectNewSkill(soundEffectPlayerNewSkill, soundEffetcsVolume.value);
     toast({
         render: () =>
             h('div', {}, [
@@ -385,6 +390,10 @@ function createToast(message: string) {
                 h('p', { class: 'text-sm text-gray-300' }, message),
             ]),
     });
+    setTimeout(() => {
+        showUpgrade.value = false;
+        getPowerUp();
+    }, 3000);
 }
 
 /**
@@ -762,6 +771,15 @@ onUnmounted(() => {
                     class="hover:text-amber-500q cursor-default text-2xl transition-all duration-75 hover:scale-105 hover:font-bold hover:text-red-500"
                     >Quit game</span
                 >
+            </div>
+        </Transition>
+
+        <Transition enter-active-class="transition-opacity duration-1500" enter-from-class="opacity-0" enter-to-class="opacity-100">
+            <div
+                v-if="showUpgrade"
+                class="font-game absolute top-[50%] left-[50%] flex w-full -translate-x-[50%] -translate-y-[50%] flex-col items-center justify-center text-center"
+            >
+                <span class="w-full bg-black/95 pt-2 text-7xl font-bold text-yellow-500">NEW SKILL ACQUIRED</span>
             </div>
         </Transition>
 
