@@ -220,7 +220,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 1;
+    player.value.personalAttributes.level = 2;
     gameStartTime.value = Date.now();
 }
 
@@ -575,14 +575,11 @@ function upgradePlayerAttributes(powerup: any) {
             break;
         case 'Heal':
             if (powerup.boost.type === 'Increase') {
-                if ((player.value.personalAttributes.HP += (powerup.boost.multiplier - 1) * 100) >= player.value.personalAttributes.maxHP) {
-                    player.value.personalAttributes.HP = player.value.personalAttributes.maxHP;
-                    isBoostPageOpen.value = false;
-                    break;
-                }
-                player.value.personalAttributes.HP += (powerup.boost.multiplier - 1) * 100;
+                const healAmount = Math.round((powerup.boost.multiplier - 1) * 100);
+                const newHP = player.value.personalAttributes.HP + healAmount;
+                player.value.personalAttributes.HP = Math.min(newHP, player.value.personalAttributes.maxHP);
+                isBoostPageOpen.value = false;
             }
-            isBoostPageOpen.value = false;
             break;
         case 'Health':
             if (powerup.boost.type === 'Increase') {
