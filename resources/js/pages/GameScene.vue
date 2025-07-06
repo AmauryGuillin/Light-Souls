@@ -223,7 +223,7 @@ function spawnPlayer() {
     player.value.position.Y = 50;
     player.value.name = 'Player';
     player.value.states.isSpawned = true;
-    player.value.personalAttributes.level = 1;
+    player.value.personalAttributes.level = 4;
     gameStartTime.value = Date.now();
 }
 
@@ -390,7 +390,9 @@ function createToast(message: string) {
                 h('p', { class: 'text-sm text-gray-300' }, message),
             ]),
     });
+    console.log('pre TO');
     setTimeout(() => {
+        console.log('in TO');
         showUpgrade.value = false;
         getPowerUp();
     }, 3000);
