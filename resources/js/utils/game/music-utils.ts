@@ -55,6 +55,13 @@ export function getMusicName(id: number) {
     return musicNames.find((m) => m.id === id)?.name;
 }
 
+function safeVolume(volume: number, boost = 0): number {
+    const v = Number(volume);
+    if (!isFinite(v)) return 0.3; // valeur par défaut
+    const boosted = v + boost;
+    return Math.max(0, Math.min(1, boosted));
+}
+
 /**
  * Plays a random fireball sound effect from the provided array.
  * @param soundEffectFireBall Array of fireball sound file paths.
@@ -64,7 +71,7 @@ export function playSoundEffectFireBall(soundEffectFireBall: string[], volume: n
     const soundEffectIndex = Math.floor(Math.random() * soundEffectFireBall.length);
     const soundEffectFireBallSample = new Howl({
         src: [soundEffectFireBall[soundEffectIndex]],
-        volume: volume != 0 ? volume + 0.2 : 0,
+        volume: safeVolume(volume, 0.2),
     });
     soundEffectFireBallSample.play();
 }
@@ -77,7 +84,7 @@ export function playSoundEffectFireBall(soundEffectFireBall: string[], volume: n
 export function playSoundEffectPowerUp(soundEffectPowerUp: string[], volume: number) {
     const soundEffectPowerUpSample = new Howl({
         src: [soundEffectPowerUp[0]],
-        volume: volume,
+        volume: safeVolume(volume),
     });
     soundEffectPowerUpSample.play();
 }
@@ -90,7 +97,7 @@ export function playSoundEffectPowerUp(soundEffectPowerUp: string[], volume: num
 export function playSoundEffectEnemyHit(soundEffectEnemyHit: string[], volume: number) {
     const soundEffectEnemyHitSample = new Howl({
         src: [soundEffectEnemyHit[0]],
-        volume: volume,
+        volume: safeVolume(volume),
     });
     soundEffectEnemyHitSample.play();
 }
@@ -104,7 +111,7 @@ export function playSoundEffectEnemyAttack(soundEffectEnemyAttack: string[], vol
     const soundEffectIndex = Math.floor(Math.random() * soundEffectEnemyAttack.length);
     const soundEffectEnemyAttackSample = new Howl({
         src: [soundEffectEnemyAttack[soundEffectIndex]],
-        volume: volume,
+        volume: safeVolume(volume),
     });
     soundEffectEnemyAttackSample.play();
 }
@@ -117,7 +124,7 @@ export function playSoundEffectEnemyAttack(soundEffectEnemyAttack: string[], vol
 export function playSoundEffectPlayerHit(soundEffectPlayerHit: string[], volume: number) {
     const soundEffectPlayerHitSample = new Howl({
         src: [soundEffectPlayerHit[0]],
-        volume: volume,
+        volume: safeVolume(volume),
     });
     soundEffectPlayerHitSample.play();
 }
@@ -125,17 +132,17 @@ export function playSoundEffectPlayerHit(soundEffectPlayerHit: string[], volume:
 export function playSoundEffectPlayerDeath(soundEffectPlayerDeath: string[], volume: number) {
     const soundEffectPlayerDeathSample = new Howl({
         src: [soundEffectPlayerDeath[0]],
-        volume: volume,
+        volume: safeVolume(volume),
     });
     soundEffectPlayerDeathSample.play();
 }
 
 export function playSoundEffectNewSkill(soundEffectPlayerNewSkill: string[], volume: number) {
-    const soundEffectPlayerDeathSample = new Howl({
+    const soundEffectPlayerNewSkillSample = new Howl({
         src: [soundEffectPlayerNewSkill[0]],
-        volume: volume != 0 ? volume + 0.2 : 0,
+        volume: safeVolume(volume, 0.2),
     });
-    soundEffectPlayerDeathSample.play();
+    soundEffectPlayerNewSkillSample.play();
 }
 
 export function stopGameMusic(music: Howl | null) {
