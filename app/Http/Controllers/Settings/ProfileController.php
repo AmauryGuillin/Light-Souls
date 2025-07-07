@@ -51,8 +51,8 @@ class ProfileController extends Controller
 
     public function updateProfileStats(Request $request): RedirectResponse
     {
-        $profile = Profile::where('user_id', $request->input('user_id'))->firstOrFail();
-
+        $authUser = Auth::user();
+        $profile = Profile::where('user_id', $authUser->id)->firstOrFail();
 
         $profile->update([
             'max_survival_time' => $request->input('last_survival_time') > $profile->max_survival_time ? $profile->max_survival_time = $request->input('last_survival_time') : $profile->max_survival_time,

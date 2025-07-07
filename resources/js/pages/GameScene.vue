@@ -630,7 +630,6 @@ async function sendStatsToUserProfile(userId: number, close?: boolean) {
     const survivalTime = gameStartTime.value ? Math.floor((now - gameStartTime.value) / 1000) : 0;
 
     const form = useForm({
-        user_id: userId,
         last_survival_time: survivalTime,
         last_game_enemies_killed: player.value.personalAttributes.score,
         last_game_level: player.value.personalAttributes.level,
